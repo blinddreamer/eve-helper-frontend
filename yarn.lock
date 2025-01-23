@@ -1005,9 +1005,9 @@ delayed-stream@~1.0.0:
   integrity sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==
 
 delegate-it@^6.0.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/delegate-it/-/delegate-it-6.1.0.tgz#b45af9115a9cda685b002fd80e5322d1d541e1be"
-  integrity sha512-sPgBvzO3GVViT1qKiuMLKnZs2HokFwCg304kv2bbG08Tm3qi9u5y5jEC7u2dR0js22i+17JTfqK0XpWop9c67w==
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/delegate-it/-/delegate-it-6.2.1.tgz#a264a7406bc369140135cb0fcc1f8e6c3cde3e7a"
+  integrity sha512-3/P/rwj+zal/99EEml7y1+bXjBY+Wok/WSg0EngWAtdvHK6iKTPbABQE84RyyRfR0Fmejs93BrkZQWlgyeWuFQ==
   dependencies:
     typed-query-selector "^2.11.2"
 
@@ -2037,9 +2037,9 @@ path-parse@^1.0.7:
   integrity sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==
 
 path-to-regexp@^6.2.1:
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-6.2.2.tgz#324377a83e5049cbecadc5554d6a63a9a4866b36"
-  integrity sha512-GQX3SSMokngb36+whdpRXE+3f9V8UzyAorlYvOGx87ufGHehNTn5lCxrKtLyZ4Yl/wEKnNnr98ZzOwwDZV5ogw==
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-6.3.0.tgz#2b6a26a337737a8e1416f9272ed0766b1c0389f4"
+  integrity sha512-Yhpw4T9C6hPpgPeA28us07OJeqZ5EzQTkbfwuhsUg0c237RomFoETJgmp2sa3F/41gfLE6G5cqcYwznmeEeOlQ==
 
 picocolors@^1.0.0, picocolors@^1.0.1:
   version "1.0.1"
@@ -2486,9 +2486,9 @@ supports-preserve-symlinks-flag@^1.0.0:
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
 swup@^4.6.1:
-  version "4.7.0"
-  resolved "https://registry.yarnpkg.com/swup/-/swup-4.7.0.tgz#777b92452caa8a45834441db08cd1b12ae538a4d"
-  integrity sha512-ILVKiFtHujf3MCo3tYt95/ENnqsBywmeCEiZUs87BrQeJKeHzR3J7LbFu4J6jqmxqhAnRFnRVVlWAPKyWAsPgQ==
+  version "4.8.1"
+  resolved "https://registry.yarnpkg.com/swup/-/swup-4.8.1.tgz#20ac6bf5b1aa7d4860d676451cc49c02d1affe9e"
+  integrity sha512-MEXrQUvsUE9lyt1SX8KEZcGmPigAvtkVvHwJf22MOKsjb+aDgiljTc5LTXz0ehsA/1OOXRqvtS4kWLey26i/hQ==
   dependencies:
     delegate-it "^6.0.0"
     opencollective-postinstall "^2.0.2"
@@ -2566,9 +2566,9 @@ typed-array-length@^1.0.6:
     possible-typed-array-names "^1.0.0"
 
 typed-query-selector@^2.11.2:
-  version "2.11.3"
-  resolved "https://registry.yarnpkg.com/typed-query-selector/-/typed-query-selector-2.11.3.tgz#b8791f504dfb2a675952c23cc468055ae49d5792"
-  integrity sha512-lMG8vpGrthemzydrNhGbpFqLEDEe4ivjNcofh2L2JYC8OBnkIAZLAsNVEkxS8rix2YZhTMqbwwJh91uk31kKTA==
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/typed-query-selector/-/typed-query-selector-2.12.0.tgz#92b65dbc0a42655fccf4aeb1a08b1dddce8af5f2"
+  integrity sha512-SbklCd1F0EiZOyPiW192rrHZzZ5sBijB6xM+cpmrwDqObvdtunOHHIk9fCGsoK5JVIYXoyEp4iEdE3upFH3PAg==
 
 unbox-primitive@^1.0.2:
   version "1.0.2"
