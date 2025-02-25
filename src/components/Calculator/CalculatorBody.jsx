@@ -26,6 +26,7 @@ function CalculatorBody(props) {
   const [crafitng, setCrafting] = useState({});
   const [isChecked, setIsChecked] = useState({});
   const [fuelList, setFuelList] = useState({});
+  const [requestId, setRequestId] = useState({});
  // const backend = "https://api.eve-helper.com/api/v1/";
    const backend = "http://localhost:8080/api/v1/";
 
@@ -88,17 +89,11 @@ function CalculatorBody(props) {
       
       const data = response.data;
       
-      const materials = data.materialsList.map( mat => {
-       // mat.tier = 0;
-        let materialId = mat.id;
-        let special = {materialId: data.id, neededQuantity: mat.quantity}
-        let materialToAdd = {materialId: materialId, materials: [special], tier: 0, volume: mat.volume, icon: mat.icon, price: mat.sellPrice, 
-          name:mat.name, activityId: mat.activityId, craftQuantity: mat.craftQuantity, isCreatable: mat.isCreatable, quantity: mat.quantity, checked: true,
-        jobsCount: mat.jobsCount}
-        return materialToAdd;
-      })
+      const materials = data.blueprintResult;
+      const requestId = data.id;
       setMaterialsList(materials);
-      setInitialBlueprint(data);
+      setInitialBlueprint(data.blueprintResult[0]);
+      setRequestId(requestId);
       setCrafting({ ["card_" + data.name]: true });
     } catch (error) {
       console.error("Error:", error.message);
@@ -160,6 +155,7 @@ function CalculatorBody(props) {
                 errorMessage={errorMessage}
                 setErrorMessage={setErrorMessage}
                 initialBlueprint={initialBlueprint}
+                setInitialBlueprint={setInitialBlueprint}
                 openState={openState}
                 setOpenState={setOpenState}
                 optionsSys={optionsSys}
@@ -177,6 +173,7 @@ function CalculatorBody(props) {
                 setIsLoading={setIsLoading}
                 fuelList={fuelList}
                 setFuelList={setFuelList}
+                requestId={requestId}
               />
             </Col>
           </Row>
