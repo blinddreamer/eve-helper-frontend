@@ -23,10 +23,8 @@ function CalculatorBody(props) {
   const [onStart, setOnstart] = useState(true);
   const [regions, setRegions] = useState([{}]);
   const [stations, setStations] = useState([{}]);
-  const [crafitng, setCrafting] = useState({});
-  const [isChecked, setIsChecked] = useState({});
-  const [fuelList, setFuelList] = useState({});
   const [requestId, setRequestId] = useState({});
+  const [checkedItems, setCheckedItems] = useState({});
  // const backend = "https://api.eve-helper.com/api/v1/";
    const backend = "http://localhost:8080/api/v1/";
 
@@ -63,12 +61,11 @@ function CalculatorBody(props) {
     }
   }
   const submitForm = async () => {
+    setCheckedItems({});
     setIsClicked(false);
     setOpenState({});
-    setCrafting({});
-    setIsChecked({});
-    setFuelList({});
-    setIsLoading(true);
+   // setMaterialsList([]);
+   setIsLoading(true);
     try {
       const response = await axios.post(backend + "type", {
         blueprintName: formData.blueprintName,
@@ -94,7 +91,7 @@ function CalculatorBody(props) {
       setMaterialsList(materials);
       setInitialBlueprint(data.blueprintResult[0]);
       setRequestId(requestId);
-      setCrafting({ ["card_" + data.name]: true });
+      
     } catch (error) {
       console.error("Error:", error.message);
       setErrorMessage(
@@ -165,15 +162,11 @@ function CalculatorBody(props) {
                 formData={formData}
                 formDataPart={formDataPart}
                 formDataReaction={formDataReaction}
-                crafitng={crafitng}
-                setCrafting={setCrafting}
-                isChecked={isChecked}
-                setIsChecked={setIsChecked}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
-                fuelList={fuelList}
-                setFuelList={setFuelList}
                 requestId={requestId}
+                checkedItems={checkedItems}
+                setCheckedItems={setCheckedItems}
               />
             </Col>
           </Row>
