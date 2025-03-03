@@ -31,6 +31,7 @@ function ShortForm(props) {
 
     return (
         <Form>
+          <p>{props.reaction ? "Reaction Bonuses:":"Component Bonuses:"}</p>
            <Form.Group controlId={`me_${componentId}`}>
                   <Form.Control
                     type="number"
@@ -88,7 +89,7 @@ function ShortForm(props) {
           onChange={() => handleOnchange(componentId)}
         />
       </Form.Group>
-      <Button className="btn btn-secondary"> Apply</Button>
+      {/* <Button className="btn btn-secondary"> Apply</Button> */}
             </Form>
              
     );

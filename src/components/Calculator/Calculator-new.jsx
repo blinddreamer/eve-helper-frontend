@@ -5,19 +5,20 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
-
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { GiBasket } from "react-icons/gi";
-import AdvancedModeToggle from "../AdvancedModeToggle";
 import axios from "axios";
-import { a } from "framer-motion/client";
+
 function Calculator(props){
 const [isCopied, setIsCopied] = useState({});
 const [isLoading, setIsLoading] = useState(false);
-const [selectAll, setSelectAll] = useState({});
 
 
-
-
+// useEffect(() => {
+//   const allChecked = props.materialsList.filter(mat).every((mat) => props.checkedItems[mat.id]);
+//   setMasterChecked(allChecked);
+// }, [checkedItems, materials]);
+// Display blueprint info window
   function displayCommon(){
       let volumeFormat = new Intl.NumberFormat();
       let priceFormat = new Intl.NumberFormat("en-US");
@@ -27,7 +28,7 @@ const [selectAll, setSelectAll] = useState({});
         {!props.initialBlueprint.materialsList && (
           <div id="start-message">
             <Alert variant="success">
-              Choose blueprint or reaction formula to start.
+              Choose blueprint or reaction formula to start. If advanced mode is enabled please fill the required fields for better calculations.
             </Alert>
           </div>
         )}
@@ -55,7 +56,7 @@ const [selectAll, setSelectAll] = useState({});
               })}{" "}
               <p id="bpheader" />
               Sell order :{" "}
-              {props.initialBlueprint.sellPrice.toLocaleString("en-US", {
+              {props.initialBlueprint.totalSellPrice.toLocaleString("en-US", {
                 style: "currency",
                 currency: "ISK",
                 minimumFractionDigits: 2,
@@ -64,7 +65,7 @@ const [selectAll, setSelectAll] = useState({});
               Profit :{" "}
               <span
                 className={
-                  props.initialBlueprint.sellPrice -
+                  props.initialBlueprint.totalSellPrice -
                     props.initialBlueprint.craftPrice
                      <
                   0
@@ -73,7 +74,7 @@ const [selectAll, setSelectAll] = useState({});
                 }
               >
                 {(
-                  props.initialBlueprint.sellPrice -
+                  props.initialBlueprint.totalSellPrice -
                   props.initialBlueprint.craftPrice
                   
                 ).toLocaleString("en-US", {
@@ -86,7 +87,7 @@ const [selectAll, setSelectAll] = useState({});
               Margin :{" "}
               <span
                 className={
-                  props.initialBlueprint.sellPrice -
+                  props.initialBlueprint.totalSellPrice -
                      props.initialBlueprint.craftPrice
                      
                      <
@@ -96,12 +97,12 @@ const [selectAll, setSelectAll] = useState({});
                 }
               >
                 {(
-                  ((props.initialBlueprint.sellPrice -
+                  ((props.initialBlueprint.totalSellPrice -
                    
                       props.initialBlueprint.craftPrice
                       
                     ) /
-                    props.initialBlueprint.sellPrice) *
+                    props.initialBlueprint.totalSellPrice) *
                   100
                 ).toFixed(2) + " %"}
               </span>
@@ -124,14 +125,10 @@ const [selectAll, setSelectAll] = useState({});
                 )}
               </Button>
               <p />
-              <AdvancedModeToggle
-                setAdvancedMode={props.setAdvancedMode}
-                advancedMode={props.advancedMode}
-              />
             </div>
           </div>
           {generateOutputTables()}
-         {checkForFuel(props.materialsList) && generateTable(props.materialsList, 105, true)}
+          {checkForFuel(props.materialsList) && generateTable(props.materialsList, 105, true)}
         
           <Modal size="sm" className="loadingModal" centered={true} show={isLoading}><span className="d-flex justify-content-center"><Spinner
               as="span"
@@ -146,6 +143,7 @@ const [selectAll, setSelectAll] = useState({});
       
     )}
     
+  // Generate the material tables based on how many tiers are presented  
     function generateOutputTables() {
       let index = 0;
       const tables = [];
@@ -157,21 +155,21 @@ const [selectAll, setSelectAll] = useState({});
         return tables;
     }
 
+
     function handleCheck(material){
       props.setCheckedItems(prev => ({
         ...prev,
         [material.id]: !prev[material.id] // Toggle check state
       }));
-      material.checked = !material.checked;
       updateMaterialStats(material);
-   
- }
+    }
 
- function handleMassCheck(tier){
+    function handleMassCheck(tier){
   const materials = props.materialsList
   .filter(mat => mat.tier === tier - 1 && mat.isCreatable)   // Filter by tier
   .flatMap(mat => mat.materialsList)
-  .filter(mat => mat.isCreatable && mat.activityId!==105 && (!props.checkedItems[mat.id] || props.checkedItems["all_"+tier]))
+  .filter(mat => mat.isCreatable && mat.activityId!==105 && (!props.checkedItems[mat.id] && !props.checkedItems["all_"+tier] || 
+    (props.checkedItems["all_"+tier] && props.checkedItems[mat.id])))
   .reduce((acc, mat) => {
     const existing = acc.find(item => item.name === mat.name);
     if (existing) {
@@ -188,66 +186,19 @@ const [selectAll, setSelectAll] = useState({});
         return acc;
       }, { ...prev }) // Preserve previous state
   );
+  if(materials.length!=0){
   massUpdateMaterialStats(materials);  
+  }
   props.setCheckedItems(prev => ({
     ...prev,
     ["all_"+tier]: !prev["all_"+tier] // Toggle check state
   }));
- }
-
- async function updateMaterialStats(material){
-  setIsLoading(true)
-  let request = {
-        requestId: props.requestId,
-        blueprintName: material.name,
-        tier: material.tier,
-        blueprintMe: material.activityId === 11 ? props.formDataReaction.blueprintMe : props.formDataPart.blueprintMe,
-        building: material.activityId === 11 ? props.formDataReaction.building : props.formDataPart.building,
-        buildingRig: material.activityId === 11 ? props.formDataReaction.buildingRig : props.formDataPart.buildingRig,
-        system: material.activityId === 11 ? props.formDataReaction.system : props.formDataPart.system,
-        facilityTax: material.activityId === 11 ? props.formDataReaction.facilityTax : props.formDataPart.facilityTax,
-    };
-      const response = await axios.post(props.backend + "update-type", request);
-      props.setMaterialsList(response.data.blueprintResult);
-      props.setInitialBlueprint(response.data.blueprintResult[0]);
-      console.log(response.data.blueprintResult);
-      setIsLoading(false)
- 
-  }
-
-  async function massUpdateMaterialStats(materials){
-    setIsLoading(true)
-    let requests = materials.map(material=> ({
-          requestId: props.requestId,
-          blueprintName: material.name,
-          tier: material.tier,
-          blueprintMe: material.activityId === 11 ? props.formDataReaction.blueprintMe : props.formDataPart.blueprintMe,
-          building: material.activityId === 11 ? props.formDataReaction.building : props.formDataPart.building,
-          buildingRig: material.activityId === 11 ? props.formDataReaction.buildingRig : props.formDataPart.buildingRig,
-          system: material.activityId === 11 ? props.formDataReaction.system : props.formDataPart.system,
-          facilityTax: material.activityId === 11 ? props.formDataReaction.facilityTax : props.formDataPart.facilityTax,
-      }));
-        const response = await axios.post(props.backend + "mass-update-type", requests);
-        props.setMaterialsList(response.data.blueprintResult);
-        props.setInitialBlueprint(response.data.blueprintResult[0]);
-        console.log(response.data.blueprintResult);
-        setIsLoading(false)
-   
     }
 
-    function isMassUpdateClickable(tier) {
-      return props.materialsList.some(mat => 
-        mat.tier === tier -1 && mat.isCreatable && 
-        mat.materialsList.some(subMat => subMat.isCreatable)
-      );
-    }
-
-   function generateTable(materialsList, tier, isFuel){
+   // GENERATE TABLE
+  function generateTable(materialsList, tier, isFuel){
       let volumeFormat = new Intl.NumberFormat();
       let priceFormat = new Intl.NumberFormat("en-US");
-      let totalVolume = 0;
-      let totalBuyCost = 0;
-
       const mergedMaterials = materialsList
       .flatMap(mat => 
         mat.materialsList
@@ -267,6 +218,8 @@ const [selectAll, setSelectAll] = useState({});
         }
         return acc;
       }, []);
+      let totalVolume = mergedMaterials.map(mat => mat.volume * calculateQuantity(props.materialsList, mat.name)).reduce((sum, volume) => sum + volume, 0);
+      let totalBuyCost = mergedMaterials.map(mat => mat.price * calculateQuantity(props.materialsList, mat.name)).reduce((sum, price) => sum + price, 0);
       if (materialsList.length === 0) {
         return null;  // or return undefined; based on your needs
     }
@@ -276,15 +229,16 @@ const [selectAll, setSelectAll] = useState({});
     <p>
   You will need the following parts to craft:{" "}
   {props.materialsList
-    .filter(mat => mat.tier === tier-1)
+    .filter(mat => mat.tier === tier-1 && mat.selectedForCraft)
     .map(mat => mat.name + " x " + mat.quantity)
     .join(", ")}
 </p>}
 {isFuel && 
   <p>
-    You will need the following Fuel {" "}
+    You will need the following Fuel Blocks {" "}
     </p>}
     <Table 
+    key={"tab_"+tier}
       bordered
       hover
       size="sm">
@@ -301,45 +255,66 @@ const [selectAll, setSelectAll] = useState({});
           </tr>
       </thead>
       <tbody>
-          {mergedMaterials.map((mat, index) => (
+          {mergedMaterials.map((mat, index) => ( 
             mat.quantity > 0 &&
             
-              <tr key={index}>
-                  <td><img src={mat.icon} loading="lazy" alt={mat.name} /></td>
-                  <td>{mat.name}</td>
-                  <td>{volumeFormat.format(calculateQuantity(props.materialsList, mat.name))}</td>
-                  <td>{volumeFormat.format(mat.volume*calculateQuantity(props.materialsList, mat.name))}</td>
-                  <td>{priceFormat.format(mat.price)} / {priceFormat.format(mat.price*calculateQuantity(props.materialsList, mat.name))}</td>
-                  <td>{mat.activityId == 1 ? "component" : mat.activityId == 11 ? "reaction": mat.activityId == 105 ? "fuel" :"none"}</td>
-                  <td>{0}</td>
-                  <td>
-                  <Form.Check
-              role={mat.isCreatable ? "button" : ""}
-              defaultChecked={false}
-              checked={props.checkedItems[mat.id] || false}
-              disabled={!mat.isCreatable}
-              id={mat.id}
-              key={"key_"+ mat.id}
-              type="switch"
-              onClick={()=>handleCheck(mat)}
-            />
+              <tr key={"tr_"+index}>
+                  <td key={"td_img"+index}><img src={mat.icon} loading="lazy" alt={mat.name} /></td>
+                  <td key={"td_name"+index}>{mat.name}</td>
+                  <td key={"td_quant"+index}>{volumeFormat.format(calculateQuantity(props.materialsList, mat.name))}</td>
+                  <td key={"td_vol"+index}>{volumeFormat.format(mat.volume*calculateQuantity(props.materialsList, mat.name))}</td>
+                  <td key={"td_price"+index}>{priceFormat.format(mat.price)} / {priceFormat.format(mat.price*calculateQuantity(props.materialsList, mat.name))}</td>
+                  <td key={"td_activity"+index}>{mat.activityId == 1 ? "component" : mat.activityId == 11 ? "reaction": mat.activityId == 105 ? "fuel" :"none"}</td>
+                  <td key={"td_excess"+index}>{0}</td>
+                  <td key={"td_checkBox"+index}>
+                  <OverlayTrigger
+                  placement="right" // Position of tooltip
+                  overlay={!props.isAdvancedCalc ? <Tooltip id="checkbox-tooltip">"Enter Advanced mode and recalculate to enable"</Tooltip> :
+                    mat.isCreatable ?
+                    (mat.activityId==105 ? <Tooltip id="checkbox-tooltip">"Fuel support is comming soon"</Tooltip>:
+                    <Tooltip id="checkbox-tooltip">"Click to add/remove item from crafting calculations"</Tooltip>):
+                    <Tooltip id="checkbox-tooltip">"Item is not creatable"</Tooltip>
+                  }> 
+                  <span> 
+                 <Form.Check
+                  role={mat.isCreatable ? "button" : ""}
+                  checked={props.checkedItems[mat.id] || false}
+                  disabled={!props.isAdvancedCalc || !mat.isCreatable || mat.tier ==105}
+                  id={mat.id}
+                  key={"key_"+ mat.id}
+                  type="switch"
+                  onChange={()=>handleCheck(mat)}/></span>
+                  </OverlayTrigger>
                   </td>
               </tr>
           ))}
           <tr>
             <td>#</td>
             <td colSpan={2}>Total</td>
-            <td>{volumeFormat.format(totalVolume)}</td>
-            <td colSpan={3}>{priceFormat.format(totalBuyCost)}</td>
+            <td>{volumeFormat.format(totalVolume) +" m³"}</td>
+            <td colSpan={3}>{totalBuyCost.toLocaleString("en-US", {
+                style: "currency",
+                currency: "ISK",
+                minimumFractionDigits: 2,
+              })}</td>
             <td>
+            <OverlayTrigger
+                  placement="right" // Position of tooltip
+                  overlay={!props.isAdvancedCalc ? <Tooltip id="checkbox-tooltip">"Enter Advanced mode and recalculate to enable"</Tooltip> :
+                    tier==105 ? 
+                    <Tooltip id="checkbox-tooltip">"Fuel support is comming soon"</Tooltip>:
+                    isMassUpdateClickable(tier) ?
+                    <Tooltip id="checkbox-tooltip">"Click to add/remove all items from crafting calculations"</Tooltip> :
+                    <Tooltip id="checkbox-tooltip">"No creatable materials"</Tooltip>
+                  }> 
+              <span>
             <Form.Check
-              defaultChecked={false}
-              disabled = {!isMassUpdateClickable(tier)}
-              key={"key_"+ tier}
+              disabled = {!props.isAdvancedCalc || !isMassUpdateClickable(tier) || tier ==105}
+              key={"key_check"+ tier}
               checked={props.checkedItems["all_"+tier]}
               type="switch"
-              onClick={()=>handleMassCheck(tier)}
-            />
+              onChange={()=>handleMassCheck(tier)}/></span>
+              </OverlayTrigger>
             </td>
           </tr>
       </tbody>
@@ -361,8 +336,94 @@ const [selectAll, setSelectAll] = useState({});
         )}</Button>} */}
   </>);
   }
+
+  // COPY FUNCTION
+  function generateCopyText(material, step) {
+    // Initialize an empty string to store the copy text
+    let copyText = "";
+
+    // Iterate through the material's materialsList
+    if (
+      Array.isArray(material.materialsList) &&
+      material.isCreatable &&
+      (material.copy || step == 0)
+    ) {
+      for (const subMaterial of material.materialsList) {
+        // Recursively generate copy text for each sub-material
+        copyText += generateCopyText(subMaterial, step + 1);
+      }
+    }
+    // Construct the copy text for the current material (if it's not marked as copy)
+    if (!material.copy && step != 0) {
+      copyText += `${material.name} x${material.quantity} \n`;
+    }
+
+    return copyText;
+  }
+
+  
+  async function handleMultiBuyCopy(id) {
+    try {
+      await navigator.clipboard.writeText(
+        generateCopyText(props.initialBlueprint, 0)
+      );
+      console.log("Text copied");
+      setIsCopied({ [id]: true });
+    } catch {
+      console.error("Error copying text: ", error);
+      alert("Failed to copy text.");
+    }
+  }
+
+  // HELPING FUNCTIONS 
+  async function updateMaterialStats(material){
+    setIsLoading(true)
+    let request = {
+          requestId: props.requestId,
+          blueprintName: material.name,
+          tier: material.tier,
+          blueprintMe: material.activityId === 11 ? props.formDataReaction.blueprintMe : props.formDataPart.blueprintMe,
+          building: material.activityId === 11 ? props.formDataReaction.building : props.formDataPart.building,
+          buildingRig: material.activityId === 11 ? props.formDataReaction.buildingRig : props.formDataPart.buildingRig,
+          system: material.activityId === 11 ? props.formDataReaction.system : props.formDataPart.system,
+          facilityTax: material.activityId === 11 ? props.formDataReaction.facilityTax : props.formDataPart.facilityTax,
+      };
+        const response = await axios.post(props.backend + "update-type", request);
+        props.setMaterialsList(response.data.blueprintResult);
+        props.setInitialBlueprint(response.data.blueprintResult[0]);
+       // console.log(response.data.blueprintResult);
+        setIsLoading(false)
    
-  function calculateQuantity(originalData, blueprintName) {
+    }
+  
+    async function massUpdateMaterialStats(materials){
+      setIsLoading(true)
+      let requests = materials.map(material=> ({
+            requestId: props.requestId,
+            blueprintName: material.name,
+            tier: material.tier,
+            blueprintMe: material.activityId === 11 ? props.formDataReaction.blueprintMe : props.formDataPart.blueprintMe,
+            building: material.activityId === 11 ? props.formDataReaction.building : props.formDataPart.building,
+            buildingRig: material.activityId === 11 ? props.formDataReaction.buildingRig : props.formDataPart.buildingRig,
+            system: material.activityId === 11 ? props.formDataReaction.system : props.formDataPart.system,
+            facilityTax: material.activityId === 11 ? props.formDataReaction.facilityTax : props.formDataPart.facilityTax,
+        }));
+          const response = await axios.post(props.backend + "mass-update-type", requests);
+          props.setMaterialsList(response.data.blueprintResult);
+          props.setInitialBlueprint(response.data.blueprintResult[0]);
+      //    console.log(response.data.blueprintResult);
+          setIsLoading(false)
+     
+      }
+  
+      function isMassUpdateClickable(tier) {
+        return props.materialsList.some(mat => 
+          mat.tier === tier -1 && mat.isCreatable && 
+          mat.materialsList.some(subMat => subMat.isCreatable)
+        );
+      }
+  
+   function calculateQuantity(originalData, blueprintName) {
     return originalData
         .filter(mat => mat.selectedForCraft && mat.materialsList.some(m => m.name === blueprintName))
         .flatMap(mat => mat.materialsList)

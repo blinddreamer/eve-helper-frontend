@@ -5,6 +5,7 @@ import "react-bootstrap-typeahead/css/Typeahead.bs5.css";
 import { Typeahead } from "react-bootstrap-typeahead";
 
 import React, { useState } from "react";
+import ShortForm from "./ShortForm";
 
 function CalculatorForm(props) {
   const [system, setSystem] = useState("");
@@ -32,7 +33,7 @@ function CalculatorForm(props) {
     props.setIsClicked(true);
   }
 
-  return (
+  return (<>
     <Form>
       <Form.Group controlId="blueprintName">
         <Form.Label>Blueprint Name:</Form.Label>
@@ -137,7 +138,34 @@ function CalculatorForm(props) {
           })}
         </Form.Select>
       </Form.Group>
+      </Form>
       <p />
+      {props.advancedMode &&
+      blueprint!= null &&
+      props.bpDetails
+  .filter(bp => bp.blueprint === blueprint)
+  .some(bp => bp.complexity === 3) &&
+      <ShortForm
+        reaction={false}
+        setFormDataPart={props.setFormDataPart}
+        setFormDataReaction={props.setFormDataReaction}
+        optionsSys={props.optionsSys}
+        advancedMode={props.advancedMode}
+        regions={props.regions}
+      />}
+  {props.advancedMode &&
+  blueprint!= null &&
+      props.bpDetails
+  .filter(bp => bp.blueprint === blueprint)
+  .some(bp => bp.complexity >=2) &&
+      <ShortForm
+        reaction={true}
+        setFormDataPart={props.setFormDataPart}
+        setFormDataReaction={props.setFormDataReaction}
+        optionsSys={props.optionsSys}
+        advancedMode={props.advancedMode}
+        regions={props.regions}
+      />}
       <Button variant="secondary" onClick={sendData}>
         {props.isLoading ? (
           <>
@@ -154,7 +182,8 @@ function CalculatorForm(props) {
           "Calculate"
         )}
       </Button>
-    </Form>
+    
+      </>
   );
 }
 export default CalculatorForm;

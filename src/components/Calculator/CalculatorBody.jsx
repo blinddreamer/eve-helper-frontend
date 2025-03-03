@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Calculator from "./Calculator-new.jsx";
 import GetForm from "./CalculatorForm.jsx";
-import ShortForm from "./ShortForm.jsx";
+import AdvancedModeToggle from "../AdvancedModeToggle.jsx";
 import axios from "axios";
 import Animated from "../Animated";
 
@@ -24,7 +24,10 @@ function CalculatorBody(props) {
   const [regions, setRegions] = useState([{}]);
   const [stations, setStations] = useState([{}]);
   const [requestId, setRequestId] = useState({});
+  const [isAdvancedCalc, setIsAdvancedCacl] = useState({});
   const [checkedItems, setCheckedItems] = useState({});
+  const [blueprintComplexity, setBlueprintComplexity] = useState({});
+  const [bpDetails, setBpDetails] = useState([]);
  // const backend = "https://api.eve-helper.com/api/v1/";
    const backend = "http://localhost:8080/api/v1/";
 
@@ -58,12 +61,14 @@ function CalculatorBody(props) {
     const response = await axios.get(backend + "blueprints");
     if (response.status === 200) {
       setOptionsBp(response.data.blueprints.map((bp) => bp.blueprint));
+      setBpDetails(response.data.blueprints);
     }
   }
   const submitForm = async () => {
     setCheckedItems({});
     setIsClicked(false);
     setOpenState({});
+    setIsAdvancedCacl(props.advancedMode);
    // setMaterialsList([]);
    setIsLoading(true);
     try {
@@ -109,6 +114,10 @@ function CalculatorBody(props) {
             <Col>
               <Col>
                 <div id="menuleft">
+                <AdvancedModeToggle
+                setAdvancedMode={props.setAdvancedMode}
+                advancedMode={props.advancedMode}
+              />
                   <GetForm
                     setFormData={setFormData}
                     setIsClicked={setIsClicked}
@@ -116,10 +125,15 @@ function CalculatorBody(props) {
                     optionsBp={optionsBp}
                     optionsSys={optionsSys}
                     advancedMode={props.advancedMode}
+                    setFormDataPart={setFormDataPart}
+                    setFormDataReaction={setFormDataReaction}
                     regions={regions}
+                    blueprintComplexity={blueprintComplexity}
+                    setBlueprintComplexity={setBlueprintComplexity}
+                    bpDetails={bpDetails}
                   ></GetForm>
                 </div>
-                <div id="menuParts">
+                {/* <div id="menuParts">
                   <p>Parts bonuses:</p>
                   <ShortForm
                     reaction={false}
@@ -142,7 +156,7 @@ function CalculatorBody(props) {
                     advancedMode={props.advancedMode}
                     regions={regions}
                   ></ShortForm>
-                </div>
+                </div> */}
               </Col>
             </Col>
             <Col xs={9}>
@@ -167,6 +181,7 @@ function CalculatorBody(props) {
                 requestId={requestId}
                 checkedItems={checkedItems}
                 setCheckedItems={setCheckedItems}
+                isAdvancedCalc={isAdvancedCalc}
               />
             </Col>
           </Row>
