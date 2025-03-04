@@ -14,11 +14,21 @@
     />
 
     <title>EVE Helper - Industry Calculator/Appraisal for EVE Online</title>
-    <script
-      data-goatcounter="https://goat.eve-helper.com/count"
-      async
-      src="//gc.zgo.at/count.js"
-    ></script>
+    <!--analitics-->
+    <script type="text/javascript">
+      (function () {
+        var sbSiteSecret = "cc3cae2c-f2b1-4bec-8bdd-45a71fb70bf8";
+        window.sitebehaviourTrackingSecret = sbSiteSecret;
+        var scriptElement = document.createElement("script");
+        scriptElement.async = true;
+        scriptElement.id = "site-behaviour-script-v2";
+        scriptElement.src =
+          "https://sitebehaviour-cdn.fra1.cdn.digitaloceanspaces.com/index.min.js?sitebehaviour-secret=" +
+          sbSiteSecret;
+        document.head.appendChild(scriptElement);
+      })();
+    </script>
+    <!--analitics-->
   </head>
   <body>
     <div id="root"></div>
