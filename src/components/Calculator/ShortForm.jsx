@@ -33,7 +33,7 @@ function ShortForm(props) {
   return (
     <Form>
       <OverlayTrigger
-        placement="right" // Position of tooltip
+        placement="left" // Position of tooltip
         overlay={
           props.reaction ? (
             <Tooltip id="reaction-tooltip">

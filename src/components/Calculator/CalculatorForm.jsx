@@ -1,4 +1,10 @@
-import { Form, Button, Spinner, OverlayTrigger, Tooltip } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Spinner,
+  OverlayTrigger,
+  Tooltip,
+} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import "react-bootstrap-typeahead/css/Typeahead.bs5.css";
@@ -50,19 +56,21 @@ function CalculatorForm(props) {
           />
         </Form.Group>
         <OverlayTrigger
-        placement="right" // Position of tooltip
-        overlay={<Tooltip id="runs-tooltip">
-              RUNS TOOLTIP
-            </Tooltip>}
-      >
-        <Form.Group id="bp_quantity" controlId="quantity">
-          <Form.Control
-            type="number"
-            min={1}
-            name="quantity"
-            placeholder="Runs."
-          />
-        </Form.Group>
+          placement="left" // Position of tooltip
+          overlay={
+            <Tooltip id="runs-tooltip">
+              Number of runs for single manufacturing job/line.
+            </Tooltip>
+          }
+        >
+          <Form.Group id="bp_quantity" controlId="quantity">
+            <Form.Control
+              type="number"
+              min={1}
+              name="quantity"
+              placeholder="Runs."
+            />
+          </Form.Group>
         </OverlayTrigger>
         <Form.Group id="bp_me" controlId="blueprintMe">
           <Form.Control
@@ -76,11 +84,26 @@ function CalculatorForm(props) {
         <Form.Group id="bp_build" controlId="building">
           <Form.Select defaultValue="0" aria-label="Default select example">
             <option value={0}>Building.</option>
-            {(!blueprint ||  props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 11)) && <option value="1">Azbel</option>}
-            {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 11)) && <option value="2">Raitaru</option>}
-            {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 11)) && <option value="3">Sotiyo</option>}
-            {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 1)) && <option value="4">Athanor</option>}
-            {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 1)) && <option value="5">Tatara</option>}
+            {(!blueprint ||
+              props.bpDetails.some(
+                (bp) => bp.blueprint === blueprint && bp.activity !== 11
+              )) && <option value="1">Azbel</option>}
+            {(!blueprint ||
+              props.bpDetails.some(
+                (bp) => bp.blueprint === blueprint && bp.activity !== 11
+              )) && <option value="2">Raitaru</option>}
+            {(!blueprint ||
+              props.bpDetails.some(
+                (bp) => bp.blueprint === blueprint && bp.activity !== 11
+              )) && <option value="3">Sotiyo</option>}
+            {(!blueprint ||
+              props.bpDetails.some(
+                (bp) => bp.blueprint === blueprint && bp.activity !== 1
+              )) && <option value="4">Athanor</option>}
+            {(!blueprint ||
+              props.bpDetails.some(
+                (bp) => bp.blueprint === blueprint && bp.activity !== 1
+              )) && <option value="5">Tatara</option>}
           </Form.Select>
         </Form.Group>
 
@@ -114,41 +137,45 @@ function CalculatorForm(props) {
           />
         </Form.Group>
         <OverlayTrigger
-        placement="right" // Position of tooltip
-        overlay={<Tooltip id="count-tooltip">
-              COUNT TOOLTIP
-            </Tooltip>}
-      >
-        <Form.Group id="bp_count" controlId="blueprintCount">
-          <Form.Control
-            type="number"
-            min={1}
-            name="blueprintCount"
-            placeholder="Job Count."
-          />
-        </Form.Group>
+          placement="left" // Position of tooltip
+          overlay={
+            <Tooltip id="count-tooltip">
+              How many manufacturing jobs you are going to start.
+            </Tooltip>
+          }
+        >
+          <Form.Group id="bp_count" controlId="blueprintCount">
+            <Form.Control
+              type="number"
+              min={1}
+              name="blueprintCount"
+              placeholder="Job Count."
+            />
+          </Form.Group>
         </OverlayTrigger>
         <OverlayTrigger
-        placement="right" // Position of tooltip
-        overlay={<Tooltip id="market-tooltip">
-              MARKET TOOLTIP
-            </Tooltip>}
-      >  
-        <Form.Group id="bp_market" controlId="marketRegion">
-          <Form.Select aria-label="Default select example">
-            {props.regions.map((region, index) => {
-              return (
-                <option
-                  key={index}
-                  selected={region.regionId == 10000002}
-                  value={region.regionId}
-                >
-                  {region.regionName}
-                </option>
-              );
-            })}
-          </Form.Select>
-        </Form.Group>
+          placement="left" // Position of tooltip
+          overlay={
+            <Tooltip id="market-tooltip">
+              Region you are buying mats from. For Jita leave Forge.
+            </Tooltip>
+          }
+        >
+          <Form.Group id="bp_market" controlId="marketRegion">
+            <Form.Select aria-label="Default select example">
+              {props.regions.map((region, index) => {
+                return (
+                  <option
+                    key={index}
+                    selected={region.regionId == 10000002}
+                    value={region.regionId}
+                  >
+                    {region.regionName}
+                  </option>
+                );
+              })}
+            </Form.Select>
+          </Form.Group>
         </OverlayTrigger>
       </Form>
       <p />
