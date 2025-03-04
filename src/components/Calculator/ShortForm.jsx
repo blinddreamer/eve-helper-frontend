@@ -1,4 +1,5 @@
 import Form from "react-bootstrap/Form";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Typeahead } from "react-bootstrap-typeahead/types";
 import { useState, useRef } from "react";
 
@@ -32,7 +33,14 @@ function ShortForm(props) {
 
     return (
         <Form>
-          <p>{props.reaction ? "Reaction Bonuses:":"Component Bonuses:"}</p>
+
+          
+<OverlayTrigger
+                  placement="right" // Position of tooltip
+                  overlay={props.reaction ? <Tooltip id="checkbox-tooltip">REACTION INFO TEXT</Tooltip> :
+                    <Tooltip id="checkbox-tooltip">COMPONENT INFO TEXT</Tooltip>
+                  }>
+          <p>{props.reaction ? "Reaction Structure:":"Component Structure:"}</p></OverlayTrigger>
              {!props.reaction &&  <Form.Group id="me_select" controlId={`me_${componentId}`}>
                   <Form.Control
                     type="number"

@@ -134,31 +134,7 @@ function CalculatorBody(props) {
                     bpDetails={bpDetails}
                   ></GetForm>
                 </div>
-                {/* <div id="menuParts">
-                  <p>Components Structure:</p>
-                  <ShortForm
-                    reaction={false}
-                    formData={formData}
-                    setFormDataPart={setFormDataPart}
-                    setFormDataReaction={setFormDataReaction}
-                    optionsSys={optionsSys}
-                    advancedMode={props.advancedMode}
-                    regions={regions}
-                  ></ShortForm>
-                </div>
-                <div id="menuReactions">
-                  <p>Reaction Structure:</p>
-                  <ShortForm
-                    reaction={true}
-                    formData={formData}
-                    setFormDataPart={setFormDataPart}
-                    setFormDataReaction={setFormDataReaction}
-                    optionsSys={optionsSys}
-                    advancedMode={props.advancedMode}
-                    regions={regions}
-                  ></ShortForm>
-                </div> */}
-              </Col>
+               </Col>
             </Col>
             <Col xs={9}>
               <Calculator
