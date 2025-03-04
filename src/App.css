@@ -254,3 +254,19 @@ textarea {
 #ft_select {
   margin-bottom: 1rem;
 }
+
+#basic-behaviors-example-item-0 {
+  font-size: 10px;
+}
+
+#bp_bn,
+#bp_quantity,
+#bp_me,
+#bp_build,
+#bp_rig,
+#bp_system,
+#bp_ft,
+#bp_count,
+#bp_market {
+  margin-top: 5px;
+}
