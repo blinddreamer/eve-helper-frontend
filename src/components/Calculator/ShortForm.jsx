@@ -33,7 +33,7 @@ function ShortForm(props) {
     return (
         <Form>
           <p>{props.reaction ? "Reaction Bonuses:":"Component Bonuses:"}</p>
-           <Form.Group controlId={`me_${componentId}`}>
+             {!props.reaction &&  <Form.Group controlId={`me_${componentId}`}>
                   <Form.Control
                     type="number"
                     min={0}
@@ -41,7 +41,7 @@ function ShortForm(props) {
                     placeholder="Material Efficiency"
                     onChange={() => handleOnchange(componentId)}
                    />
-                </Form.Group>
+                </Form.Group>}
 
                 <Form.Group controlId={`build_${componentId}`}>
                   <Form.Select
@@ -50,11 +50,11 @@ function ShortForm(props) {
                   >
                     <option hidden>Select Building</option>
                     <option value="0">None</option>
-                    <option value="1">Azbel</option>
-                    <option value="2">Raitaru</option>
-                    <option value="3">Sotiyo</option>
-                    <option value="4">Athanor</option>
-                    <option value="5">Tatara</option>
+                  {!props.reaction &&  <option value="1">Azbel</option>}
+                  {!props.reaction &&  <option value="2">Raitaru</option>}
+                  {!props.reaction &&   <option value="3">Sotiyo</option>}
+                  {props.reaction &&  <option value="4">Athanor</option>}
+                  {props.reaction &&  <option value="5">Tatara</option>}
                   </Form.Select>
                 </Form.Group>             
             <Form.Group controlId={"rig_"+componentId}>
