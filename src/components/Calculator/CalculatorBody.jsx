@@ -23,6 +23,7 @@ function CalculatorBody(props) {
   const [onStart, setOnstart] = useState(true);
   const [regions, setRegions] = useState([{}]);
   const [stations, setStations] = useState([{}]);
+  const [isCopied, setIsCopied] = useState({});
   const [requestId, setRequestId] = useState({});
   const [isAdvancedCalc, setIsAdvancedCacl] = useState({});
   const [checkedItems, setCheckedItems] = useState({});
@@ -66,6 +67,7 @@ function CalculatorBody(props) {
   }
   const submitForm = async () => {
     setCheckedItems({});
+    setIsCopied({});
     setIsClicked(false);
     setOpenState({});
     setIsAdvancedCacl(props.advancedMode);
@@ -182,6 +184,8 @@ function CalculatorBody(props) {
                 checkedItems={checkedItems}
                 setCheckedItems={setCheckedItems}
                 isAdvancedCalc={isAdvancedCalc}
+                isCopied={isCopied}
+                setIsCopied={setIsCopied}
               />
             </Col>
           </Row>

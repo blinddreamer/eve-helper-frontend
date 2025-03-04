@@ -1,10 +1,11 @@
 import Form from "react-bootstrap/Form";
 import { Typeahead } from "react-bootstrap-typeahead/types";
-import { useState } from "react";
-import { Button } from "react-bootstrap";
+import { useState, useRef } from "react";
+
 function ShortForm(props) {
    const [systemPart, setSystemPart] = useState(null);
    const [systemReaction, setSystemReaction] = useState(null);
+   const typeaheadRef = useRef(null);
    const componentId = props.reaction ? "reactiion" : "part";
     function handleOnchange(componentId){
         let building = document.getElementById("build_"+ componentId).value;
@@ -69,6 +70,7 @@ function ShortForm(props) {
                 </Form.Group>
                 <Form.Group>
                   <Typeahead
+                    ref={typeaheadRef}
                     id={`system_${componentId}`}
                    
                     minLength={2}

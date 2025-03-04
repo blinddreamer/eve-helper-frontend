@@ -3,13 +3,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import "react-bootstrap-typeahead/css/Typeahead.bs5.css";
 import { Typeahead } from "react-bootstrap-typeahead";
-
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import ShortForm from "./ShortForm";
 
 function CalculatorForm(props) {
   const [system, setSystem] = useState("");
   const [blueprint, setBlueprint] = useState("");
+  const typeaheadRef = useRef(null);
 
   function sendData() {
     let building = document.getElementById("building").value;
@@ -38,6 +38,7 @@ function CalculatorForm(props) {
       <Form.Group controlId="blueprintName">
         <Form.Label>Blueprint Name:</Form.Label>
         <Typeahead
+        ref={typeaheadRef}
           minLength={2}
           clearButton
           onChange={(selected) => {
@@ -91,6 +92,7 @@ function CalculatorForm(props) {
       <Form.Group controlId="systemName">
         <Form.Label>System:</Form.Label>
         <Typeahead
+        ref={typeaheadRef}
           clearButton={true}
           minLength={2}
           onChange={(selected) => {

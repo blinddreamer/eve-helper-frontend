@@ -5,19 +5,26 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { OverlayTrigger, Tooltip, Popover } from "react-bootstrap";
 import { GiBasket } from "react-icons/gi";
 import axios from "axios";
 
 function Calculator(props){
-const [isCopied, setIsCopied] = useState({});
 const [isLoading, setIsLoading] = useState(false);
 
+useEffect(() => {
+  if (!Array.isArray(props.materialsList) || props.materialsList.length === 0) return;
 
-// useEffect(() => {
-//   const allChecked = props.materialsList.filter(mat).every((mat) => props.checkedItems[mat.id]);
-//   setMasterChecked(allChecked);
-// }, [checkedItems, materials]);
+  const newCheckedStatus = {};
+
+  props.materialsList.forEach(mat => {
+    const isChecked = massUpdateStatus(mat.tier);
+    newCheckedStatus["all_"+mat.tier] = isChecked;
+  });
+
+  props.setCheckedItems(prev => ({ ...prev, ...newCheckedStatus }));
+}, [props.materialsList]); // Runs when materialsList changes
+
 // Display blueprint info window
   function displayCommon(){
       let volumeFormat = new Intl.NumberFormat();
@@ -116,7 +123,7 @@ const [isLoading, setIsLoading] = useState(false);
                   handleMultiBuyCopy("copy_" + props.initialBlueprint.name)
                 }
               >
-                {!isCopied["copy_" + props.initialBlueprint.name] ? (
+                {!props.isCopied["copy_" + props.initialBlueprint.name] ? (
                   <>
                     <GiBasket /> Copy Mats
                   </>
@@ -165,22 +172,22 @@ const [isLoading, setIsLoading] = useState(false);
     }
 
     function handleMassCheck(tier){
-  const materials = props.materialsList
-  .filter(mat => mat.tier === tier - 1 && mat.isCreatable)   // Filter by tier
-  .flatMap(mat => mat.materialsList)
-  .filter(mat => mat.isCreatable && mat.activityId!==105 && (!props.checkedItems[mat.id] && !props.checkedItems["all_"+tier] || 
-    (props.checkedItems["all_"+tier] && props.checkedItems[mat.id])))
-  .reduce((acc, mat) => {
-    const existing = acc.find(item => item.name === mat.name);
-    if (existing) {
-      existing.quantity += mat.quantity; // Merge duplicates by summing quantity (if applicable)
-    } else {
-      acc.push({ ...mat });
-    }
-    return acc;
-  }, []);
-  props.setCheckedItems(prev => 
-    materials
+      const materials = props.materialsList
+            .filter(mat => mat.tier === tier - 1 && mat.isCreatable)   // Filter by tier
+            .flatMap(mat => mat.materialsList)
+            .filter(mat => mat.isCreatable && mat.activityId!==105 && (!props.checkedItems[mat.id] && !props.checkedItems["all_"+tier] || 
+            (props.checkedItems["all_"+tier] && props.checkedItems[mat.id])))
+            .reduce((acc, mat) => {
+          const existing = acc.find(item => item.name === mat.name);
+          if (existing) {
+              existing.quantity += mat.quantity; // Merge duplicates by summing quantity (if applicable)
+          } else {
+            acc.push({ ...mat });
+          }
+        return acc;
+      }, []);
+       props.setCheckedItems(prev => 
+      materials
       .reduce((acc, mat) => {
         acc[mat.id] = !prev[mat.id]; // Toggle check state
         return acc;
@@ -230,7 +237,7 @@ const [isLoading, setIsLoading] = useState(false);
   You will need the following parts to craft:{" "}
   {props.materialsList
     .filter(mat => mat.tier === tier-1 && mat.selectedForCraft)
-    .map(mat => mat.name + " x " + mat.quantity)
+    .map(mat => mat.name + " x " + calculateQuantity(props.materialsList, mat.name))
     .join(", ")}
 </p>}
 {isFuel && 
@@ -260,12 +267,35 @@ const [isLoading, setIsLoading] = useState(false);
             
               <tr key={"tr_"+index}>
                   <td key={"td_img"+index}><img src={mat.icon} loading="lazy" alt={mat.name} /></td>
-                  <td key={"td_name"+index}>{mat.name}</td>
+  {props.materialsList.some(bp => bp.name === mat.name) ? <OverlayTrigger
+
+  placement="right"
+  overlay={
+    <Popover id={`popover-${mat.id}`}>
+      <Popover.Header as="h3">Materials for {mat.name}</Popover.Header>
+      <Popover.Body>
+        <Table striped bordered hover size="sm">
+          <thead>
+            <tr>
+              <th>Material</th>
+              <th>Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {showTooltipTableInfo(mat)}
+          </tbody>
+        </Table>
+      </Popover.Body>
+    </Popover>
+  }
+>
+  <td key={`td_name_${index}`}>{mat.name}</td>
+</OverlayTrigger> : <td key={`td_name_${index}`}>{mat.name}</td>}
                   <td key={"td_quant"+index}>{volumeFormat.format(calculateQuantity(props.materialsList, mat.name))}</td>
                   <td key={"td_vol"+index}>{volumeFormat.format(mat.volume*calculateQuantity(props.materialsList, mat.name))}</td>
                   <td key={"td_price"+index}>{priceFormat.format(mat.price)} / {priceFormat.format(mat.price*calculateQuantity(props.materialsList, mat.name))}</td>
                   <td key={"td_activity"+index}>{mat.activityId == 1 ? "component" : mat.activityId == 11 ? "reaction": mat.activityId == 105 ? "fuel" :"none"}</td>
-                  <td key={"td_excess"+index}>{0}</td>
+                  <td key={"td_excess"+index}>{getExcess(mat)}</td>
                   <td key={"td_checkBox"+index}>
                   <OverlayTrigger
                   placement="right" // Position of tooltip
@@ -278,7 +308,7 @@ const [isLoading, setIsLoading] = useState(false);
                   <span> 
                  <Form.Check
                   role={mat.isCreatable ? "button" : ""}
-                  checked={props.checkedItems[mat.id] || false}
+                  checked={getIsChecked(mat)}
                   disabled={!props.isAdvancedCalc || !mat.isCreatable || mat.tier ==105}
                   id={mat.id}
                   key={"key_"+ mat.id}
@@ -338,37 +368,60 @@ const [isLoading, setIsLoading] = useState(false);
   }
 
   // COPY FUNCTION
-  function generateCopyText(material, step) {
-    // Initialize an empty string to store the copy text
+  function generateCopyText(materials) {
     let copyText = "";
-
-    // Iterate through the material's materialsList
-    if (
-      Array.isArray(material.materialsList) &&
-      material.isCreatable &&
-      (material.copy || step == 0)
-    ) {
-      for (const subMaterial of material.materialsList) {
-        // Recursively generate copy text for each sub-material
-        copyText += generateCopyText(subMaterial, step + 1);
-      }
-    }
-    // Construct the copy text for the current material (if it's not marked as copy)
-    if (!material.copy && step != 0) {
-      copyText += `${material.name} x${material.quantity} \n`;
-    }
-
+    let visited = new Set(); // Track already copied materials
+  
+    materials.forEach(mat => {
+      copyText = checkMatsToCopyRecursive(mat.materialsList, copyText, visited);
+    });
+  
     return copyText;
   }
+  
+  function showTooltipTableInfo(mat) {
+    const foundMaterial = props.materialsList.find(bp => bp.name === mat.name);
+    
+    if (!foundMaterial || !foundMaterial.materialsList?.length) {
+      return (
+        <tr>
+          <td colSpan="2">No materials available</td>
+        </tr>
+      );
+    }
+  
+    return foundMaterial.materialsList.map((m) => (
+      <tr key={m.id}>
+        <td><img src={m.icon} loading="lazy" alt={m.name} />{m.name}</td>
+        <td>{m.quantity}</td>
+      </tr>
+    ));
+  }
 
+  function checkMatsToCopyRecursive(materials, copyText, visited) {
+    materials.forEach(mat => {
+      if (visited.has(mat.name)) return; // Skip duplicates
+  
+      const skipCopy = props.materialsList.find(bp => bp.name === mat.name && bp.selectedForCraft);
+      
+      if (!skipCopy) {
+        copyText += `${mat.name} x${calculateQuantity(props.materialsList, mat.name)} \n`;
+        visited.add(mat.name); // Mark as copied
+      } else {
+        copyText = checkMatsToCopyRecursive(skipCopy.materialsList, copyText, visited);
+      }
+    });
+  
+    return copyText;
+  }
   
   async function handleMultiBuyCopy(id) {
     try {
       await navigator.clipboard.writeText(
-        generateCopyText(props.initialBlueprint, 0)
+        generateCopyText(props.materialsList.filter(mat=>mat.selectedForCraft))
       );
       console.log("Text copied");
-      setIsCopied({ [id]: true });
+      props.setIsCopied({ [id]: true });
     } catch {
       console.error("Error copying text: ", error);
       alert("Failed to copy text.");
@@ -419,7 +472,7 @@ const [isLoading, setIsLoading] = useState(false);
       function isMassUpdateClickable(tier) {
         return props.materialsList.some(mat => 
           mat.tier === tier -1 && mat.isCreatable && 
-          mat.materialsList.some(subMat => subMat.isCreatable)
+          mat.materialsList.some(subMat => subMat.isCreatable && subMat.tier !== 105)
         );
       }
   
@@ -430,6 +483,29 @@ const [isLoading, setIsLoading] = useState(false);
         .filter(m => m.name === blueprintName)
         .map(m => m.quantity)
         .reduce((sum, qty) => sum + qty, 0);
+}
+function getIsChecked(material) {
+  return props.materialsList.some(mat => mat.name === material.name && mat.selectedForCraft);
+}
+
+function massUpdateStatus(tier) {
+  return props.materialsList
+    .filter(mat => mat.tier === tier - 1) // Get materials from previous tier
+    .flatMap(mat => mat.materialsList)
+    .filter(mat=> mat.isCreatable) // Flatten their required materials
+    .every(mat => {
+      const bp = props.materialsList.find(bp => bp.name === mat.name);
+      return bp ? bp.selectedForCraft : false; // Prevent undefined errors
+    });
+}
+
+function getExcess(material) {
+  const foundMat = props.materialsList.find(mat => mat.name === material.name && mat.selectedForCraft);
+  if (!foundMat) return 0;
+
+  return foundMat.craftQuantity > 1 
+    ? foundMat.craftQuantity * foundMat.jobsCount - calculateQuantity(props.materialsList,material.name) 
+    : 0;
 }
 
 function checkForFuel(originalData) {
