@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import Table from 'react-bootstrap/Table';
 import Alert  from "react-bootstrap/Alert";
 import Button from 'react-bootstrap/Button';
@@ -11,7 +12,7 @@ import axios from "axios";
 
 function Calculator(props){
 const [isLoading, setIsLoading] = useState(false);
-
+const navigate = useNavigate();
 useEffect(() => {
   if (!Array.isArray(props.materialsList) || props.materialsList.length === 0) return;
 
@@ -256,7 +257,7 @@ useEffect(() => {
               <th>Quantity</th>
               <th>Volume m³</th>
               <th>Market Cost ISK per unit/total</th>
-              <th>Activity</th>
+              <th>Type</th>
               <th>Excess</th>
               <th>Buy / Craft</th>
           </tr>
@@ -299,11 +300,11 @@ useEffect(() => {
                   <td key={"td_checkBox"+index}>
                   <OverlayTrigger
                   placement="right" // Position of tooltip
-                  overlay={!props.isAdvancedCalc ? <Tooltip id="checkbox-tooltip">"Enter Advanced mode and recalculate to enable"</Tooltip> :
+                  overlay={!props.isAdvancedCalc ? <Tooltip id="checkbox-tooltip">Enter Advanced mode and recalculate to enable</Tooltip> :
                     mat.isCreatable ?
-                    (mat.activityId==105 ? <Tooltip id="checkbox-tooltip">"Fuel support is comming soon"</Tooltip>:
-                    <Tooltip id="checkbox-tooltip">"Click to add/remove item from crafting calculations"</Tooltip>):
-                    <Tooltip id="checkbox-tooltip">"Item is not creatable"</Tooltip>
+                    (mat.activityId==105 ? <Tooltip id="checkbox-tooltip">Fuel support is comming soon</Tooltip>:
+                    <Tooltip id="checkbox-tooltip">Click to add/remove item from crafting calculations</Tooltip>):
+                    <Tooltip id="checkbox-tooltip">Item not creatable</Tooltip>
                   }> 
                   <span> 
                  <Form.Check
@@ -330,12 +331,12 @@ useEffect(() => {
             <td>
             <OverlayTrigger
                   placement="right" // Position of tooltip
-                  overlay={!props.isAdvancedCalc ? <Tooltip id="checkbox-tooltip">"Enter Advanced mode and recalculate to enable"</Tooltip> :
+                  overlay={!props.isAdvancedCalc ? <Tooltip id="checkbox-tooltip">Enter Advanced mode and recalculate to enable</Tooltip> :
                     tier==105 ? 
-                    <Tooltip id="checkbox-tooltip">"Fuel support is comming soon"</Tooltip>:
+                    <Tooltip id="checkbox-tooltip">Fuel support is comming soon</Tooltip>:
                     isMassUpdateClickable(tier) ?
-                    <Tooltip id="checkbox-tooltip">"Click to add/remove all items from crafting calculations"</Tooltip> :
-                    <Tooltip id="checkbox-tooltip">"No creatable materials"</Tooltip>
+                    <Tooltip id="checkbox-tooltip">Click to add/remove all items from crafting calculations</Tooltip> :
+                    <Tooltip id="checkbox-tooltip">No creatable materials</Tooltip>
                   }> 
               <span>
             <Form.Check
@@ -379,24 +380,6 @@ useEffect(() => {
     return copyText;
   }
   
-  function showTooltipTableInfo(mat) {
-    const foundMaterial = props.materialsList.find(bp => bp.name === mat.name);
-    
-    if (!foundMaterial || !foundMaterial.materialsList?.length) {
-      return (
-        <tr>
-          <td colSpan="2">No materials available</td>
-        </tr>
-      );
-    }
-  
-    return foundMaterial.materialsList.map((m) => (
-      <tr key={m.id}>
-        <td><img src={m.icon} loading="lazy" alt={m.name} />{m.name}</td>
-        <td>{m.quantity}</td>
-      </tr>
-    ));
-  }
 
   function checkMatsToCopyRecursive(materials, copyText, visited) {
     materials.forEach(mat => {
@@ -441,11 +424,19 @@ useEffect(() => {
           system: material.activityId === 11 ? props.formDataReaction.system : props.formDataPart.system,
           facilityTax: material.activityId === 11 ? props.formDataReaction.facilityTax : props.formDataPart.facilityTax,
       };
+      try{
         const response = await axios.post(props.backend + "update-type", request);
         props.setMaterialsList(response.data.blueprintResult);
         props.setInitialBlueprint(response.data.blueprintResult[0]);
-       // console.log(response.data.blueprintResult);
+      }catch(error){
+        console.error("Error updating material stats:", error);
+        navigate("/error", { state: { message: error.message } });
+      }finally{
         setIsLoading(false)
+      }
+       
+       // console.log(response.data.blueprintResult);
+        
    
     }
   
@@ -461,11 +452,18 @@ useEffect(() => {
             system: material.activityId === 11 ? props.formDataReaction.system : props.formDataPart.system,
             facilityTax: material.activityId === 11 ? props.formDataReaction.facilityTax : props.formDataPart.facilityTax,
         }));
+        try{
           const response = await axios.post(props.backend + "mass-update-type", requests);
           props.setMaterialsList(response.data.blueprintResult);
           props.setInitialBlueprint(response.data.blueprintResult[0]);
       //    console.log(response.data.blueprintResult);
+        } catch{
+          console.error("Error updating material stats:", error);
+          navigate("/error", { state: { message: error.message } });
+        }finally{
           setIsLoading(false)
+        }
+          
      
       }
   
@@ -486,6 +484,25 @@ useEffect(() => {
 }
 function getIsChecked(material) {
   return props.materialsList.some(mat => mat.name === material.name && mat.selectedForCraft);
+}
+
+function showTooltipTableInfo(mat) {
+  const foundMaterial = props.materialsList.find(bp => bp.name === mat.name);
+  
+  if (!foundMaterial || !foundMaterial.materialsList?.length) {
+    return (
+      <tr>
+        <td colSpan="2">No materials available</td>
+      </tr>
+    );
+  }
+
+  return foundMaterial.materialsList.map((m) => (
+    <tr key={m.id}>
+      <td><img src={m.icon} loading="lazy" alt={m.name} />{m.name}</td>
+      <td>{m.quantity}</td>
+    </tr>
+  ));
 }
 
 function massUpdateStatus(tier) {
