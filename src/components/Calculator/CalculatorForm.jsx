@@ -33,7 +33,6 @@ function CalculatorForm(props) {
     props.setIsClicked(true);
   }
 
-
   return (
     <>
       <Form>
@@ -47,7 +46,7 @@ function CalculatorForm(props) {
             }}
             id="basic-behaviors-example"
             options={props.optionsBp}
-            placeholder="Choose a Blueprint..."
+            placeholder="Choose a Blueprint."
           />
         </Form.Group>
         <Form.Group id="bp_quantity" controlId="quantity">
@@ -70,7 +69,7 @@ function CalculatorForm(props) {
 
         <Form.Group id="bp_build" controlId="building">
           <Form.Select defaultValue="0" aria-label="Default select example">
-            <option value={0}>Building:</option>
+            <option value={0}>Building.</option>
             <option value="1">Azbel</option>
             <option value="2">Raitaru</option>
             <option value="3">Sotiyo</option>
@@ -81,13 +80,12 @@ function CalculatorForm(props) {
 
         <Form.Group id="bp_rig" controlId="buildingRig">
           <Form.Select aria-label="Default select example" defaultValue="0">
-            <option value={0}>Building Rig:</option>
+            <option value={0}>Building Rig.</option>
             <option value="1">T1</option>
             <option value="2">T2</option>
           </Form.Select>
         </Form.Group>
         <Form.Group id="bp_system" controlId="systemName">
-          <Form.Label>System:</Form.Label>
           <Typeahead
             ref={typeaheadRef}
             clearButton={true}
@@ -98,7 +96,7 @@ function CalculatorForm(props) {
             id="basic-behaviors-example"
             options={props.optionsSys}
             oo
-            placeholder="Choose a system..."
+            placeholder="Choose a system."
           />
         </Form.Group>
         <Form.Group id="bp_ft" controlId="facility">

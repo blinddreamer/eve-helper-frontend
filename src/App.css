@@ -77,6 +77,7 @@ a:visited {
   padding: 2px;
   width: 138px;
   height: 38px;
+  margin-bottom: 1rem;
 }
 
 .cards:hover {
@@ -247,18 +248,6 @@ textarea {
 #build_select,
 #rig_select,
 #system_select,
-#ft_select {
-  margin-top: 5px;
-}
-
-#ft_select {
-  margin-bottom: 1rem;
-}
-
-#basic-behaviors-example-item-0 {
-  font-size: 10px;
-}
-
 #bp_bn,
 #bp_quantity,
 #bp_me,
@@ -267,6 +256,15 @@ textarea {
 #bp_system,
 #bp_ft,
 #bp_count,
-#bp_market {
+#bp_market,
+#ft_select {
   margin-top: 5px;
+}
+
+#ft_select {
+  margin-bottom: 1rem;
+}
+
+.dropdown-item {
+  font-size: 10px;
 }
