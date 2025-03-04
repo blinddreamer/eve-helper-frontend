@@ -253,3 +253,10 @@ textarea {
 #menuReactions {
   margin-top: 1rem;
 }
+
+#build_select,
+#rig_select,
+#system_select,
+#ft_select {
+  margin-bottom: 5px;
+}
