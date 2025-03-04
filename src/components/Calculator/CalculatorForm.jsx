@@ -70,11 +70,11 @@ function CalculatorForm(props) {
         <Form.Group id="bp_build" controlId="building">
           <Form.Select defaultValue="0" aria-label="Default select example">
             <option value={0}>Building.</option>
-            <option value="1">Azbel</option>
-            <option value="2">Raitaru</option>
-            <option value="3">Sotiyo</option>
-            <option value="4">Athanor</option>
-            <option value="5">Tatara</option>
+            {(!blueprint ||  props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 11)) && <option value="1">Azbel</option>}
+            {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 11)) && <option value="2">Raitaru</option>}
+            {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 11)) && <option value="3">Sotiyo</option>}
+            {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 1)) && <option value="4">Athanor</option>}
+            {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 1)) && <option value="5">Tatara</option>}
           </Form.Select>
         </Form.Group>
 
