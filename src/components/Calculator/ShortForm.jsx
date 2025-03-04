@@ -35,6 +35,7 @@ function ShortForm(props) {
           <p>{props.reaction ? "Reaction Bonuses:":"Component Bonuses:"}</p>
              {!props.reaction &&  <Form.Group controlId={`me_${componentId}`}>
                   <Form.Control
+                  id="me_select"
                     type="number"
                     min={0}
                     
@@ -43,7 +44,7 @@ function ShortForm(props) {
                    />
                 </Form.Group>}
 
-                <Form.Group controlId={`build_${componentId}`}>
+                <Form.Group id="build_select" controlId={`build_${componentId}`}>
                   <Form.Select
                     aria-label="Default select example"
                     onChange={() => handleOnchange(componentId)}
@@ -57,7 +58,7 @@ function ShortForm(props) {
                   {props.reaction &&  <option value="5">Tatara</option>}
                   </Form.Select>
                 </Form.Group>             
-            <Form.Group controlId={"rig_"+componentId}>
+            <Form.Group id="rig_select" controlId={"rig_"+componentId}>
                   <Form.Select
                     onChange={() => handleOnchange(componentId)}
                     aria-label="Default select example"
@@ -68,7 +69,7 @@ function ShortForm(props) {
                     <option value="2">T2</option>
                   </Form.Select>
                 </Form.Group>
-                <Form.Group>
+                <Form.Group id="system_select">
                   <Typeahead
                     ref={typeaheadRef}
                     id={`system_${componentId}`}
@@ -82,7 +83,7 @@ function ShortForm(props) {
                     placeholder="System"
                   />
                 </Form.Group>
-        <Form.Group controlId={"ft_"+componentId}  >
+        <Form.Group id="ft_select" controlId={"ft_"+componentId}  >
         <Form.Control
           type="number"
           min={0}

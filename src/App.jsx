@@ -13,6 +13,7 @@ import PageNotFound from "./components/PageNotFound";
 import Appraisal from "./components/Appraisal/Appraisal.jsx";
 import Video from "./components/Video";
 import NavbarMenu from "./components/NavbarMenu";
+import ErrorPage from "./components/ErrorPage.jsx";
 import { AnimatePresence } from "framer-motion";
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/Calculator" element={<CalculatorHome />} />
             <Route path="/Appraisal" element={<Appraisal />} />
+            <Route path="/error" element={<ErrorPage />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </AnimatePresence>

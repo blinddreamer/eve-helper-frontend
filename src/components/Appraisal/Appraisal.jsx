@@ -42,7 +42,7 @@ function Appraisal() {
       const items = [];
       lines.forEach((line) => {
         if (line.trim() !== "") {
-          const [quantity, itemName] = line.split(/\s+(.+)/);
+          const [itemName, quantity] = line.split(/\s+(.+)/);
           const item = { quantity: quantity.trim(), name: itemName.trim() };
           items.push(item);
         }
