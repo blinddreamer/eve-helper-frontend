@@ -291,8 +291,8 @@ function Calculator(props) {
                       "card_" + props.initialBlueprint.name
                     ) <
                   0
-                    ? "redmilcho"
-                    : "greenmilcho"
+                    ? "negativeprice"
+                    : "positiveprice"
                 }
               >
                 {(
@@ -388,7 +388,7 @@ function Calculator(props) {
               </tr>
             </thead>
             <tbody>
-              {props.materialsList.map((mat, index) =>
+              {props.initialBlueprint.materialsList.map((mat, index) =>
                 render(props.initialBlueprint.name, mat, index)
               )}
             </tbody>
