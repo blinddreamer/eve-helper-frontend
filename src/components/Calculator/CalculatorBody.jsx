@@ -135,7 +135,7 @@ function CalculatorBody(props) {
                   ></GetForm>
                 </div>
                 {/* <div id="menuParts">
-                  <p>Parts bonuses:</p>
+                  <p>Components Structure:</p>
                   <ShortForm
                     reaction={false}
                     formData={formData}
@@ -147,7 +147,7 @@ function CalculatorBody(props) {
                   ></ShortForm>
                 </div>
                 <div id="menuReactions">
-                  <p>Reaction Bonuses:</p>
+                  <p>Reaction Structure:</p>
                   <ShortForm
                     reaction={true}
                     formData={formData}
