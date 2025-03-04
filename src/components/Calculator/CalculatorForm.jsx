@@ -33,141 +33,136 @@ function CalculatorForm(props) {
     props.setIsClicked(true);
   }
 
-  return (<>
-    <Form>
-      <Form.Group controlId="blueprintName">
-        <Form.Label>Blueprint Name:</Form.Label>
-        <Typeahead
-        ref={typeaheadRef}
-          minLength={2}
-          clearButton
-          onChange={(selected) => {
-            setBlueprint(selected[0]);
-          }}
-          id="basic-behaviors-example"
-          options={props.optionsBp}
-          placeholder="Choose a Blueprint..."
-        />
-      </Form.Group>
-      <Form.Group controlId="quantity">
-        <Form.Label>Runs:</Form.Label>
-        <Form.Control
-          type="number"
-          min={1}
-          name="quantity"
-          placeholder="Enter quantity number."
-        />
-      </Form.Group>
+  return (
+    <>
+      <Form>
+        <Form.Group controlId="blueprintName">
+          <Typeahead
+            ref={typeaheadRef}
+            minLength={2}
+            clearButton
+            onChange={(selected) => {
+              setBlueprint(selected[0]);
+            }}
+            id="basic-behaviors-example"
+            options={props.optionsBp}
+            placeholder="Choose a Blueprint..."
+          />
+        </Form.Group>
+        <Form.Group controlId="quantity">
+          <Form.Control
+            type="number"
+            min={1}
+            name="quantity"
+            placeholder="Runs."
+          />
+        </Form.Group>
 
-      <Form.Group controlId="blueprintMe">
-        <Form.Label>Blueprint ME:</Form.Label>
-        <Form.Control
-          type="number"
-          min={0}
-          name="blueprintMe"
-          placeholder="Enter blueprint ME."
-        />
-      </Form.Group>
+        <Form.Group controlId="blueprintMe">
+          <Form.Control
+            type="number"
+            min={0}
+            name="blueprintMe"
+            placeholder="Blueprint ME."
+          />
+        </Form.Group>
 
-      <Form.Group controlId="building">
-        <Form.Label>Building:</Form.Label>
-        <Form.Select defaultValue="0" aria-label="Default select example">
-          <option value={0}>None</option>
-          <option value="1">Azbel</option>
-          <option value="2">Raitaru</option>
-          <option value="3">Sotiyo</option>
-          <option value="4">Athanor</option>
-          <option value="5">Tatara</option>
-        </Form.Select>
-      </Form.Group>
+        <Form.Group controlId="building">
+          <Form.Select defaultValue="0" aria-label="Default select example">
+            <option value={0}>Building:</option>
+            <option value="1">Azbel</option>
+            <option value="2">Raitaru</option>
+            <option value="3">Sotiyo</option>
+            <option value="4">Athanor</option>
+            <option value="5">Tatara</option>
+          </Form.Select>
+        </Form.Group>
 
-      <Form.Group controlId="buildingRig">
-        <Form.Label>Building Rig:</Form.Label>
-        <Form.Select aria-label="Default select example" defaultValue="0">
-          <option value={0}>None</option>
-          <option value="1">T1</option>
-          <option value="2">T2</option>
-        </Form.Select>
-      </Form.Group>
-      <Form.Group controlId="systemName">
-        <Form.Label>System:</Form.Label>
-        <Typeahead
-        ref={typeaheadRef}
-          clearButton={true}
-          minLength={2}
-          onChange={(selected) => {
-            setSystem(selected[0]);
-          }}
-          id="basic-behaviors-example"
-          options={props.optionsSys}
-          oo
-          placeholder="Choose a system..."
-        />
-      </Form.Group>
-      <Form.Group controlId="facility">
-        <Form.Label>Facility tax:</Form.Label>
-        <Form.Control
-          type="number"
-          min={0}
-          name="facility"
-          placeholder="Enter facility tax."
-        />
-      </Form.Group>
+        <Form.Group controlId="buildingRig">
+          <Form.Select aria-label="Default select example" defaultValue="0">
+            <option value={0}>Building Rig:</option>
+            <option value="1">T1</option>
+            <option value="2">T2</option>
+          </Form.Select>
+        </Form.Group>
+        <Form.Group controlId="systemName">
+          <Form.Label>System:</Form.Label>
+          <Typeahead
+            ref={typeaheadRef}
+            clearButton={true}
+            minLength={2}
+            onChange={(selected) => {
+              setSystem(selected[0]);
+            }}
+            id="basic-behaviors-example"
+            options={props.optionsSys}
+            oo
+            placeholder="Choose a system..."
+          />
+        </Form.Group>
+        <Form.Group controlId="facility">
+          <Form.Control
+            type="number"
+            min={0}
+            name="facility"
+            placeholder="Facility tax."
+          />
+        </Form.Group>
 
-      <Form.Group controlId="blueprintCount">
-        <Form.Label>Job Count:</Form.Label>
-        <Form.Control
-          type="number"
-          min={1}
-          name="blueprintCount"
-          placeholder="Enter blueprint count."
-        />
-      </Form.Group>
+        <Form.Group controlId="blueprintCount">
+          <Form.Control
+            type="number"
+            min={1}
+            name="blueprintCount"
+            placeholder="Job Count."
+          />
+        </Form.Group>
 
-      <Form.Group controlId="marketRegion">
-        <Form.Label>Market Region:</Form.Label>
-        <Form.Select aria-label="Default select example">
-          {props.regions.map((region, index) => {
-            return (
-              <option
-                key={index}
-                selected={region.regionId == 10000002}
-                value={region.regionId}
-              >
-                {region.regionName}
-              </option>
-            );
-          })}
-        </Form.Select>
-      </Form.Group>
+        <Form.Group controlId="marketRegion">
+          <Form.Select aria-label="Default select example">
+            {props.regions.map((region, index) => {
+              return (
+                <option
+                  key={index}
+                  selected={region.regionId == 10000002}
+                  value={region.regionId}
+                >
+                  {region.regionName}
+                </option>
+              );
+            })}
+          </Form.Select>
+        </Form.Group>
       </Form>
       <p />
       {props.advancedMode &&
-      blueprint!= null &&
-      props.bpDetails
-  .filter(bp => bp.blueprint === blueprint)
-  .some(bp => bp.complexity === 3) &&
-      <ShortForm
-        reaction={false}
-        setFormDataPart={props.setFormDataPart}
-        setFormDataReaction={props.setFormDataReaction}
-        optionsSys={props.optionsSys}
-        advancedMode={props.advancedMode}
-        regions={props.regions}
-      />}
-  {props.advancedMode &&
-  blueprint!= null &&
-      props.bpDetails
-  .filter(bp => bp.blueprint === blueprint)
-  .some(bp => bp.complexity >=2) &&
-      <ShortForm
-        reaction={true}
-        setFormDataPart={props.setFormDataPart}
-        setFormDataReaction={props.setFormDataReaction}
-        optionsSys={props.optionsSys}
-        advancedMode={props.advancedMode}
-        regions={props.regions}
-      />}
+        blueprint != null &&
+        props.bpDetails
+          .filter((bp) => bp.blueprint === blueprint)
+          .some((bp) => bp.complexity === 3) && (
+          <ShortForm
+            reaction={false}
+            setFormDataPart={props.setFormDataPart}
+            setFormDataReaction={props.setFormDataReaction}
+            optionsSys={props.optionsSys}
+            advancedMode={props.advancedMode}
+            regions={props.regions}
+          />
+        )}
+      {props.advancedMode &&
+        blueprint != null &&
+        props.bpDetails
+          .filter((bp) => bp.blueprint === blueprint)
+          .some((bp) => bp.complexity >= 2) && (
+          <ShortForm
+            reaction={true}
+            setFormDataPart={props.setFormDataPart}
+            setFormDataReaction={props.setFormDataReaction}
+            optionsSys={props.optionsSys}
+            advancedMode={props.advancedMode}
+            regions={props.regions}
+          />
+        )}
       <Button variant="secondary" onClick={sendData}>
         {props.isLoading ? (
           <>
@@ -184,8 +179,7 @@ function CalculatorForm(props) {
           "Calculate"
         )}
       </Button>
-    
-      </>
+    </>
   );
 }
 export default CalculatorForm;
