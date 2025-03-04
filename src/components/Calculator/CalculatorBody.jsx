@@ -29,8 +29,8 @@ function CalculatorBody(props) {
   const [checkedItems, setCheckedItems] = useState({});
   const [blueprintComplexity, setBlueprintComplexity] = useState({});
   const [bpDetails, setBpDetails] = useState([]);
-  //const backend = "https://api.eve-helper.com/api/v1/";
-  const backend = "http://localhost:8080/api/v1/";
+  const backend = "https://api.eve-helper.com/api/v1/";
+  //const backend = "http://localhost:8080/api/v1/";
 
   useEffect(() => {
     isClicked && submitForm();
