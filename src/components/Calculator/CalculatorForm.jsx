@@ -35,7 +35,7 @@ function CalculatorForm(props) {
 
   return (<>
     <Form>
-      <Form.Group controlId="blueprintName">
+      <Form.Group id="bp_bn" controlId="blueprintName">
         <Form.Label>Blueprint Name:</Form.Label>
         <Typeahead
         ref={typeaheadRef}
@@ -49,7 +49,7 @@ function CalculatorForm(props) {
           placeholder="Choose a Blueprint..."
         />
       </Form.Group>
-      <Form.Group controlId="quantity">
+      <Form.Group id="bp_quantity" controlId="quantity">
         <Form.Label>Runs:</Form.Label>
         <Form.Control
           type="number"
@@ -59,7 +59,7 @@ function CalculatorForm(props) {
         />
       </Form.Group>
 
-      <Form.Group controlId="blueprintMe">
+      <Form.Group id="bp_me" controlId="blueprintMe">
         <Form.Label>Blueprint ME:</Form.Label>
         <Form.Control
           type="number"
@@ -69,7 +69,7 @@ function CalculatorForm(props) {
         />
       </Form.Group>
 
-      <Form.Group controlId="building">
+      <Form.Group id="bp_build" controlId="building">
         <Form.Label>Building:</Form.Label>
         <Form.Select defaultValue="0" aria-label="Default select example">
           <option value={0}>None</option>
@@ -81,7 +81,7 @@ function CalculatorForm(props) {
         </Form.Select>
       </Form.Group>
 
-      <Form.Group controlId="buildingRig">
+      <Form.Group id="bp_rig" controlId="buildingRig">
         <Form.Label>Building Rig:</Form.Label>
         <Form.Select aria-label="Default select example" defaultValue="0">
           <option value={0}>None</option>
@@ -89,7 +89,7 @@ function CalculatorForm(props) {
           <option value="2">T2</option>
         </Form.Select>
       </Form.Group>
-      <Form.Group controlId="systemName">
+      <Form.Group id="bp_system" controlId="systemName">
         <Form.Label>System:</Form.Label>
         <Typeahead
         ref={typeaheadRef}
@@ -104,7 +104,7 @@ function CalculatorForm(props) {
           placeholder="Choose a system..."
         />
       </Form.Group>
-      <Form.Group controlId="facility">
+      <Form.Group id="bp_ft" controlId="facility">
         <Form.Label>Facility tax:</Form.Label>
         <Form.Control
           type="number"
@@ -114,7 +114,7 @@ function CalculatorForm(props) {
         />
       </Form.Group>
 
-      <Form.Group controlId="blueprintCount">
+      <Form.Group id="bp_count" controlId="blueprintCount">
         <Form.Label>Job Count:</Form.Label>
         <Form.Control
           type="number"
@@ -124,7 +124,7 @@ function CalculatorForm(props) {
         />
       </Form.Group>
 
-      <Form.Group controlId="marketRegion">
+      <Form.Group id="bp_market" controlId="marketRegion">
         <Form.Label>Market Region:</Form.Label>
         <Form.Select aria-label="Default select example">
           {props.regions.map((region, index) => {

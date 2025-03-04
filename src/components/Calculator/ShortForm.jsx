@@ -33,9 +33,8 @@ function ShortForm(props) {
     return (
         <Form>
           <p>{props.reaction ? "Reaction Bonuses:":"Component Bonuses:"}</p>
-             {!props.reaction &&  <Form.Group controlId={`me_${componentId}`}>
+             {!props.reaction &&  <Form.Group id="me_select" controlId={`me_${componentId}`}>
                   <Form.Control
-                  id="me_select"
                     type="number"
                     min={0}
                     
