@@ -247,3 +247,12 @@ textarea {
 .negativeprice {
   color: #fa7f08;
 }
+
+#menuParts {
+}
+#menuReactions {
+  margin-top: 1rem;
+}
+.form.select {
+  margin-bottom: 1rem;
+}

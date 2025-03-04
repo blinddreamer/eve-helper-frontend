@@ -71,8 +71,8 @@ function CalculatorBody(props) {
     setIsClicked(false);
     setOpenState({});
     setIsAdvancedCacl(props.advancedMode);
-   // setMaterialsList([]);
-   setIsLoading(true);
+    // setMaterialsList([]);
+    setIsLoading(true);
     try {
       const response = await axios.post(backend + "type", {
         blueprintName: formData.blueprintName,
@@ -90,15 +90,14 @@ function CalculatorBody(props) {
         throw new Error(`Server Error: ${response.statusText}`);
       }
       setErrorMessage("");
-      
+
       const data = response.data;
-      
+
       const materials = data.blueprintResult;
       const requestId = data.id;
       setMaterialsList(materials);
       setInitialBlueprint(data.blueprintResult[0]);
       setRequestId(requestId);
-      
     } catch (error) {
       console.error("Error:", error.message);
       setErrorMessage(
@@ -116,10 +115,10 @@ function CalculatorBody(props) {
             <Col>
               <Col>
                 <div id="menuleft">
-                <AdvancedModeToggle
-                setAdvancedMode={props.setAdvancedMode}
-                advancedMode={props.advancedMode}
-              />
+                  <AdvancedModeToggle
+                    setAdvancedMode={props.setAdvancedMode}
+                    advancedMode={props.advancedMode}
+                  />
                   <GetForm
                     setFormData={setFormData}
                     setIsClicked={setIsClicked}
