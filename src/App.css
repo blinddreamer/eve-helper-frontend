@@ -248,15 +248,13 @@ textarea {
   color: #fa7f08;
 }
 
-#menuParts {
-}
-#menuReactions {
-  margin-top: 1rem;
-}
-
 #build_select,
 #rig_select,
 #system_select,
 #ft_select {
-  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+#ft_select {
+  margin-bottom: 1rem;
 }
