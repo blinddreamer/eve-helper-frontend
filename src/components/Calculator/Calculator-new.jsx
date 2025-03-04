@@ -273,7 +273,7 @@ useEffect(() => {
   placement="right"
   overlay={
     <Popover id={`popover-${mat.id}`}>
-      <Popover.Header as="h3">Materials for {mat.name}</Popover.Header>
+      <Popover.Header as="h3">Materials for {mat.name} x {calculateQuantity(props.materialsList, mat.name)}</Popover.Header>
       <Popover.Body>
         <Table striped bordered hover size="sm">
           <thead>
@@ -350,21 +350,6 @@ useEffect(() => {
           </tr>
       </tbody>
   </Table>
-  {/* {props.initialBlueprint.materialsList && 
-  <Button id={tier} onClick={(e)=>getParts(e)}> {isLoading[tier] ? (
-          <>
-            <Spinner
-              as="span"
-              animation="border"
-              size="sm"
-              role="status"
-              aria-hidden="true"
-            />
-            Loading...
-          </>
-        ) : (
-          "Calculate"
-        )}</Button>} */}
   </>);
   }
 

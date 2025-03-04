@@ -34,28 +34,43 @@ function Appraisal() {
   }
 
   async function calculateAppraisal() {
-    setErrorMessage();
+    setErrorMessage(null);
     try {
       setIsLoading(true);
-      const text = document.getElementById("appraisalText").value;
-      const lines = text.split(`\n`);
+  
+      const text = document.getElementById("appraisalText").value || "";
+      const lines = text.split("\n").map(line => line.trim()).filter(line => line !== "");
+  
+      console.log("Lines after split:", lines);
+  
       const items = [];
-      lines.forEach((line) => {
-        if (line.trim() !== "") {
-          const [itemName, quantity] = line.split(/\s+(.+)/);
-          const item = { quantity: quantity.trim(), name: itemName.trim() };
-          items.push(item);
+  
+      lines.forEach((line, index) => {
+        if (typeof line !== "string") {
+          console.error(`Line ${index + 1} is not a string:`, line);
+          return;
         }
+
+       const match = line.match(/^(.+?)\s+(\d+)$/);
+
+       if (match) {
+          const itemName = match[1].trim();
+          const quantity = parseInt(match[2], 10);
+          items.push({ name: itemName, quantity });
+        } 
       });
+  
+      if (items.length === 0) throw new Error("No valid items found.");
       const region = document.getElementById("marketRegion").value;
-      const data = await axios.post(backend + "appraisal", {
+      if (!region) throw new Error("Market region is required.");
+      const { data, status } = await axios.post(backend + "appraisal", {
         appraisalRequestEntityList: items,
         regionId: region,
       });
-      if (data.status != 200) {
-        throw new Error(`Server Error: ${response.statusText}`);
-      }
-      setAppraisal(data.data);
+  
+      if (status !== 200) throw new Error(`Server Error: ${status}`);
+  
+      setAppraisal(data);
     } catch (error) {
       setErrorMessage(error.message);
     } finally {

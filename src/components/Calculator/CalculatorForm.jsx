@@ -1,4 +1,4 @@
-import { Form, Button, Spinner } from "react-bootstrap";
+import { Form, Button, Spinner, OverlayTrigger, Tooltip } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import "react-bootstrap-typeahead/css/Typeahead.bs5.css";
@@ -49,6 +49,12 @@ function CalculatorForm(props) {
             placeholder="Choose a Blueprint."
           />
         </Form.Group>
+        <OverlayTrigger
+        placement="right" // Position of tooltip
+        overlay={<Tooltip id="runs-tooltip">
+              RUNS TOOLTIP
+            </Tooltip>}
+      >
         <Form.Group id="bp_quantity" controlId="quantity">
           <Form.Control
             type="number"
@@ -57,7 +63,7 @@ function CalculatorForm(props) {
             placeholder="Runs."
           />
         </Form.Group>
-
+        </OverlayTrigger>
         <Form.Group id="bp_me" controlId="blueprintMe">
           <Form.Control
             type="number"
@@ -107,7 +113,12 @@ function CalculatorForm(props) {
             placeholder="Facility tax."
           />
         </Form.Group>
-
+        <OverlayTrigger
+        placement="right" // Position of tooltip
+        overlay={<Tooltip id="count-tooltip">
+              COUNT TOOLTIP
+            </Tooltip>}
+      >
         <Form.Group id="bp_count" controlId="blueprintCount">
           <Form.Control
             type="number"
@@ -116,7 +127,13 @@ function CalculatorForm(props) {
             placeholder="Job Count."
           />
         </Form.Group>
-
+        </OverlayTrigger>
+        <OverlayTrigger
+        placement="right" // Position of tooltip
+        overlay={<Tooltip id="market-tooltip">
+              MARKET TOOLTIP
+            </Tooltip>}
+      >  
         <Form.Group id="bp_market" controlId="marketRegion">
           <Form.Select aria-label="Default select example">
             {props.regions.map((region, index) => {
@@ -132,6 +149,7 @@ function CalculatorForm(props) {
             })}
           </Form.Select>
         </Form.Group>
+        </OverlayTrigger>
       </Form>
       <p />
       {props.advancedMode &&

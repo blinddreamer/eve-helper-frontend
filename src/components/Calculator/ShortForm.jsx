@@ -36,12 +36,12 @@ function ShortForm(props) {
         placement="right" // Position of tooltip
         overlay={
           props.reaction ? (
-            <Tooltip id="checkbox-tooltip">
+            <Tooltip id="reaction-tooltip">
               Populate the below with the structure information for the
               Tatara/Athanor you are using for reactions.
             </Tooltip>
           ) : (
-            <Tooltip id="checkbox-tooltip">
+            <Tooltip id="component-tooltip">
               Populate the below with information for the structure you are
               using for components.
             </Tooltip>

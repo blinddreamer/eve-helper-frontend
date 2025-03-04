@@ -6,16 +6,16 @@ function AppraisalResult(props) {
   let priceFormat = new Intl.NumberFormat("en-US");
 
   function formatPrice(price) {
-    if (price >= 1e6) {
-      // If price is million or more
-      return (price / 1e6).toFixed(1) + "M"; // Convert to million and add "m"
+    if (price >= 1e9) {
+        return (price / 1e9).toFixed(1) + "B"; // Convert to billion and add "B"
+    } else if (price >= 1e6) {
+        return (price / 1e6).toFixed(1) + "M"; // Convert to million and add "M"
     } else if (price >= 1e3) {
-      // If price is thousand or more
-      return (price / 1e3).toFixed(1) + "K"; // Convert to thousand and add "k"
+        return (price / 1e3).toFixed(1) + "K"; // Convert to thousand and add "K"
     } else {
-      return price.toFixed(0); // Otherwise, return as it is
+        return price.toFixed(0); // Otherwise, return as it is
     }
-  }
+}
 
   return (
     <Animated>
