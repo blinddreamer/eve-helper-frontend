@@ -37,13 +37,13 @@ function ShortForm(props) {
         overlay={
           props.reaction ? (
             <Tooltip id="checkbox-tooltip">
-              Populate the below with information for the structure you are
-              using for components.
+              Populate the below with the structure information for the
+              Tatara/Athanor you are using for reactions.
             </Tooltip>
           ) : (
             <Tooltip id="checkbox-tooltip">
-              Populate the below with the structure information for the
-              Tatara/Athanor you are using for reactions.
+              Populate the below with information for the structure you are
+              using for components.
             </Tooltip>
           )
         }
