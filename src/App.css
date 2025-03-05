@@ -268,3 +268,7 @@ textarea {
 .dropdown-item {
   font-size: 10px;
 }
+
+.bg-body-tertiary {
+  border-radius: 5px;
+}
