@@ -362,9 +362,9 @@ function Calculator(props) {
                       <OverlayTrigger
                         placement="right" // Position of tooltip
                         overlay={
-                          !props.isAdvancedCalc ? (
+                          !props.advancedMode ? (
                             <Tooltip id="checkbox-tooltip">
-                              Enter Advanced mode and recalculate to enable. Fill required Component/Reaction Structure form
+                              Enter Advanced mode and fill required Component/Reaction Structure form to enable.
                             </Tooltip>
                           ) : mat.isCreatable ? (
                             mat.activityId == 105 ? (
@@ -392,7 +392,7 @@ function Calculator(props) {
                             role={mat.isCreatable ? "button" : ""}
                             checked={getIsChecked(mat)}
                             disabled={
-                              !props.isAdvancedCalc ||
+                              !props.advancedMode ||
                               !mat.isCreatable ||
                               !checkFormDataStatus(mat.activityId)||
                               mat.tier == 105
@@ -458,9 +458,9 @@ function Calculator(props) {
                 <OverlayTrigger
                   placement="right" // Position of tooltip
                   overlay={
-                    !props.isAdvancedCalc ? (
+                    !props.advancedMode ? (
                       <Tooltip id="checkbox-tooltip">
-                        Enter Advanced mode and recalculate to enable. Fill Required Component/Reaction Structure.
+                        Enter Advanced mode and fill Required Component/Reaction Structure to enable.
                       </Tooltip>
                     ) : tier == 105 ? (
                       <Tooltip id="checkbox-tooltip">
@@ -486,7 +486,7 @@ function Calculator(props) {
                   <span>
                     <Form.Check
                       disabled={
-                        !props.isAdvancedCalc ||
+                        !props.advancedMode ||
                         !isMassUpdateClickable(tier) ||
                         !checkFormDataStatus(props.materialsList
                           .find(mat => mat.tier === tier - 1)
