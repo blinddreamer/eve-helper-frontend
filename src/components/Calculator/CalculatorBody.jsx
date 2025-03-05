@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Calculator from "./Calculator-new.jsx";
+import Calculator from "./Calculator.jsx";
 import GetForm from "./CalculatorForm.jsx";
 import AdvancedModeToggle from "../AdvancedModeToggle.jsx";
 import axios from "axios";
