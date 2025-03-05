@@ -300,3 +300,9 @@ textarea {
 #homebox {
   padding: 15px;
 }
+
+#alert-container-box {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: -25px;
+}

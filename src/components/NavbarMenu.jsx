@@ -45,11 +45,13 @@ function NavbarMenu() {
       </Navbar>
 
       {/* Spacing */}
-      <div className="alert-container">
-        <ResponsiveAlert
-          breakpointWidth={1280}
-          message="Optimizing for desktop first, screen resolution too low!"
-        />
+      <div id="alert-container-box">
+        <div className="alert-container">
+          <ResponsiveAlert
+            breakpointWidth={1280}
+            message="Optimizing for desktop first, screen resolution too low!"
+          />
+        </div>
       </div>
     </>
   );
