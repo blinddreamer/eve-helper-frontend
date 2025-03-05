@@ -40,11 +40,7 @@ function Appraisal() {
   
       const text = document.getElementById("appraisalText").value || "";
       const lines = text.split("\n").map(line => line.trim()).filter(line => line !== "");
-  
-      console.log("Lines after split:", lines);
-  
       const items = [];
-  
       lines.forEach((line, index) => {
         if (typeof line !== "string") {
           console.error(`Line ${index + 1} is not a string:`, line);

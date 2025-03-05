@@ -25,7 +25,6 @@ function CalculatorBody(props) {
   const [stations, setStations] = useState([{}]);
   const [isCopied, setIsCopied] = useState({});
   const [requestId, setRequestId] = useState({});
-  const [isAdvancedCalc, setIsAdvancedCacl] = useState({});
   const [checkedItems, setCheckedItems] = useState({});
   const [blueprintComplexity, setBlueprintComplexity] = useState({});
   const [bpDetails, setBpDetails] = useState([]);
@@ -70,8 +69,6 @@ function CalculatorBody(props) {
     setIsCopied({});
     setIsClicked(false);
     setOpenState({});
-    setIsAdvancedCacl(props.advancedMode);
-    // setMaterialsList([]);
     setIsLoading(true);
     try {
       const response = await axios.post(backend + "type", {
@@ -158,7 +155,6 @@ function CalculatorBody(props) {
                 requestId={requestId}
                 checkedItems={checkedItems}
                 setCheckedItems={setCheckedItems}
-                isAdvancedCalc={isAdvancedCalc}
                 isCopied={isCopied}
                 setIsCopied={setIsCopied}
               />

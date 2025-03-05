@@ -273,8 +273,9 @@ function Calculator(props) {
               .map(
                 (mat) =>
                   mat.name +
-                  " x " +
-                  calculateQuantity(props.materialsList, mat.name)
+                  " x " + (tier-1==0 ?
+                  mat.quantity :
+                  calculateQuantity(props.materialsList, mat.name))
               )
               .join(", ")}
           </p>
@@ -361,24 +362,27 @@ function Calculator(props) {
                       <OverlayTrigger
                         placement="right" // Position of tooltip
                         overlay={
-                          !props.isAdvancedCalc ? (
+                          !props.advancedMode ? (
                             <Tooltip id="checkbox-tooltip">
-                              Enter Advanced mode and recalculate to enable
+                              Enter Advanced mode and fill required Component/Reaction Structure form to enable.
                             </Tooltip>
                           ) : mat.isCreatable ? (
                             mat.activityId == 105 ? (
                               <Tooltip id="checkbox-tooltip">
                                 Fuel support is comming soon
                               </Tooltip>
-                            ) : (
+                            ) :( checkFormDataStatus(mat.activityId) ?
                               <Tooltip id="checkbox-tooltip">
                                 Click to add/remove item from crafting
                                 calculations
-                              </Tooltip>
+                              </Tooltip> : 
+                              <Tooltip id="checkbox-tooltip">
+                              Plese fill Components/Reaction Structure to Enable
+                            </Tooltip>
                             )
                           ) : (
                             <Tooltip id="checkbox-tooltip">
-                              Item not creatable
+                              Item not craftable
                             </Tooltip>
                           )
                         }
@@ -388,8 +392,9 @@ function Calculator(props) {
                             role={mat.isCreatable ? "button" : ""}
                             checked={getIsChecked(mat)}
                             disabled={
-                              !props.isAdvancedCalc ||
+                              !props.advancedMode ||
                               !mat.isCreatable ||
+                              !checkFormDataStatus(mat.activityId)||
                               mat.tier == 105
                             }
                             id={mat.id}
@@ -407,26 +412,67 @@ function Calculator(props) {
               <td>#</td>
               <td colSpan={2}>Total</td>
               <td>{volumeFormat.format(totalVolume) + " m³"}</td>
-              <td colSpan={3}>
+              <td>
                 {totalBuyCost.toLocaleString("en-US", {
                   style: "currency",
                   currency: "ISK",
                   minimumFractionDigits: 2,
                 })}
               </td>
+              <OverlayTrigger
+                        placement="right"
+                        overlay={
+                          <Popover id={`popover-costs${tier}`}>
+                            <Popover.Header as="h3">
+                             Job Costs
+                             </Popover.Header>
+                            <Popover.Body>
+                              <Table striped bordered hover size="sm">
+                                <thead>
+                                  <tr>
+                                    <th>Material</th>
+                                    <th>Job Costs</th>
+                                  </tr>
+                                </thead>
+                                <tbody>{showTableJobCosts(tier)}
+                                <tr>
+                                    <td>Total</td>
+                                    <td>{calculateJobCosts(tier).toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "ISK",
+                  minimumFractionDigits: 2,
+                })}</td>
+                                  </tr>
+                                </tbody>
+                              </Table>
+                            </Popover.Body>
+                          </Popover>
+                        }
+                      >
+              <td colSpan={2}>{calculateJobCosts(tier).toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "ISK",
+                  minimumFractionDigits: 2,
+                })}</td></OverlayTrigger>
               <td>
                 <OverlayTrigger
                   placement="right" // Position of tooltip
                   overlay={
-                    !props.isAdvancedCalc ? (
+                    !props.advancedMode ? (
                       <Tooltip id="checkbox-tooltip">
-                        Enter Advanced mode and recalculate to enable
+                        Enter Advanced mode and fill Required Component/Reaction Structure to enable.
                       </Tooltip>
                     ) : tier == 105 ? (
                       <Tooltip id="checkbox-tooltip">
                         Fuel support is comming soon
                       </Tooltip>
                     ) : isMassUpdateClickable(tier) ? (
+                      !checkFormDataStatus(props.materialsList
+                        .find(mat => mat.tier === tier - 1)
+                        ?.materialsList?.[0]?.activityId) ?
+                              <Tooltip id="checkbox-tooltip">
+                                Fill Required Component/Reaction Structure.
+                              </Tooltip> :
                       <Tooltip id="checkbox-tooltip">
                         Click to add/remove all items from crafting calculations
                       </Tooltip>
@@ -440,8 +486,11 @@ function Calculator(props) {
                   <span>
                     <Form.Check
                       disabled={
-                        !props.isAdvancedCalc ||
+                        !props.advancedMode ||
                         !isMassUpdateClickable(tier) ||
+                        !checkFormDataStatus(props.materialsList
+                          .find(mat => mat.tier === tier - 1)
+                          ?.materialsList?.[0]?.activityId) ||
                         tier == 105
                       }
                       key={"key_check" + tier}
@@ -521,7 +570,7 @@ function Calculator(props) {
       tier: material.tier,
       blueprintMe:
         material.activityId === 11
-          ? props.formDataReaction.blueprintMe
+          ? 0
           : props.formDataPart.blueprintMe,
       building:
         material.activityId === 11
@@ -620,6 +669,13 @@ function Calculator(props) {
       .map((m) => m.quantity)
       .reduce((sum, qty) => sum + qty, 0);
   }
+
+  function calculateJobCosts(tier){
+    return props.materialsList.filter(mat=>mat.tier === tier-1)
+    .map(mat=>mat.industryCosts)
+    .reduce((sum, costs)=> sum +costs, 0);
+  }
+
   function getIsChecked(material) {
     return props.materialsList.some(
       (mat) => mat.name === material.name && mat.selectedForCraft
@@ -650,6 +706,23 @@ function Calculator(props) {
     ));
   }
 
+  function showTableJobCosts(tier){
+  return  props.materialsList.filter(mat=> mat.tier ===tier-1)
+    .map((m) => (
+      <tr key={m.id}>
+        <td>
+          <img src={m.icon} width="32" height="32" loading="lazy" alt={m.name} />
+          {m.name}
+        </td>
+        <td>{m.industryCosts.toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "ISK",
+                  minimumFractionDigits: 2,
+                })}</td>
+      </tr>
+    ));
+  }
+
   function massUpdateStatus(tier) {
     return props.materialsList
       .filter((mat) => mat.tier === tier - 1) // Get materials from previous tier
@@ -671,6 +744,11 @@ function Calculator(props) {
       ? foundMat.craftQuantity * foundMat.jobsCount -
           calculateQuantity(props.materialsList, material.name)
       : 0;
+  }
+
+  function checkFormDataStatus(activity){
+    return activity===11 ? props.formDataReaction!=null && (props.formDataReaction.building != null && props.formDataReaction.buildingRig != null && props.formDataReaction.system != null && props.formDataReaction.facilityTax != null) :
+    props.formDataPart!=null && (props.formDataPart.building != null && props.formDataPart.buildingRig != null && props.formDataPart.system != null && props.formDataPart.facilityTax != null && props.formDataPart.blueprintMe !=null);
   }
 
   function checkForFuel(originalData) {
