@@ -420,11 +420,33 @@ function Calculator(props) {
                 })}
               </td>
               <OverlayTrigger
-                        placement="bottom" // Position of tooltip
+                        placement="right"
                         overlay={
-                          <Tooltip id="jobcosts-tooltip">
-                            Total Job Costs.
-                          </Tooltip>
+                          <Popover id={`popover-costs${tier}`}>
+                            <Popover.Header as="h3">
+                             Job Costs
+                             </Popover.Header>
+                            <Popover.Body>
+                              <Table striped bordered hover size="sm">
+                                <thead>
+                                  <tr>
+                                    <th>Material</th>
+                                    <th>Job Costs</th>
+                                  </tr>
+                                </thead>
+                                <tbody>{showTableJobCosts(tier)}
+                                <tr>
+                                    <td>Total</td>
+                                    <td>{calculateJobCosts(tier).toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "ISK",
+                  minimumFractionDigits: 2,
+                })}</td>
+                                  </tr>
+                                </tbody>
+                              </Table>
+                            </Popover.Body>
+                          </Popover>
                         }
                       >
               <td colSpan={2}>{calculateJobCosts(tier).toLocaleString("en-US", {
@@ -680,6 +702,23 @@ function Calculator(props) {
           {m.name}
         </td>
         <td>{m.quantity}</td>
+      </tr>
+    ));
+  }
+
+  function showTableJobCosts(tier){
+  return  props.materialsList.filter(mat=> mat.tier ===tier-1)
+    .map((m) => (
+      <tr key={m.id}>
+        <td>
+          <img src={m.icon} width="32" height="32" loading="lazy" alt={m.name} />
+          {m.name}
+        </td>
+        <td>{m.industryCosts.toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "ISK",
+                  minimumFractionDigits: 2,
+                })}</td>
       </tr>
     ));
   }
