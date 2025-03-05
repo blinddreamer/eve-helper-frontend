@@ -12,6 +12,7 @@ import axios from "axios";
 
 function Calculator(props) {
   const [isLoading, setIsLoading] = useState(false);
+  const [transactionType, setTransactionType] = useState("sell");
   const navigate = useNavigate();
   useEffect(() => {
     if (!Array.isArray(props.materialsList) || props.materialsList.length === 0)
@@ -59,14 +60,14 @@ function Calculator(props) {
                   " m³"}
                 <p id="bpheader" />
                 Crafting price:{" "}
-                {props.initialBlueprint.craftPrice.toLocaleString("en-US", {
+                {(transactionType=== "sell" ? props.initialBlueprint.sellCraftPrice: props.initialBlueprint.buyCraftPrice).toLocaleString("en-US", {
                   style: "currency",
                   currency: "ISK",
                   minimumFractionDigits: 2,
                 })}{" "}
                 <p id="bpheader" />
                 Sell order :{" "}
-                {props.initialBlueprint.totalSellPrice.toLocaleString("en-US", {
+                {(transactionType=== "sell" ? props.initialBlueprint.totalSellPrice: props.initialBlueprint.totalBuyPrice).toLocaleString("en-US", {
                   style: "currency",
                   currency: "ISK",
                   minimumFractionDigits: 2,
@@ -75,16 +76,23 @@ function Calculator(props) {
                 Profit :{" "}
                 <span
                   className={
-                    props.initialBlueprint.totalSellPrice -
-                      props.initialBlueprint.craftPrice <
+                    (transactionType === "sell" ?
+                      props.initialBlueprint.totalSellPrice -
+                      props.initialBlueprint.sellCraftPrice :
+                      props.initialBlueprint.totalBuyPrice -
+                      props.initialBlueprint.buyCraftPrice)
+                      <
                     0
                       ? "redmilcho"
                       : "greenmilcho"
                   }
                 >
                   {(
+                    transactionType === "sell" ?
                     props.initialBlueprint.totalSellPrice -
-                    props.initialBlueprint.craftPrice
+                    props.initialBlueprint.sellCraftPrice :
+                    props.initialBlueprint.totalBuyPrice -
+                    props.initialBlueprint.buyCraftPrice
                   ).toLocaleString("en-US", {
                     style: "currency",
                     currency: "ISK",
@@ -94,18 +102,26 @@ function Calculator(props) {
                 <p id="bpheader" />
                 Margin :{" "}
                 <span
-                  className={
+                  className={ (transactionType === "sell" ?
                     props.initialBlueprint.totalSellPrice -
-                      props.initialBlueprint.craftPrice <
+                      props.initialBlueprint.sellCraftPrice :
+                      props.initialBlueprint.totalBuyPrice -
+                      props.initialBlueprint.buyCraftPrice)
+                      <
                     0
                       ? "negativeprice"
                       : "positiveprice"
                   }
                 >
                   {(
-                    ((props.initialBlueprint.totalSellPrice -
-                      props.initialBlueprint.craftPrice) /
-                      props.initialBlueprint.totalSellPrice) *
+                    ((transactionType=== "sell" ? (props.initialBlueprint.totalSellPrice -
+                      props.initialBlueprint.sellCraftPrice) /
+                      props.initialBlueprint.totalSellPrice :
+                      (props.initialBlueprint.totalBuyPrice -
+                      props.initialBlueprint.buyCraftPrice) /
+                      props.initialBlueprint.totalBuyPrice)
+                    
+                    )*
                     100
                   ).toFixed(2) + " %"}
                 </span>
@@ -257,7 +273,7 @@ function Calculator(props) {
       .reduce((sum, volume) => sum + volume, 0);
     let totalBuyCost = mergedMaterials
       .map(
-        (mat) => mat.price * calculateQuantity(props.materialsList, mat.name)
+        (mat) => (transactionType === "sell" ? mat.sellPrice:mat.buyPrice) * calculateQuantity(props.materialsList, mat.name)
       )
       .reduce((sum, price) => sum + price, 0);
     if (materialsList.length === 0) {
@@ -288,7 +304,12 @@ function Calculator(props) {
               <th>Item</th>
               <th>Quantity</th>
               <th>Volume m³</th>
-              <th>Market Cost ISK per unit/total</th>
+              <th>Market Cost ISK per unit/total 
+              <div key={`inline-radio`} className="mb-3"> 
+              <Form.Check inline type="radio" label="Sell" aria-label="radio 1" value={"sell"} id={`inline-radio-1`}  checked={transactionType === "sell"}
+                onChange={(e) => setTransactionType(e.target.value)}/> 
+                 <Form.Check inline type="radio" label="Buy" aria-label="radio 1" value={"buy"} id={`inline-radio-2`}  checked={transactionType === "buy"}
+                onChange={(e) => setTransactionType(e.target.value)}/> </div> </th>
               <th>Type</th>
               <th>Excess</th>
               <th>Buy / Craft</th>
@@ -342,9 +363,9 @@ function Calculator(props) {
                       )}
                     </td>
                     <td key={"td_price" + index}>
-                      {priceFormat.format(mat.price)} /{" "}
-                      {priceFormat.format(
-                        mat.price *
+                      {priceFormat.format(transactionType === "sell" ? mat.sellPrice : mat.buyPrice)} /{" "}
+                      {priceFormat.format((transactionType === "sell" ?
+                        mat.sellPrice : mat.buyPrice) *
                           calculateQuantity(props.materialsList, mat.name)
                       )}
                     </td>
@@ -526,7 +547,7 @@ function Calculator(props) {
       );
 
       if (!skipCopy) {
-        copyText += `${mat.name} x${calculateQuantity(
+        copyText += `${mat.name} ${calculateQuantity(
           props.materialsList,
           mat.name
         )} \n`;
@@ -552,6 +573,10 @@ function Calculator(props) {
       );
       console.log("Text copied");
       props.setIsCopied({ [id]: true });
+      // Reset back to "Copy" after 2 seconds
+    setTimeout(() => {
+      props.setIsCopied({ [id]: false });
+    }, 500);
     } catch {
       console.error("Error copying text: ", error);
       alert("Failed to copy text.");
@@ -708,7 +733,6 @@ function Calculator(props) {
     .map((m) => (
       <tr key={m.id}>
         <td>
-          <img src={m.icon} width="12" height="12" loading="lazy" alt={m.name} />
           {m.name}
         </td>
         <td>{m.industryCosts.toLocaleString("en-US", {
