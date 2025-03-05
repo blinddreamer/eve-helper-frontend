@@ -10,7 +10,7 @@ function Homepage() {
   return (
     <>
       <Animated>
-        <div>
+        <div id="homebox">
           <div>
             <Alert variant="danger">UNDER CONSTRUCTION</Alert>
           </div>

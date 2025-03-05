@@ -272,3 +272,35 @@ textarea {
 .bg-body-tertiary {
   border-radius: 5px;
 }
+
+/* Navbar Background & Padding */
+.navbar-custom {
+  padding: 1rem;
+}
+
+/* Brand Name Styling */
+.brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Navbar Links (Keep them on the Left) */
+.nav-item {
+  font-size: 1.1rem;
+  margin-right: 5px; /* Adds spacing between links */
+  transition: color 0.3s ease-in-out;
+}
+
+.nav-item:hover {
+  color: #ffcc00 !important; /* Eve Online yellow */
+}
+
+/* Ensure dark mode toggle stays aligned right */
+.navbar-custom .ms-auto {
+  display: flex;
+  align-items: center;
+}
+
+#homebox {
+  padding: 15px;
+}

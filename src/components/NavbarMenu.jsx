@@ -11,36 +11,46 @@ function NavbarMenu() {
   return (
     <>
       <Video />
-      <Navbar expand="lg" className="bg-body-tertiary navbarh">
+      <Navbar expand="lg" className="bg-body-tertiary navbar-custom">
         <Container>
-          <Navbar.Brand>eve-helper</Navbar.Brand>
+          {/* Brand Name - Stays on the Left */}
+          <Navbar.Brand as={Link} to="/" className="brand">
+            eve-helper
+          </Navbar.Brand>
+
+          {/* Mobile Toggle Button */}
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
+          {/* Navbar Items */}
           <Navbar.Collapse id="basic-navbar-nav">
+            {/* 🟢 Menu Links Stick to the Left */}
             <Nav className="me-auto">
-              <Nav.Link as={Link} to="/">
+              <Nav.Link as={Link} to="/" className="nav-item">
                 Home
               </Nav.Link>
-              <Nav.Link as={Link} to="/Calculator">
+              <Nav.Link as={Link} to="/Calculator" className="nav-item">
                 Calculator
               </Nav.Link>
-              <Nav.Link as={Link} to="/Appraisal">
+              <Nav.Link as={Link} to="/Appraisal" className="nav-item">
                 Appraisal
               </Nav.Link>
             </Nav>
-            <Nav>
+
+            {/* 🔵 Dark Mode Toggle Stays on the Right */}
+            <Nav className="ms-auto align-items-center">
               <DarkModeToggle />
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <p></p>
-      <div>
+
+      {/* Spacing */}
+      <div className="alert-container">
         <ResponsiveAlert
           breakpointWidth={1280}
           message="Optimizing for desktop first, screen resolution too low!"
         />
       </div>
-      <p></p>
     </>
   );
 }
