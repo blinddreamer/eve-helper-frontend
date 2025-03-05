@@ -291,10 +291,6 @@ textarea {
   transition: color 0.3s ease-in-out;
 }
 
-.nav-item:hover {
-  color: #ffcc00 !important; /* Eve Online yellow */
-}
-
 /* Ensure dark mode toggle stays aligned right */
 .navbar-custom .ms-auto {
   display: flex;
