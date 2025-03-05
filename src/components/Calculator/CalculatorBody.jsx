@@ -30,7 +30,7 @@ function CalculatorBody(props) {
   const [blueprintComplexity, setBlueprintComplexity] = useState({});
   const [bpDetails, setBpDetails] = useState([]);
   const backend = "https://api.eve-helper.com/api/v1/";
-  //const backend = "http://localhost:8080/api/v1/";
+ // const backend = "http://localhost:8080/api/v1/";
 
   useEffect(() => {
     isClicked && submitForm();
@@ -71,7 +71,6 @@ function CalculatorBody(props) {
     setIsClicked(false);
     setOpenState({});
     setIsAdvancedCacl(props.advancedMode);
-    // setMaterialsList([]);
     setIsLoading(true);
     try {
       const response = await axios.post(backend + "type", {

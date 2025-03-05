@@ -11,7 +11,7 @@ function ShortForm(props) {
   function handleOnchange(componentId) {
     let building = document.getElementById("build_" + componentId).value;
     let buildingRig = document.getElementById("rig_" + componentId).value;
-    let blueprintMe = document.getElementById("me_" + componentId).value;
+    let blueprintMe = document.getElementById("me_" + "part").value;
     let facilityTax = document.getElementById("ft_" + componentId).value;
     !props.reaction
       ? props.setFormDataPart({
@@ -22,7 +22,6 @@ function ShortForm(props) {
           facilityTax: facilityTax,
         })
       : props.setFormDataReaction({
-          blueprintMe: blueprintMe,
           buildingRig: buildingRig,
           building: building,
           system: systemReaction,
