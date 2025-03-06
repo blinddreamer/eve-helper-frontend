@@ -13,6 +13,7 @@ import axios from "axios";
 function Calculator(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [transactionType, setTransactionType] = useState("sell");
+  const [masterTransactionType, setMasterTransactionType] = useState("sell");
   const navigate = useNavigate();
   useEffect(() => {
     if (!Array.isArray(props.materialsList) || props.materialsList.length === 0)
@@ -31,8 +32,6 @@ function Calculator(props) {
   // Display blueprint info window
   function displayCommon() {
     let volumeFormat = new Intl.NumberFormat();
-    let priceFormat = new Intl.NumberFormat("en-US");
-
     return (
       <>
         {!props.initialBlueprint.materialsList && (
@@ -57,7 +56,7 @@ function Calculator(props) {
               <div id="propvolume">
                 Volume :{" "}
                 {volumeFormat.format(props.initialBlueprint.totalVolume) +
-                  " m³"}
+                  " m³"} 
                 <p id="bpheader" />
                 Crafting price:{" "}
                 {(transactionType=== "sell" ? props.initialBlueprint.sellCraftPrice: props.initialBlueprint.buyCraftPrice).toLocaleString("en-US", {
@@ -67,7 +66,14 @@ function Calculator(props) {
                 })}{" "}
                 <p id="bpheader" />
                 Sell order :{" "}
-                {(transactionType=== "sell" ? props.initialBlueprint.totalSellPrice: props.initialBlueprint.totalBuyPrice).toLocaleString("en-US", {
+                {props.initialBlueprint.totalSellPrice.toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "ISK",
+                  minimumFractionDigits: 2,
+                })}
+                 <p id="bpheader" />
+                Buy order :{" "}
+                {props.initialBlueprint.totalBuyPrice.toLocaleString("en-US", {
                   style: "currency",
                   currency: "ISK",
                   minimumFractionDigits: 2,
@@ -76,24 +82,12 @@ function Calculator(props) {
                 Profit :{" "}
                 <span
                   className={
-                    (transactionType === "sell" ?
-                      props.initialBlueprint.totalSellPrice -
-                      props.initialBlueprint.sellCraftPrice :
-                      props.initialBlueprint.totalBuyPrice -
-                      props.initialBlueprint.buyCraftPrice)
-                      <
-                    0
+                    calculatePriceDifferences() < 0
                       ? "redmilcho"
                       : "greenmilcho"
                   }
                 >
-                  {(
-                    transactionType === "sell" ?
-                    props.initialBlueprint.totalSellPrice -
-                    props.initialBlueprint.sellCraftPrice :
-                    props.initialBlueprint.totalBuyPrice -
-                    props.initialBlueprint.buyCraftPrice
-                  ).toLocaleString("en-US", {
+                  {calculatePriceDifferences().toLocaleString("en-US", {
                     style: "currency",
                     currency: "ISK",
                     minimumFractionDigits: 2,
@@ -102,28 +96,12 @@ function Calculator(props) {
                 <p id="bpheader" />
                 Margin :{" "}
                 <span
-                  className={ (transactionType === "sell" ?
-                    props.initialBlueprint.totalSellPrice -
-                      props.initialBlueprint.sellCraftPrice :
-                      props.initialBlueprint.totalBuyPrice -
-                      props.initialBlueprint.buyCraftPrice)
-                      <
-                    0
+                  className={ calculatePriceDifferences() < 0
                       ? "negativeprice"
                       : "positiveprice"
                   }
                 >
-                  {(
-                    ((transactionType=== "sell" ? (props.initialBlueprint.totalSellPrice -
-                      props.initialBlueprint.sellCraftPrice) /
-                      props.initialBlueprint.totalSellPrice :
-                      (props.initialBlueprint.totalBuyPrice -
-                      props.initialBlueprint.buyCraftPrice) /
-                      props.initialBlueprint.totalBuyPrice)
-                    
-                    )*
-                    100
-                  ).toFixed(2) + " %"}
+                  {calculateMarginPercent().toFixed(2) + " %"}
                 </span>
                 <p id="bpheader" />
               </div>
@@ -145,6 +123,11 @@ function Calculator(props) {
                 </Button>
                 <p />
               </div>
+              <div key={`inline-radio`} className="mb-3"> 
+              <Form.Check inline type="radio" label="Sell" aria-label="radio 1" value={"sell"} id={`inline-radio-master-1`}  checked={masterTransactionType === "sell"}
+                onChange={(e) => setMasterTransactionType(e.target.value)}/> 
+                 <Form.Check inline type="radio" label="Buy" aria-label="radio 1" value={"buy"} id={`inline-radio-master-2`}  checked={masterTransactionType === "buy"}
+                onChange={(e) => setMasterTransactionType(e.target.value)}/> </div>
             </div>
             {generateOutputTables()}
             {checkForFuel(props.materialsList) &&
@@ -623,6 +606,20 @@ function Calculator(props) {
     }
 
     // console.log(response.data.blueprintResult);
+  }
+
+  function calculatePriceDifferences(){
+    return (masterTransactionType === "sell" ?
+    props.initialBlueprint.totalSellPrice : props.initialBlueprint.totalBuyPrice) -
+    (transactionType === "sell" ?
+    props.initialBlueprint.sellCraftPrice:
+    props.initialBlueprint.buyCraftPrice);
+  }
+
+  function calculateMarginPercent(){
+    const price = masterTransactionType === "sell" ? props.initialBlueprint.totalSellPrice : props.initialBlueprint.totalBuyPrice;
+    const craftPrice = transactionType === "sell" ? props.initialBlueprint.sellCraftPrice : props.initialBlueprint.buyCraftPrice;
+    return  ((price - craftPrice) / price) * 100;
   }
 
   async function massUpdateMaterialStats(materials) {
