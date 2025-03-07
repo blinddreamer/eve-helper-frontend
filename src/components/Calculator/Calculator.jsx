@@ -29,6 +29,10 @@ function Calculator(props) {
     props.setCheckedItems((prev) => ({ ...prev, ...newCheckedStatus }));
   }, [props.materialsList]); // Runs when materialsList changes
 
+  useEffect(() => {
+    document.title = "EVE Helper - Industry calculator";
+  });
+
   // Display blueprint info window
   function displayCommon() {
     let volumeFormat = new Intl.NumberFormat();
