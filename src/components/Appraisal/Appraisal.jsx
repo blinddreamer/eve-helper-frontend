@@ -15,14 +15,10 @@ function Appraisal() {
   const [appraisal, setAppraisal] = useState({});
   const [errorMessage, setErrorMessage] = useState();
   const backend = import.meta.env.VITE_BACKEND_URL;
- 
+
   useEffect(() => {
     onStart && getRegions();
     setOnstart(false);
-  });
-
-  useEffect(() => {
-    document.title = "EVE Helper - Appraisal";
   });
 
   async function getRegions() {
@@ -36,9 +32,12 @@ function Appraisal() {
     setErrorMessage(null);
     try {
       setIsLoading(true);
-  
+
       const text = document.getElementById("appraisalText").value || "";
-      const lines = text.split("\n").map(line => line.trim()).filter(line => line !== "");
+      const lines = text
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line !== "");
       const items = [];
       lines.forEach((line, index) => {
         if (typeof line !== "string") {
@@ -46,15 +45,15 @@ function Appraisal() {
           return;
         }
 
-       const match = line.match(/^(.+?)\s+(\d+)$/);
+        const match = line.match(/^(.+?)\s+(\d+)$/);
 
-       if (match) {
+        if (match) {
           const itemName = match[1].trim();
           const quantity = parseInt(match[2], 10);
           items.push({ name: itemName, quantity });
-        } 
+        }
       });
-  
+
       if (items.length === 0) throw new Error("No valid items found.");
       const region = document.getElementById("marketRegion").value;
       if (!region) throw new Error("Market region is required.");
@@ -62,9 +61,9 @@ function Appraisal() {
         appraisalRequestEntityList: items,
         regionId: region,
       });
-  
+
       if (status !== 200) throw new Error(`Server Error: ${status}`);
-  
+
       setAppraisal(data);
     } catch (error) {
       setErrorMessage(error.message);

@@ -1,13 +1,22 @@
 import { React, useEffect } from "react";
 import Alert from "react-bootstrap/Alert";
 import Animated from "./Animated";
+import { Helmet } from "react-helmet-async";
 
 function Homepage() {
-  useEffect(() => {
-    document.title = "EVE Helper - Home";
-  });
   return (
     <>
+      <Helmet>
+        <title>EVE Helper - Industry Calculator/Appraisal for EVE Online</title>
+        <meta
+          name="description"
+          content="EVE Helper is an industrial calculator for EVE Online, helping with market appraisals, production costs, and profit calculations."
+        />
+        <meta
+          name="keywords"
+          content="EVE Online, industry calculator, reprocessing, market data, appraisal, profit calculator"
+        />
+      </Helmet>
       <Animated>
         <div id="homebox">
           <div>
