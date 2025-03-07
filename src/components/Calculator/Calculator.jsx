@@ -56,10 +56,13 @@ function Calculator(props) {
               <div id="propvolume">
                 Volume :{" "}
                 {volumeFormat.format(props.initialBlueprint.totalVolume) +
-                  " m³"} 
+                  " m³"}
                 <p id="bpheader" />
                 Crafting price:{" "}
-                {(transactionType=== "sell" ? props.initialBlueprint.sellCraftPrice: props.initialBlueprint.buyCraftPrice).toLocaleString("en-US", {
+                {(transactionType === "sell"
+                  ? props.initialBlueprint.sellCraftPrice
+                  : props.initialBlueprint.buyCraftPrice
+                ).toLocaleString("en-US", {
                   style: "currency",
                   currency: "ISK",
                   minimumFractionDigits: 2,
@@ -71,7 +74,7 @@ function Calculator(props) {
                   currency: "ISK",
                   minimumFractionDigits: 2,
                 })}
-                 <p id="bpheader" />
+                <p id="bpheader" />
                 Buy order :{" "}
                 {props.initialBlueprint.totalBuyPrice.toLocaleString("en-US", {
                   style: "currency",
@@ -96,7 +99,8 @@ function Calculator(props) {
                 <p id="bpheader" />
                 Margin :{" "}
                 <span
-                  className={ calculatePriceDifferences() < 0
+                  className={
+                    calculatePriceDifferences() < 0
                       ? "negativeprice"
                       : "positiveprice"
                   }
@@ -122,12 +126,38 @@ function Calculator(props) {
                   )}
                 </Button>
                 <p />
+                <div id="akwarddiv">
+                  <span id="akwardspan">
+                    Sell item to buy or sell order
+                    <div key={`inline-radio`}>
+                      <Form.Check
+                        inline
+                        type="radio"
+                        label="Sell"
+                        aria-label="radio 1"
+                        value={"sell"}
+                        id={`inline-radio-master-1`}
+                        checked={masterTransactionType === "sell"}
+                        onChange={(e) =>
+                          setMasterTransactionType(e.target.value)
+                        }
+                      />
+                      <Form.Check
+                        inline
+                        type="radio"
+                        label="Buy"
+                        aria-label="radio 1"
+                        value={"buy"}
+                        id={`inline-radio-master-2`}
+                        checked={masterTransactionType === "buy"}
+                        onChange={(e) =>
+                          setMasterTransactionType(e.target.value)
+                        }
+                      />{" "}
+                    </div>
+                  </span>
+                </div>
               </div>
-              <div key={`inline-radio`} className="mb-3"> 
-              <Form.Check inline type="radio" label="Sell" aria-label="radio 1" value={"sell"} id={`inline-radio-master-1`}  checked={masterTransactionType === "sell"}
-                onChange={(e) => setMasterTransactionType(e.target.value)}/> 
-                 <Form.Check inline type="radio" label="Buy" aria-label="radio 1" value={"buy"} id={`inline-radio-master-2`}  checked={masterTransactionType === "buy"}
-                onChange={(e) => setMasterTransactionType(e.target.value)}/> </div>
             </div>
             {generateOutputTables()}
             {checkForFuel(props.materialsList) &&
@@ -256,7 +286,9 @@ function Calculator(props) {
       .reduce((sum, volume) => sum + volume, 0);
     let totalBuyCost = mergedMaterials
       .map(
-        (mat) => (transactionType === "sell" ? mat.sellPrice:mat.buyPrice) * calculateQuantity(props.materialsList, mat.name)
+        (mat) =>
+          (transactionType === "sell" ? mat.sellPrice : mat.buyPrice) *
+          calculateQuantity(props.materialsList, mat.name)
       )
       .reduce((sum, price) => sum + price, 0);
     if (materialsList.length === 0) {
@@ -272,9 +304,10 @@ function Calculator(props) {
               .map(
                 (mat) =>
                   mat.name +
-                  " x " + (tier-1==0 ?
-                  mat.quantity :
-                  calculateQuantity(props.materialsList, mat.name))
+                  " x " +
+                  (tier - 1 == 0
+                    ? mat.quantity
+                    : calculateQuantity(props.materialsList, mat.name))
               )
               .join(", ")}
           </p>
@@ -287,12 +320,33 @@ function Calculator(props) {
               <th>Item</th>
               <th>Quantity</th>
               <th>Volume m³</th>
-              <th>Market Cost ISK per unit/total 
-              <div key={`inline-radio`} className="mb-3"> 
-              <Form.Check inline type="radio" label="Sell" aria-label="radio 1" value={"sell"} id={`inline-radio-1`}  checked={transactionType === "sell"}
-                onChange={(e) => setTransactionType(e.target.value)}/> 
-                 <Form.Check inline type="radio" label="Buy" aria-label="radio 1" value={"buy"} id={`inline-radio-2`}  checked={transactionType === "buy"}
-                onChange={(e) => setTransactionType(e.target.value)}/> </div> </th>
+              <th>
+                <div id="akwarddiv">
+                  Market Cost ISK per unit/total
+                  <div key={`inline-radio`}>
+                    <Form.Check
+                      inline
+                      type="radio"
+                      label="Sell"
+                      aria-label="radio 1"
+                      value={"sell"}
+                      id={`inline-radio-1`}
+                      checked={transactionType === "sell"}
+                      onChange={(e) => setTransactionType(e.target.value)}
+                    />
+                    <Form.Check
+                      inline
+                      type="radio"
+                      label="Buy"
+                      aria-label="radio 1"
+                      value={"buy"}
+                      id={`inline-radio-2`}
+                      checked={transactionType === "buy"}
+                      onChange={(e) => setTransactionType(e.target.value)}
+                    />{" "}
+                  </div>
+                </div>{" "}
+              </th>
               <th>Type</th>
               <th>Excess</th>
               <th>Buy / Craft</th>
@@ -346,9 +400,16 @@ function Calculator(props) {
                       )}
                     </td>
                     <td key={"td_price" + index}>
-                      {priceFormat.format(transactionType === "sell" ? mat.sellPrice : mat.buyPrice)} /{" "}
-                      {priceFormat.format((transactionType === "sell" ?
-                        mat.sellPrice : mat.buyPrice) *
+                      {priceFormat.format(
+                        transactionType === "sell"
+                          ? mat.sellPrice
+                          : mat.buyPrice
+                      )}{" "}
+                      /{" "}
+                      {priceFormat.format(
+                        (transactionType === "sell"
+                          ? mat.sellPrice
+                          : mat.buyPrice) *
                           calculateQuantity(props.materialsList, mat.name)
                       )}
                     </td>
@@ -368,21 +429,24 @@ function Calculator(props) {
                         overlay={
                           !props.advancedMode ? (
                             <Tooltip id="checkbox-tooltip">
-                              Enter Advanced mode and fill required Component/Reaction Structure form to enable.
+                              Enter Advanced mode and fill required
+                              Component/Reaction Structure form to enable.
                             </Tooltip>
                           ) : mat.isCreatable ? (
                             mat.activityId == 105 ? (
                               <Tooltip id="checkbox-tooltip">
                                 Fuel support is comming soon
                               </Tooltip>
-                            ) :( checkFormDataStatus(mat.activityId) ?
+                            ) : checkFormDataStatus(mat.activityId) ? (
                               <Tooltip id="checkbox-tooltip">
                                 Click to add/remove item from crafting
                                 calculations
-                              </Tooltip> : 
+                              </Tooltip>
+                            ) : (
                               <Tooltip id="checkbox-tooltip">
-                              Plese fill Components/Reaction Structure to Enable
-                            </Tooltip>
+                                Plese fill Components/Reaction Structure to
+                                Enable
+                              </Tooltip>
                             )
                           ) : (
                             <Tooltip id="checkbox-tooltip">
@@ -398,7 +462,7 @@ function Calculator(props) {
                             disabled={
                               !props.advancedMode ||
                               !mat.isCreatable ||
-                              !checkFormDataStatus(mat.activityId)||
+                              !checkFormDataStatus(mat.activityId) ||
                               mat.tier == 105
                             }
                             id={mat.id}
@@ -424,62 +488,69 @@ function Calculator(props) {
                 })}
               </td>
               <OverlayTrigger
-                        placement="right"
-                        overlay={
-                          <Popover id={`popover-costs${tier}`}>
-                            <Popover.Header as="h3">
-                             Job Costs
-                             </Popover.Header>
-                            <Popover.Body>
-                              <Table striped bordered hover size="sm">
-                                <thead>
-                                  <tr>
-                                    <th>Material</th>
-                                    <th>Job Costs</th>
-                                  </tr>
-                                </thead>
-                                <tbody>{showTableJobCosts(tier)}
-                                <tr>
-                                    <td>Total</td>
-                                    <td>{calculateJobCosts(tier).toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "ISK",
-                  minimumFractionDigits: 2,
-                })}</td>
-                                  </tr>
-                                </tbody>
-                              </Table>
-                            </Popover.Body>
-                          </Popover>
-                        }
-                      >
-              <td colSpan={2}>{calculateJobCosts(tier).toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "ISK",
-                  minimumFractionDigits: 2,
-                })}</td></OverlayTrigger>
+                placement="right"
+                overlay={
+                  <Popover id={`popover-costs${tier}`}>
+                    <Popover.Header as="h3">Job Costs</Popover.Header>
+                    <Popover.Body>
+                      <Table striped bordered hover size="sm">
+                        <thead>
+                          <tr>
+                            <th>Material</th>
+                            <th>Job Costs</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {showTableJobCosts(tier)}
+                          <tr>
+                            <td>Total</td>
+                            <td>
+                              {calculateJobCosts(tier).toLocaleString("en-US", {
+                                style: "currency",
+                                currency: "ISK",
+                                minimumFractionDigits: 2,
+                              })}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </Table>
+                    </Popover.Body>
+                  </Popover>
+                }
+              >
+                <td colSpan={2}>
+                  {calculateJobCosts(tier).toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "ISK",
+                    minimumFractionDigits: 2,
+                  })}
+                </td>
+              </OverlayTrigger>
               <td>
                 <OverlayTrigger
                   placement="right" // Position of tooltip
                   overlay={
                     !props.advancedMode ? (
                       <Tooltip id="checkbox-tooltip">
-                        Enter Advanced mode and fill Required Component/Reaction Structure to enable.
+                        Enter Advanced mode and fill Required Component/Reaction
+                        Structure to enable.
                       </Tooltip>
                     ) : tier == 105 ? (
                       <Tooltip id="checkbox-tooltip">
                         Fuel support is comming soon
                       </Tooltip>
                     ) : isMassUpdateClickable(tier) ? (
-                      checkFormDataStatusForMulti(tier)
-                     ) ?
-                              <Tooltip id="checkbox-tooltip">
-                                Fill Required Component/Reaction Structure.
-                              </Tooltip> :
-                      <Tooltip id="checkbox-tooltip">
-                        Click to add/remove all items from crafting calculations
-                      </Tooltip>
-                     : (
+                      checkFormDataStatusForMulti(tier) ? (
+                        <Tooltip id="checkbox-tooltip">
+                          Fill Required Component/Reaction Structure.
+                        </Tooltip>
+                      ) : (
+                        <Tooltip id="checkbox-tooltip">
+                          Click to add/remove all items from crafting
+                          calculations
+                        </Tooltip>
+                      )
+                    ) : (
                       <Tooltip id="checkbox-tooltip">
                         No craftable materials
                       </Tooltip>
@@ -557,9 +628,9 @@ function Calculator(props) {
       console.log("Text copied");
       props.setIsCopied({ [id]: true });
       // Reset back to "Copy" after 2 seconds
-    setTimeout(() => {
-      props.setIsCopied({ [id]: false });
-    }, 500);
+      setTimeout(() => {
+        props.setIsCopied({ [id]: false });
+      }, 500);
     } catch {
       console.error("Error copying text: ", error);
       alert("Failed to copy text.");
@@ -574,9 +645,7 @@ function Calculator(props) {
       blueprintName: material.name,
       tier: material.tier,
       blueprintMe:
-        material.activityId === 11
-          ? 0
-          : props.formDataPart.blueprintMe,
+        material.activityId === 11 ? 0 : props.formDataPart.blueprintMe,
       building:
         material.activityId === 11
           ? props.formDataReaction.building
@@ -608,18 +677,27 @@ function Calculator(props) {
     // console.log(response.data.blueprintResult);
   }
 
-  function calculatePriceDifferences(){
-    return (masterTransactionType === "sell" ?
-    props.initialBlueprint.totalSellPrice : props.initialBlueprint.totalBuyPrice) -
-    (transactionType === "sell" ?
-    props.initialBlueprint.sellCraftPrice:
-    props.initialBlueprint.buyCraftPrice);
+  function calculatePriceDifferences() {
+    return (
+      (masterTransactionType === "sell"
+        ? props.initialBlueprint.totalSellPrice
+        : props.initialBlueprint.totalBuyPrice) -
+      (transactionType === "sell"
+        ? props.initialBlueprint.sellCraftPrice
+        : props.initialBlueprint.buyCraftPrice)
+    );
   }
 
-  function calculateMarginPercent(){
-    const price = masterTransactionType === "sell" ? props.initialBlueprint.totalSellPrice : props.initialBlueprint.totalBuyPrice;
-    const craftPrice = transactionType === "sell" ? props.initialBlueprint.sellCraftPrice : props.initialBlueprint.buyCraftPrice;
-    return  ((price - craftPrice) / price) * 100;
+  function calculateMarginPercent() {
+    const price =
+      masterTransactionType === "sell"
+        ? props.initialBlueprint.totalSellPrice
+        : props.initialBlueprint.totalBuyPrice;
+    const craftPrice =
+      transactionType === "sell"
+        ? props.initialBlueprint.sellCraftPrice
+        : props.initialBlueprint.buyCraftPrice;
+    return ((price - craftPrice) / price) * 100;
   }
 
   async function massUpdateMaterialStats(materials) {
@@ -689,10 +767,11 @@ function Calculator(props) {
       .reduce((sum, qty) => sum + qty, 0);
   }
 
-  function calculateJobCosts(tier){
-    return props.materialsList.filter(mat=>mat.tier === tier-1)
-    .map(mat=>mat.industryCosts)
-    .reduce((sum, costs)=> sum +costs, 0);
+  function calculateJobCosts(tier) {
+    return props.materialsList
+      .filter((mat) => mat.tier === tier - 1)
+      .map((mat) => mat.industryCosts)
+      .reduce((sum, costs) => sum + costs, 0);
   }
 
   function getIsChecked(material) {
@@ -725,20 +804,21 @@ function Calculator(props) {
     ));
   }
 
-  function showTableJobCosts(tier){
-  return  props.materialsList.filter(mat=> mat.tier ===tier-1)
-    .map((m) => (
-      <tr key={m.id}>
-        <td>
-          {m.name}
-        </td>
-        <td>{m.industryCosts.toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "ISK",
-                  minimumFractionDigits: 2,
-                })}</td>
-      </tr>
-    ));
+  function showTableJobCosts(tier) {
+    return props.materialsList
+      .filter((mat) => mat.tier === tier - 1)
+      .map((m) => (
+        <tr key={m.id}>
+          <td>{m.name}</td>
+          <td>
+            {m.industryCosts.toLocaleString("en-US", {
+              style: "currency",
+              currency: "ISK",
+              minimumFractionDigits: 2,
+            })}
+          </td>
+        </tr>
+      ));
   }
 
   function massUpdateStatus(tier) {
@@ -764,20 +844,51 @@ function Calculator(props) {
       : 0;
   }
 
-  function checkFormDataStatusForMulti(tier){
-  const materials = props.materialsList
-  .filter(mat => mat.tier === tier - 1)
-  .flatMap(mat => mat.materialsList)
-  .filter(mat => mat.isCreatable && (mat.activityId === 11 || mat.activityId === 1));
+  function checkFormDataStatusForMulti(tier) {
+    const materials = props.materialsList
+      .filter((mat) => mat.tier === tier - 1)
+      .flatMap((mat) => mat.materialsList)
+      .filter(
+        (mat) =>
+          mat.isCreatable && (mat.activityId === 11 || mat.activityId === 1)
+      );
 
-  const hasActivity1 =  materials.some(mat => mat.isCreatable && mat.activityId === 1) ? materials.some(mat => mat.isCreatable && mat.activityId === 1 && checkFormDataStatus(mat.activityId)): true;
-  const hasActivity11 = materials.some(mat => mat.isCreatable && mat.activityId === 11) ? materials.some(mat => mat.isCreatable && mat.activityId === 11 && checkFormDataStatus(mat.activityId)): true;
+    const hasActivity1 = materials.some(
+      (mat) => mat.isCreatable && mat.activityId === 1
+    )
+      ? materials.some(
+          (mat) =>
+            mat.isCreatable &&
+            mat.activityId === 1 &&
+            checkFormDataStatus(mat.activityId)
+        )
+      : true;
+    const hasActivity11 = materials.some(
+      (mat) => mat.isCreatable && mat.activityId === 11
+    )
+      ? materials.some(
+          (mat) =>
+            mat.isCreatable &&
+            mat.activityId === 11 &&
+            checkFormDataStatus(mat.activityId)
+        )
+      : true;
 
-  return !(hasActivity1 && hasActivity11);
+    return !(hasActivity1 && hasActivity11);
   }
-  function checkFormDataStatus(activity){
-    return activity===11 ? props.formDataReaction!=null && (props.formDataReaction.building != null && props.formDataReaction.buildingRig != null && props.formDataReaction.system != null && props.formDataReaction.facilityTax != null) :
-    props.formDataPart!=null && (props.formDataPart.building != null && props.formDataPart.buildingRig != null && props.formDataPart.system != null && props.formDataPart.facilityTax != null && props.formDataPart.blueprintMe !=null);
+  function checkFormDataStatus(activity) {
+    return activity === 11
+      ? props.formDataReaction != null &&
+          props.formDataReaction.building != null &&
+          props.formDataReaction.buildingRig != null &&
+          props.formDataReaction.system != null &&
+          props.formDataReaction.facilityTax != null
+      : props.formDataPart != null &&
+          props.formDataPart.building != null &&
+          props.formDataPart.buildingRig != null &&
+          props.formDataPart.system != null &&
+          props.formDataPart.facilityTax != null &&
+          props.formDataPart.blueprintMe != null;
   }
 
   function checkForFuel(originalData) {
