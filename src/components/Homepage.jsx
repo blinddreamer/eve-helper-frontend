@@ -1,7 +1,6 @@
 import { React, useEffect } from "react";
 import Alert from "react-bootstrap/Alert";
 import Animated from "./Animated";
-import { Helmet } from "react-helmet-async";
 
 function Homepage() {
   return (
