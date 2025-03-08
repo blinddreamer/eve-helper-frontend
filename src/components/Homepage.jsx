@@ -29,7 +29,7 @@ function Homepage() {
         />
         <meta
           property="og:image"
-          content="https://eve-helper.com/social-preview.webp"
+          content="https://eve-helper.com/social-preview.png"
         />
         <meta property="og:url" content="https://eve-helper.com" />
 
@@ -46,7 +46,7 @@ function Homepage() {
         />
         <meta
           name="twitter:image"
-          content="https://eve-helper.com/social-preview.webp"
+          content="https://eve-helper.com/social-preview.png"
         />
         {/* Favicon & App Icons */}
         <link
