@@ -10,7 +10,6 @@ import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
 import Animated from "../Animated";
 
-
 function Appraisal() {
   const [onStart, setOnstart] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,8 +27,7 @@ function Appraisal() {
 
   const backend = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
-  const { uuid } = useParams(); 
-
+  const { uuid } = useParams();
 
     // Load stored values when the component mounts
     useEffect(() => {
@@ -73,10 +71,10 @@ function Appraisal() {
     fetchAppraisal();
   }, [uuid]); // Runs only when `uuid` changes
 
-// Function to update local storage
-const updateStorage = (key, value) => {
-  localStorage.setItem(key, value);
-};
+  // Function to update local storage
+  const updateStorage = (key, value) => {
+    localStorage.setItem(key, value);
+  };
 
   useEffect(() => {
     if(!appraisal.appraisals) {
@@ -86,17 +84,24 @@ const updateStorage = (key, value) => {
     document.title = `Appraisal @ ${pricePercentage}% - ${market}`;
 
     const metaTitle = document.querySelector('meta[property="og:title"]');
-    const metaDescription = document.querySelector('meta[property="og:description"]');
+    const metaDescription = document.querySelector(
+      'meta[property="og:description"]'
+    );
 
     if (metaTitle) {
-        metaTitle.setAttribute("content", `Appraisal @ ${pricePercentage}% - ${market}`);
+      metaTitle.setAttribute(
+        "content",
+        `Appraisal @ ${pricePercentage}% - ${market}`
+      );
     }
 
     if (metaDescription) {
-        metaDescription.setAttribute("content", `Order Type: ${transactionType} | Price Based on: ${price}`);
+      metaDescription.setAttribute(
+        "content",
+        `Order Type: ${transactionType} | Price Based on: ${price}`
+      );
     }
-  }, [appraisal,pricePercentage, market, transactionType]);
-  
+  }, [appraisal, pricePercentage, market, transactionType]);
 
   useEffect(() => {
     onStart && getStations() && getSystems();
@@ -118,31 +123,31 @@ const updateStorage = (key, value) => {
       setStations(response.data);
     }
   }
- 
-  function updateStorageOnSubmit(){
-    updateStorage("marketRegion",market);
+
+  function updateStorageOnSubmit() {
+    updateStorage("marketRegion", market);
     updateStorage("pricePercentage", pricePercentage);
     updateStorage("transactionType", transactionType);
     updateStorage("appraisalComment", comment);
     updateStorage("system", system)
  }
 
- const handleCopy = async () => {
-  try {
-    await navigator.clipboard.writeText(window.location.href);
-    
-  } catch (error) {
-    console.error("Copy failed", error);
-  }
-};
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      
+    } catch (error) {
+      console.error("Copy failed", error);
+    }
+  };
 
   async function calculateAppraisal() {
     setErrorMessage(null);
     updateStorageOnSubmit();
-   // setAppraisal();
+    // setAppraisal();
     try {
       setIsLoading(true);
-      const percent = pricePercentage;  
+      const percent = pricePercentage;
       const text = document.getElementById("appraisalText").value || "";
       const lines = text
         .split("\n")
@@ -178,7 +183,7 @@ const updateStorage = (key, value) => {
       });
 
       if (status !== 200) throw new Error(`Server Error: ${status}`);
-  
+
       navigate(`/appraisal/${data}`);
     } catch (error) {
       setErrorMessage(error.message);
@@ -189,9 +194,7 @@ const updateStorage = (key, value) => {
   return (
     <Animated>
       <div id="animateddiv">
-        <Container>
-          <Row>
-            <Col>
+        
               <div id="menuleft">
                 <AppraisalForm
                   isLoading={isLoading}
@@ -216,8 +219,7 @@ const updateStorage = (key, value) => {
                   setOptionsSys={setOptionsSys}
                 />
               </div>
-            </Col>
-            <Col xs={7}>
+            
               {appraisal.appraisalResult ? (
                 <AppraisalResult appraisal={appraisal} 
                  pricePercentage={pricePercentage}
@@ -229,13 +231,11 @@ const updateStorage = (key, value) => {
                   </Alert>
                 </div>
               )}
-            </Col>
-          </Row>
-          <Row></Row>
-        </Container>
+          
+        
       </div>
     </Animated>
   );
+  
 }
-
 export default Appraisal;
