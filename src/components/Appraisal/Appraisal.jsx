@@ -9,7 +9,6 @@ import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
 import Animated from "../Animated";
 
-
 function Appraisal() {
   const [onStart, setOnstart] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,21 +23,20 @@ function Appraisal() {
 
   const backend = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
-  const { uuid } = useParams(); 
+  const { uuid } = useParams();
 
+  // Load stored values when the component mounts
+  useEffect(() => {
+    const storedRegion = localStorage.getItem("marketRegion");
+    const storedPrice = localStorage.getItem("pricePercentage");
+    const storedTransaction = localStorage.getItem("transactionType");
+    const storedComment = localStorage.getItem("appraisalComment");
 
-    // Load stored values when the component mounts
-    useEffect(() => {
-      const storedRegion = localStorage.getItem("marketRegion");
-      const storedPrice = localStorage.getItem("pricePercentage");
-      const storedTransaction = localStorage.getItem("transactionType");
-      const storedComment = localStorage.getItem("appraisalComment");
-  
-      if (storedRegion) setMarket(storedRegion);
-      if (storedPrice) setPricePercentage(parseFloat(storedPrice));
-      if (storedTransaction) setTransactionType(storedTransaction);
-      if (storedComment) setComment(storedComment);
-    }, []);
+    if (storedRegion) setMarket(storedRegion);
+    if (storedPrice) setPricePercentage(parseFloat(storedPrice));
+    if (storedTransaction) setTransactionType(storedTransaction);
+    if (storedComment) setComment(storedComment);
+  }, []);
 
   useEffect(() => {
     if (!uuid || loadedApp) return; // Ensure UUID is available before fetching
@@ -63,28 +61,40 @@ function Appraisal() {
     fetchAppraisal();
   }, [uuid]); // Runs only when `uuid` changes
 
-// Function to update local storage
-const updateStorage = (key, value) => {
-  localStorage.setItem(key, value);
-};
+  // Function to update local storage
+  const updateStorage = (key, value) => {
+    localStorage.setItem(key, value);
+  };
 
   useEffect(() => {
-    if(!appraisal) return;
-    const price = transactionType === "split" ? appraisal.estimateTotalSplit : transactionType=== "sell" ? appraisal.estimateTotalSell : appraisal.estimateTotalBuy;
+    if (!appraisal) return;
+    const price =
+      transactionType === "split"
+        ? appraisal.estimateTotalSplit
+        : transactionType === "sell"
+        ? appraisal.estimateTotalSell
+        : appraisal.estimateTotalBuy;
     document.title = `Appraisal @ ${pricePercentage}% - ${market}`;
 
     const metaTitle = document.querySelector('meta[property="og:title"]');
-    const metaDescription = document.querySelector('meta[property="og:description"]');
+    const metaDescription = document.querySelector(
+      'meta[property="og:description"]'
+    );
 
     if (metaTitle) {
-        metaTitle.setAttribute("content", `Appraisal @ ${pricePercentage}% - ${market}`);
+      metaTitle.setAttribute(
+        "content",
+        `Appraisal @ ${pricePercentage}% - ${market}`
+      );
     }
 
     if (metaDescription) {
-        metaDescription.setAttribute("content", `Order Type: ${transactionType} | Price Based on: ${price}`);
+      metaDescription.setAttribute(
+        "content",
+        `Order Type: ${transactionType} | Price Based on: ${price}`
+      );
     }
-  }, [appraisal,pricePercentage, market, transactionType]);
-  
+  }, [appraisal, pricePercentage, market, transactionType]);
 
   useEffect(() => {
     onStart && getStations();
@@ -101,30 +111,30 @@ const updateStorage = (key, value) => {
       setStations(response.data);
     }
   }
- 
-  function updateStorageOnSubmit(){
-    updateStorage("marketRegion",market);
+
+  function updateStorageOnSubmit() {
+    updateStorage("marketRegion", market);
     updateStorage("pricePercentage", pricePercentage);
     updateStorage("transactionType", transactionType);
     updateStorage("appraisalComment", comment);
- }
-
- const handleCopy = async () => {
-  try {
-    await navigator.clipboard.writeText(window.location.href);
-    alert("Copied to clipboard!");
-  } catch (error) {
-    console.error("Copy failed", error);
   }
-};
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      alert("Copied to clipboard!");
+    } catch (error) {
+      console.error("Copy failed", error);
+    }
+  };
 
   async function calculateAppraisal() {
     setErrorMessage(null);
     updateStorageOnSubmit();
-   // setAppraisal();
+    // setAppraisal();
     try {
       setIsLoading(true);
-      const percent = pricePercentage;  
+      const percent = pricePercentage;
       const text = document.getElementById("appraisalText").value || "";
       const lines = text
         .split("\n")
@@ -154,12 +164,11 @@ const updateStorage = (key, value) => {
         regionId: station,
         pricePercentage: percent,
         comment: comment,
-        transactionType: transactionType
-
+        transactionType: transactionType,
       });
 
       if (status !== 200) throw new Error(`Server Error: ${status}`);
-  
+
       navigate(`/appraisal/${data}`);
     } catch (error) {
       setErrorMessage(error.message);
@@ -170,47 +179,38 @@ const updateStorage = (key, value) => {
   return (
     <Animated>
       <div id="animateddiv">
-        <Container>
-          <Row>
-            <Col>
-              <div id="menuleft">
-                <AppraisalForm
-                  isLoading={isLoading}
-                  stations={stations}
-                  errorMessage={errorMessage}
-                  setErrorMessage={setErrorMessage}
-                  calculateAppraisal={calculateAppraisal}
-                  pricePercentage={pricePercentage}
-                  setPricePercentage={setPricePercentage}
-                  transactionType={transactionType}
-                  setTransactionType={setTransactionType}
-                  comment={comment}
-                  setComment={setComment}
-                  market={market}
-                  setMarket={setMarket}
-                  updateStorage={updateStorage}
-                  handleCopy={handleCopy}
-                  uuid={uuid}
-
-                />
-              </div>
-            </Col>
-            <Col xs={7}>
-              {appraisal.appraisals ? (
-                <AppraisalResult appraisal={appraisal} 
-                pricePercentage={pricePercentage}
-                />
-              ) : (
-                <div id="start-message">
-                  <Alert variant="success">
-                    Paste a list from in-game items.
-                  </Alert>
-                </div>
-              )}
-            </Col>
-          </Row>
-          <Row></Row>
-        </Container>
+        <div id="menuleft">
+          <AppraisalForm
+            isLoading={isLoading}
+            stations={stations}
+            errorMessage={errorMessage}
+            setErrorMessage={setErrorMessage}
+            calculateAppraisal={calculateAppraisal}
+            pricePercentage={pricePercentage}
+            setPricePercentage={setPricePercentage}
+            transactionType={transactionType}
+            setTransactionType={setTransactionType}
+            comment={comment}
+            setComment={setComment}
+            market={market}
+            setMarket={setMarket}
+            updateStorage={updateStorage}
+            handleCopy={handleCopy}
+            uuid={uuid}
+          />
+        </div>
+        <div id="menuright">
+          {appraisal.appraisals ? (
+            <AppraisalResult
+              appraisal={appraisal}
+              pricePercentage={pricePercentage}
+            />
+          ) : (
+            <div id="start-message">
+              <Alert variant="success">Paste a list from in-game items.</Alert>
+            </div>
+          )}
+        </div>
       </div>
     </Animated>
   );

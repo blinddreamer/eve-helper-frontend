@@ -133,12 +133,12 @@ svg {
   font-size: 20px;
 }
 
-#menuleft {
+/*#menuleft {
   background-color: rgba(var(--bs-body-color-rgb), 0.03) !important;
   padding: 15px;
   border-radius: 5px;
   margin-top: 20px;
-}
+}*/
 
 #HukuBartopolos {
   background-color: var(--bs-body-bg);
