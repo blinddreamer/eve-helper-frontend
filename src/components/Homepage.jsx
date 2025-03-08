@@ -21,7 +21,15 @@ function Homepage() {
           property="og:image"
           content="https://eve-helper.com/social-preview.png"
         />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta
+          property="og:image:alt"
+          content="EVE Helper - Industrial Calculator for EVE Online"
+        />
         <meta property="og:url" content="https://eve-helper.com" />
+        <meta property="og:site_name" content="EVE Helper" />
+        <meta property="og:locale" content="en_US" />
 
         {/* Twitter Card Meta Tags (For Twitter Previews) */}
         <meta name="twitter:card" content="summary_large_image" />
@@ -37,6 +45,7 @@ function Homepage() {
           name="twitter:image"
           content="https://eve-helper.com/social-preview.png"
         />
+        <meta name="twitter:url" content="https://eve-helper.com" />
 
         {/* Favicon & App Icons */}
         <link
@@ -61,6 +70,9 @@ function Homepage() {
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
         <meta name="theme-color" content="#ffffff" />
+
+        {/* Canonical URL */}
+        <link rel="canonical" href="https://eve-helper.com" />
 
         {/* Title & Meta Description */}
         <title>EVE Helper - Industry Calculator/Appraisal for EVE Online</title>
