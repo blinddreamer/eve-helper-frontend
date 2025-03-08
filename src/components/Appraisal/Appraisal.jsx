@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect} from "react";
+import { useParams, useNavigate} from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import axios from "axios";
 import AppraisalForm from "./AppraisalForm";
 import AppraisalResult from "./AppraisalResult";
@@ -13,6 +14,8 @@ import Animated from "../Animated";
 function Appraisal() {
   const [onStart, setOnstart] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [system, setSystem] = useState("");
+  const [optionsSys, setOptionsSys] = useState([]);
   const [loadedApp, setLoadedApp] = useState(false);
   const [stations, setStations] = useState([{}]);
   const [appraisal, setAppraisal] = useState({});
@@ -20,6 +23,7 @@ function Appraisal() {
   const [pricePercentage, setPricePercentage] = useState(100);
   const [transactionType, setTransactionType] = useState("buy");
   const [market, setMarket] = useState("10000002_60003760");
+  const [editMode, setEditMode] = useState(true)
   const [comment, setComment] = useState("");
 
   const backend = import.meta.env.VITE_BACKEND_URL;
@@ -29,26 +33,32 @@ function Appraisal() {
 
     // Load stored values when the component mounts
     useEffect(() => {
+      if (!editMode) return;
       const storedRegion = localStorage.getItem("marketRegion");
       const storedPrice = localStorage.getItem("pricePercentage");
       const storedTransaction = localStorage.getItem("transactionType");
       const storedComment = localStorage.getItem("appraisalComment");
+      const storedSystem = localStorage.getItem("system");
   
       if (storedRegion) setMarket(storedRegion);
       if (storedPrice) setPricePercentage(parseFloat(storedPrice));
       if (storedTransaction) setTransactionType(storedTransaction);
       if (storedComment) setComment(storedComment);
+      if (storedSystem) setSystem(storedSystem);
     }, []);
 
   useEffect(() => {
-    if (!uuid || loadedApp) return; // Ensure UUID is available before fetching
-
+    if (!uuid || loadedApp) {
+      setEditMode(true);
+      return; // Ensure UUID is available before fetching
+    }
     const fetchAppraisal = async () => {
       try {
         const response = await axios.get(`${backend}appraisal/${uuid}`);
         if (response.status === 200) {
           const appraisal = response.data;
-          setAppraisal(appraisal.appraisalResult);
+          setEditMode(false);
+          setAppraisal(appraisal);
           setMarket(appraisal.market);
           setPricePercentage(appraisal.pricePercentage);
           setComment(appraisal.comment);
@@ -69,7 +79,9 @@ const updateStorage = (key, value) => {
 };
 
   useEffect(() => {
-    if(!appraisal) return;
+    if(!appraisal.appraisals) {
+      return;
+    } 
     const price = transactionType === "split" ? appraisal.estimateTotalSplit : transactionType=== "sell" ? appraisal.estimateTotalSell : appraisal.estimateTotalBuy;
     document.title = `Appraisal @ ${pricePercentage}% - ${market}`;
 
@@ -87,10 +99,15 @@ const updateStorage = (key, value) => {
   
 
   useEffect(() => {
-    onStart && getStations();
+    onStart && getStations() && getSystems();
     setOnstart(false);
   });
-
+  async function getSystems() {
+    const response = await axios.get(backend + "systems");
+    if (response.status === 200) {
+      setOptionsSys(response.data.map((sys) => sys.systemName));
+    }
+  }
   useEffect(() => {
     document.title = "EVE Helper - Appraisal";
   });
@@ -107,12 +124,13 @@ const updateStorage = (key, value) => {
     updateStorage("pricePercentage", pricePercentage);
     updateStorage("transactionType", transactionType);
     updateStorage("appraisalComment", comment);
+    updateStorage("system", system)
  }
 
  const handleCopy = async () => {
   try {
     await navigator.clipboard.writeText(window.location.href);
-    alert("Copied to clipboard!");
+    
   } catch (error) {
     console.error("Copy failed", error);
   }
@@ -154,7 +172,8 @@ const updateStorage = (key, value) => {
         regionId: station,
         pricePercentage: percent,
         comment: comment,
-        transactionType: transactionType
+        transactionType: transactionType,
+        system:system
 
       });
 
@@ -191,14 +210,17 @@ const updateStorage = (key, value) => {
                   updateStorage={updateStorage}
                   handleCopy={handleCopy}
                   uuid={uuid}
-
+                  setSystem={setSystem}
+                  system={system}
+                  optionsSys={optionsSys}
+                  setOptionsSys={setOptionsSys}
                 />
               </div>
             </Col>
             <Col xs={7}>
-              {appraisal.appraisals ? (
+              {appraisal.appraisalResult ? (
                 <AppraisalResult appraisal={appraisal} 
-                pricePercentage={pricePercentage}
+                 pricePercentage={pricePercentage}
                 />
               ) : (
                 <div id="start-message">

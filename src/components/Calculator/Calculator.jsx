@@ -15,6 +15,7 @@ function Calculator(props) {
   const [transactionType, setTransactionType] = useState("sell");
   const [masterTransactionType, setMasterTransactionType] = useState("sell");
   const navigate = useNavigate();
+  
   useEffect(() => {
     if (!Array.isArray(props.materialsList) || props.materialsList.length === 0)
       return;

@@ -1,12 +1,16 @@
 import Form from "react-bootstrap/Form";
+import { Typeahead } from "react-bootstrap-typeahead";
+import "react-bootstrap-typeahead/css/Typeahead.css";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
 import Animated from "../Animated";
 import { Clipboard } from "react-bootstrap-icons";
+import { useRef } from "react";
 
 
 function AppraisalForm(props) {
+  const typeaheadRef = useRef(null);
   const handlePercentChange = (e) => {
     let value = parseFloat(e.target.value);
 
@@ -16,6 +20,15 @@ function AppraisalForm(props) {
   if (value > 200) value = 200;
 
   props.setPricePercentage(value); // Update the state
+  };
+
+  const handleSystemChange = (selected) => {
+    if (selected.length > 0) {
+     
+      props.setSystem(selected[0]); // Update parent state (submission handles saving)
+    } else {
+      props.setSystem(""); // Clear selection properly
+    }
   };
 
   const handleMarketChange = (e) => {
@@ -78,6 +91,19 @@ function AppraisalForm(props) {
                 </div>
           
           </Form.Group>
+          <Form.Group id="bp_system_app" controlId="systemName">
+            <Form.Label>Items system location:</Form.Label>
+          <Typeahead
+            ref={typeaheadRef}
+            clearButton={true}
+            minLength={2}
+            selected={props.system ? [props.system] : []} // Use local state
+            onChange={handleSystemChange}
+            id="basic-behaviors-example"
+            options={props.optionsSys}
+            placeholder="Choose a system"
+          />
+        </Form.Group>
     
     <Form.Group controlId="appraisalComment">
             <Form.Label>Comment:</Form.Label>
@@ -85,6 +111,7 @@ function AppraisalForm(props) {
               key="app-comment"
               as="textarea"
               name="comment"
+              
               value={props.comment}
               onChange={(e) => {
                 props.setComment(e.target.value);}}

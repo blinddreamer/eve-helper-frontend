@@ -4,7 +4,7 @@ import Animated from "../Animated";
 function AppraisalResult(props) {
   let volumeFormat = new Intl.NumberFormat();
   let priceFormat = new Intl.NumberFormat("en-US");
-
+  
   function formatPrice(price) {
     if (price >= 1e9) {
         return (price / 1e9).toFixed(1) + "B"; // Convert to billion and add "B"
@@ -21,30 +21,31 @@ function AppraisalResult(props) {
     <Animated>
       <div id="appraisalResponse">
         <div id="apholddiv">
+          <h3>{props.appraisal.system} {props.appraisal.pricePercentage}% @ {props.appraisal.market=== "10000002_60003760" ? "Jita 4-4": "Amar"} {props.appraisal.transactionType}</h3>
           <table id="apmaindiv">
             <tr>
               <td>
                 BUY:
                 <span id="apbuy">
-                  {formatPrice(props.appraisal.estimateTotalBuy * (props.pricePercentage/100))}
+                  {formatPrice(props.appraisal.appraisalResult.estimateTotalBuy * (props.pricePercentage/100))}
                 </span>
               </td>
               <td>
                 SPLIT:
                 <span id="apaverage">
-                  {formatPrice(props.appraisal.estimateTotalSplit * (props.pricePercentage/100))}
+                  {formatPrice(props.appraisal.appraisalResult.estimateTotalSplit * (props.pricePercentage/100))}
                 </span>
               </td>
               <td>
                 SELL:
                 <span id="apsel">
-                  {formatPrice(props.appraisal.estimateTotalSell * (props.pricePercentage/100))}
+                  {formatPrice(props.appraisal.appraisalResult.estimateTotalSell * (props.pricePercentage/100))}
                 </span>
               </td>
               <td>
                 VOLUME:
                 <span id="apvolume">
-                  {volumeFormat.format(props.appraisal.totalVolume)}
+                  {volumeFormat.format(props.appraisal.appraisalResult.totalVolume)}
                   m³
                 </span>
               </td>
@@ -69,7 +70,7 @@ function AppraisalResult(props) {
             </tr>
           </thead>
           <tbody>
-            {props.appraisal.appraisals.map((ap, index) => (
+            {props.appraisal.appraisalResult.appraisals.map((ap, index) => (
               <tr key={index}>
                 <td><img src={ap.icon} loading="lazy" /></td>
                 <td>{ap.item}</td>
@@ -93,19 +94,19 @@ function AppraisalResult(props) {
               <td>
                 ISK PER m³ BUY:
                 <span id="apbuy">
-                  {formatPrice(props.appraisal.estimateTotalBuy * (props.pricePercentage/100) / props.appraisal.totalVolume)}
+                  {formatPrice(props.appraisal.appraisalResult.estimateTotalBuy * (props.pricePercentage/100) / props.appraisal.appraisalResult.totalVolume)}
                 </span>
               </td>
               <td>
                 ISK PER m³ SPLIT:
                 <span id="apaverage">
-                  {formatPrice(props.appraisal.estimateTotalSplit * (props.pricePercentage/100) / props.appraisal.totalVolume)}
+                  {formatPrice(props.appraisal.appraisalResult.estimateTotalSplit * (props.pricePercentage/100) / props.appraisal.appraisalResult.totalVolume)}
                 </span>
               </td>
               <td>
                ISK per m³ SELL:
                 <span id="apsel">
-                  {formatPrice(props.appraisal.estimateTotalSell * (props.pricePercentage/100) / props.appraisal.totalVolume)}
+                  {formatPrice(props.appraisal.appraisalResult.estimateTotalSell * (props.pricePercentage/100) / props.appraisal.appraisalResult.totalVolume)}
                 </span>
               </td>
             </tr>
