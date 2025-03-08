@@ -87,6 +87,30 @@ function AppraisalResult(props) {
           </tbody>
         </Table>
         <span> *all prices are estimate</span>
+        <div id="iskPerVol">
+          <table id="apmaindiv">
+            <tr>
+              <td>
+                ISK PER m³ BUY:
+                <span id="apbuy">
+                  {formatPrice(props.appraisal.estimateTotalBuy * (props.pricePercentage/100) / props.appraisal.totalVolume)}
+                </span>
+              </td>
+              <td>
+                ISK PER m³ SPLIT:
+                <span id="apaverage">
+                  {formatPrice(props.appraisal.estimateTotalSplit * (props.pricePercentage/100) / props.appraisal.totalVolume)}
+                </span>
+              </td>
+              <td>
+               ISK per m³ SELL:
+                <span id="apsel">
+                  {formatPrice(props.appraisal.estimateTotalSell * (props.pricePercentage/100) / props.appraisal.totalVolume)}
+                </span>
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
     </Animated>
   );
