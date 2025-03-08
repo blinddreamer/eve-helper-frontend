@@ -7,6 +7,44 @@ function Homepage() {
   return (
     <>
       <Helmet>
+        {/* Open Graph Meta Tags (For Social Media Previews) */}
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:title"
+          content="EVE Helper - Industry Calculator/Appraisal"
+        />
+        <meta
+          property="og:description"
+          content="EVE Helper provides industrial calculation tools for EVE Online, including market appraisals and profit calculators."
+        />
+        <meta property="og:image" content="/social-preview.webp" />
+        <meta property="og:url" content="https://eve-helper.com" />
+
+        {/* Favicon & App Icons */}
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <link rel="icon" sizes="192x192" href="/android-chrome-192x192.png" />
+        <link rel="icon" sizes="512x512" href="/android-chrome-512x512.png" />
+        <meta name="msapplication-TileColor" content="#ffffff" />
+        <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
+        <meta name="theme-color" content="#ffffff" />
+
+        {/* Title & Meta Description */}
         <title>EVE Helper - Industry Calculator/Appraisal for EVE Online</title>
         <meta
           name="description"
