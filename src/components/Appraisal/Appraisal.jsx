@@ -126,7 +126,10 @@ const updateStorage = (key, value) => {
       setIsLoading(true);
       const percent = pricePercentage;  
       const text = document.getElementById("appraisalText").value || "";
-      const lines = text.split("\n").map(line => line.trim()).filter(line => line !== "");
+      const lines = text
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line !== "");
       const items = [];
       lines.forEach((line, index) => {
         if (typeof line !== "string") {
@@ -134,15 +137,15 @@ const updateStorage = (key, value) => {
           return;
         }
 
-       const match = line.match(/^(.+?)\s+(\d+)$/);
+        const match = line.match(/^(.+?)\s+(\d+)$/);
 
-       if (match) {
+        if (match) {
           const itemName = match[1].trim();
           const quantity = parseInt(match[2], 10);
           items.push({ name: itemName, quantity });
-        } 
+        }
       });
-  
+
       if (items.length === 0) throw new Error("No valid items found.");
       const station = market;
       if (!station) throw new Error("Market region is required.");
@@ -154,7 +157,7 @@ const updateStorage = (key, value) => {
         transactionType: transactionType
 
       });
-  
+
       if (status !== 200) throw new Error(`Server Error: ${status}`);
   
       navigate(`/appraisal/${data}`);

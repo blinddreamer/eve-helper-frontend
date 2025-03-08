@@ -312,3 +312,21 @@ textarea {
   padding: 15px;
   margin-bottom: -25px;
 }
+
+#akwarddiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: -6px;
+}
+
+#akwardspan {
+  margin-top: 25px;
+  margin-bottom: 5px;
+  font-size: 13px;
+  border: 1px solid;
+  padding: 15px;
+  border-color: var(--bs-border-color);
+  border-radius: 5px;
+}
