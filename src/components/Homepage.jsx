@@ -17,7 +17,10 @@ function Homepage() {
           property="og:description"
           content="EVE Helper provides industrial calculation tools for EVE Online, including market appraisals and profit calculators."
         />
-        <meta property="og:image" content="/social-preview.webp" />
+        <meta
+          property="og:image"
+          content="https://eve-helper.com/social-preview.webp"
+        />
         <meta property="og:url" content="https://eve-helper.com" />
 
         {/* Favicon & App Icons */}
