@@ -1,5 +1,5 @@
-import { useState, useEffect} from "react";
-import { useParams, useNavigate} from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import axios from "axios";
 import AppraisalForm from "./AppraisalForm";
@@ -22,28 +22,28 @@ function Appraisal() {
   const [pricePercentage, setPricePercentage] = useState(100);
   const [transactionType, setTransactionType] = useState("buy");
   const [market, setMarket] = useState("10000002_60003760");
-  const [editMode, setEditMode] = useState(true)
+  const [editMode, setEditMode] = useState(true);
   const [comment, setComment] = useState("");
 
   const backend = import.meta.env.VITE_BACKEND_URL;
   const navigate = useNavigate();
   const { uuid } = useParams();
 
-    // Load stored values when the component mounts
-    useEffect(() => {
-      if (!editMode) return;
-      const storedRegion = localStorage.getItem("marketRegion");
-      const storedPrice = localStorage.getItem("pricePercentage");
-      const storedTransaction = localStorage.getItem("transactionType");
-      const storedComment = localStorage.getItem("appraisalComment");
-      const storedSystem = localStorage.getItem("system");
-  
-      if (storedRegion) setMarket(storedRegion);
-      if (storedPrice) setPricePercentage(parseFloat(storedPrice));
-      if (storedTransaction) setTransactionType(storedTransaction);
-      if (storedComment) setComment(storedComment);
-      if (storedSystem) setSystem(storedSystem);
-    }, []);
+  // Load stored values when the component mounts
+  useEffect(() => {
+    if (!editMode) return;
+    const storedRegion = localStorage.getItem("marketRegion");
+    const storedPrice = localStorage.getItem("pricePercentage");
+    const storedTransaction = localStorage.getItem("transactionType");
+    const storedComment = localStorage.getItem("appraisalComment");
+    const storedSystem = localStorage.getItem("system");
+
+    if (storedRegion) setMarket(storedRegion);
+    if (storedPrice) setPricePercentage(parseFloat(storedPrice));
+    if (storedTransaction) setTransactionType(storedTransaction);
+    if (storedComment) setComment(storedComment);
+    if (storedSystem) setSystem(storedSystem);
+  }, []);
 
   useEffect(() => {
     if (!uuid || loadedApp) {
@@ -77,10 +77,15 @@ function Appraisal() {
   };
 
   useEffect(() => {
-    if(!appraisal.appraisals) {
+    if (!appraisal.appraisals) {
       return;
-    } 
-    const price = transactionType === "split" ? appraisal.estimateTotalSplit : transactionType=== "sell" ? appraisal.estimateTotalSell : appraisal.estimateTotalBuy;
+    }
+    const price =
+      transactionType === "split"
+        ? appraisal.estimateTotalSplit
+        : transactionType === "sell"
+        ? appraisal.estimateTotalSell
+        : appraisal.estimateTotalBuy;
     document.title = `Appraisal @ ${pricePercentage}% - ${market}`;
 
     const metaTitle = document.querySelector('meta[property="og:title"]');
@@ -129,13 +134,12 @@ function Appraisal() {
     updateStorage("pricePercentage", pricePercentage);
     updateStorage("transactionType", transactionType);
     updateStorage("appraisalComment", comment);
-    updateStorage("system", system)
- }
+    updateStorage("system", system);
+  }
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      
     } catch (error) {
       console.error("Copy failed", error);
     }
@@ -178,8 +182,7 @@ function Appraisal() {
         pricePercentage: percent,
         comment: comment,
         transactionType: transactionType,
-        system:system
-
+        system: system,
       });
 
       if (status !== 200) throw new Error(`Server Error: ${status}`);
@@ -194,48 +197,41 @@ function Appraisal() {
   return (
     <Animated>
       <div id="animateddiv">
-        
-              <div id="menuleft">
-                <AppraisalForm
-                  isLoading={isLoading}
-                  stations={stations}
-                  errorMessage={errorMessage}
-                  setErrorMessage={setErrorMessage}
-                  calculateAppraisal={calculateAppraisal}
-                  pricePercentage={pricePercentage}
-                  setPricePercentage={setPricePercentage}
-                  transactionType={transactionType}
-                  setTransactionType={setTransactionType}
-                  comment={comment}
-                  setComment={setComment}
-                  market={market}
-                  setMarket={setMarket}
-                  updateStorage={updateStorage}
-                  handleCopy={handleCopy}
-                  uuid={uuid}
-                  setSystem={setSystem}
-                  system={system}
-                  optionsSys={optionsSys}
-                  setOptionsSys={setOptionsSys}
-                />
-              </div>
-            
-              {appraisal.appraisalResult ? (
-                <AppraisalResult appraisal={appraisal} 
-                 pricePercentage={pricePercentage}
-                />
-              ) : (
-                <div id="start-message">
-                  <Alert variant="success">
-                    Paste a list from in-game items.
-                  </Alert>
-                </div>
-              )}
-          
-        
+        <AppraisalForm
+          isLoading={isLoading}
+          stations={stations}
+          errorMessage={errorMessage}
+          setErrorMessage={setErrorMessage}
+          calculateAppraisal={calculateAppraisal}
+          pricePercentage={pricePercentage}
+          setPricePercentage={setPricePercentage}
+          transactionType={transactionType}
+          setTransactionType={setTransactionType}
+          comment={comment}
+          setComment={setComment}
+          market={market}
+          setMarket={setMarket}
+          updateStorage={updateStorage}
+          handleCopy={handleCopy}
+          uuid={uuid}
+          setSystem={setSystem}
+          system={system}
+          optionsSys={optionsSys}
+          setOptionsSys={setOptionsSys}
+        />
+
+        {appraisal.appraisalResult ? (
+          <AppraisalResult
+            appraisal={appraisal}
+            pricePercentage={pricePercentage}
+          />
+        ) : (
+          <div id="start-message">
+            <Alert variant="success">Paste a list from in-game items.</Alert>
+          </div>
+        )}
       </div>
     </Animated>
   );
-  
 }
 export default Appraisal;

@@ -133,12 +133,12 @@ svg {
   font-size: 20px;
 }
 
-/*#menuleft {
+#menuleft {
   background-color: rgba(var(--bs-body-color-rgb), 0.03) !important;
   padding: 15px;
   border-radius: 5px;
   margin-top: 20px;
-}*/
+}
 
 #HukuBartopolos {
   background-color: var(--bs-body-bg);
@@ -205,9 +205,6 @@ tr {
   background-size: 1.5vmin 1.5vmin;
 }
 
-textarea {
-  height: 200px !important;
-}
 #apbuy {
   color: #22babb;
   font-size: 2.2rem;
@@ -336,4 +333,29 @@ textarea {
   padding: 15px;
   border-color: var(--bs-border-color);
   border-radius: 5px;
+}
+
+#appraisalformtop {
+  display: flex;
+  width: 100%; /* Adjust as needed */
+  padding: 20px;
+  margin-bottom: 10px;
+}
+#appraisalformleft {
+  width: 50%;
+  background-color: rgba(var(--bs-body-color-rgb), 0.03);
+  border-radius: 15px 0px 0px 15px;
+  padding: 20px;
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+#appraisalformright {
+  width: 50%;
+  background-color: rgba(var(--bs-body-color-rgb), 0.03);
+  border-radius: 0 15px 15px 0px;
+  padding: 20px;
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+
+#appraisalformelements {
+  margin-bottom: 15px;
 }
