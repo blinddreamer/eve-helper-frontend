@@ -27,10 +27,7 @@ function Homepage() {
           property="og:description"
           content="EVE Helper provides industrial calculation tools for EVE Online, including market appraisals and profit calculators."
         />
-        <meta
-          property="og:image"
-          content="https://eve-helper.com/social-preview.png"
-        />
+        <meta property="og:image" content="/social-preview.png" />
         <meta property="og:url" content="https://eve-helper.com" />
 
         {/* Twitter Card Meta Tags (For Twitter Previews) */}
@@ -44,10 +41,7 @@ function Homepage() {
           name="twitter:description"
           content="EVE Helper provides industrial calculation tools for EVE Online, including market appraisals and profit calculators."
         />
-        <meta
-          name="twitter:image"
-          content="https://eve-helper.com/social-preview.png"
-        />
+        <meta name="twitter:image" content="/social-preview.png" />
         {/* Favicon & App Icons */}
         <link
           rel="icon"
