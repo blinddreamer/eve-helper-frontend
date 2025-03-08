@@ -42,6 +42,14 @@ function CalculatorForm(props) {
   return (
     <>
       <Form>
+      <OverlayTrigger
+          placement="left" // Position of tooltip
+          overlay={
+            <Tooltip id="bps-tooltip">
+              Type Blueprint
+            </Tooltip>
+          }
+        >
         <Form.Group id="bp_bn" controlId="blueprintName">
           <Typeahead
             ref={typeaheadRef}
@@ -52,9 +60,11 @@ function CalculatorForm(props) {
             }}
             id="basic-behaviors-example"
             options={props.optionsBp}
-            placeholder="Choose a Blueprint."
+            placeholder="Choose a Blueprint"
           />
         </Form.Group>
+        </OverlayTrigger>
+        
         <OverlayTrigger
           placement="left" // Position of tooltip
           overlay={
@@ -68,19 +78,37 @@ function CalculatorForm(props) {
               type="number"
               min={1}
               name="quantity"
-              placeholder="Runs."
+              placeholder="Runs"
             />
           </Form.Group>
         </OverlayTrigger>
+
+        <OverlayTrigger
+          placement="left" // Position of tooltip
+          overlay={
+            <Tooltip id="bp_me-tooltip">
+              Material Efficiency value
+            </Tooltip>
+          }
+        >
         <Form.Group id="bp_me" controlId="blueprintMe">
           <Form.Control
             type="number"
             min={0}
             name="blueprintMe"
-            placeholder="Blueprint ME."
+            placeholder="Blueprint ME"
           />
         </Form.Group>
+        </OverlayTrigger>
 
+        <OverlayTrigger
+          placement="left" // Position of tooltip
+          overlay={
+            <Tooltip id="build-tooltip">
+              Crafting Structure.
+            </Tooltip>
+          }
+        >
         <Form.Group id="bp_build" controlId="building">
           <Form.Select defaultValue="0" aria-label="Default select example">
             <option value={0}>Building.</option>
@@ -106,7 +134,16 @@ function CalculatorForm(props) {
               )) && <option value="5">Tatara</option>}
           </Form.Select>
         </Form.Group>
-
+        </OverlayTrigger>
+        
+        <OverlayTrigger
+          placement="left" // Position of tooltip
+          overlay={
+            <Tooltip id="rig-tooltip">
+              Building Rig
+            </Tooltip>
+          }
+        >
         <Form.Group id="bp_rig" controlId="buildingRig">
           <Form.Select aria-label="Default select example" defaultValue="0">
             <option value={0}>Building Rig.</option>
@@ -114,6 +151,16 @@ function CalculatorForm(props) {
             <option value="2">T2</option>
           </Form.Select>
         </Form.Group>
+        </OverlayTrigger>
+
+        <OverlayTrigger
+          placement="left" // Position of tooltip
+          overlay={
+            <Tooltip id="system-tooltip">
+              System of the building
+            </Tooltip>
+          }
+        >
         <Form.Group id="bp_system" controlId="systemName">
           <Typeahead
             ref={typeaheadRef}
@@ -125,9 +172,19 @@ function CalculatorForm(props) {
             id="basic-behaviors-example"
             options={props.optionsSys}
             oo
-            placeholder="Choose a system."
+            placeholder="Choose a system"
           />
         </Form.Group>
+        </OverlayTrigger>
+
+        <OverlayTrigger
+          placement="left" // Position of tooltip
+          overlay={
+            <Tooltip id="ft-tooltip">
+              Stucture Facility Tax
+            </Tooltip>
+          }
+        >
         <Form.Group id="bp_ft" controlId="facility">
           <Form.Control
             type="number"
@@ -136,11 +193,13 @@ function CalculatorForm(props) {
             placeholder="Facility tax."
           />
         </Form.Group>
+        </OverlayTrigger>
+
         <OverlayTrigger
           placement="left" // Position of tooltip
           overlay={
             <Tooltip id="count-tooltip">
-              How many manufacturing jobs you are going to start.
+              How many manufacturing jobs you are going to start
             </Tooltip>
           }
         >
@@ -157,20 +216,20 @@ function CalculatorForm(props) {
           placement="left" // Position of tooltip
           overlay={
             <Tooltip id="market-tooltip">
-              Region you are buying mats from. For Jita leave Forge.
+              Region you are buying mats from. For Jita leave Forge
             </Tooltip>
           }
         >
           <Form.Group id="bp_market" controlId="marketRegion">
             <Form.Select aria-label="Default select example">
-              {props.regions.map((region, index) => {
+              {props.stations.map((station, index) => {
                 return (
                   <option
                     key={index}
-                    selected={region.regionId == 10000002}
-                    value={region.regionId}
+                    selected={station.stationId == 60003760}
+                    value={station.regionId+"_"+station.stationId}
                   >
-                    {region.regionName}
+                    {station.regionName+ " - " + station.stationName}
                   </option>
                 );
               })}
@@ -190,7 +249,7 @@ function CalculatorForm(props) {
             setFormDataReaction={props.setFormDataReaction}
             optionsSys={props.optionsSys}
             advancedMode={props.advancedMode}
-            regions={props.regions}
+           // regions={props.regions}
           />
         )}
       {props.advancedMode &&
@@ -204,7 +263,7 @@ function CalculatorForm(props) {
             setFormDataReaction={props.setFormDataReaction}
             optionsSys={props.optionsSys}
             advancedMode={props.advancedMode}
-            regions={props.regions}
+           // regions={props.regions}
           />
         )}
       <Button variant="secondary" onClick={sendData}>

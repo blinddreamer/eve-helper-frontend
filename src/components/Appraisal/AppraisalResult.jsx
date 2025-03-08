@@ -26,13 +26,19 @@ function AppraisalResult(props) {
               <td>
                 BUY:
                 <span id="apbuy">
-                  {formatPrice(props.appraisal.estimateTotalBuy)}
+                  {formatPrice(props.appraisal.estimateTotalBuy * (props.pricePercentage/100))}
+                </span>
+              </td>
+              <td>
+                SPLIT:
+                <span id="apaverage">
+                  {formatPrice(props.appraisal.estimateTotalSplit * (props.pricePercentage/100))}
                 </span>
               </td>
               <td>
                 SELL:
                 <span id="apsel">
-                  {formatPrice(props.appraisal.estimateTotalSell)}
+                  {formatPrice(props.appraisal.estimateTotalSell * (props.pricePercentage/100))}
                 </span>
               </td>
               <td>
@@ -51,12 +57,15 @@ function AppraisalResult(props) {
               <th>#</th>
               <th>Item</th>
               <th>Quantity</th>
-              <th>Unit Volume</th>
-              <th>Total Volume</th>
-              <th>Sell Price</th>
-              <th>Total Sell Price</th>
-              <th>Buy Price</th>
-              <th>Total Buy Price</th>
+              {/* <th>Unit Volume</th> */}
+              <th>Volume</th>
+              {/* <th>Sell Price</th> */}
+              <th>Sell</th>
+              {/* <th>Buy Price</th> */}
+              <th>Buy</th>
+              {/* <th>Sell/Buy Average</th> */}
+              <th>Split</th>
+              
             </tr>
           </thead>
           <tbody>
@@ -64,13 +73,15 @@ function AppraisalResult(props) {
               <tr key={index}>
                 <td><img src={ap.icon} loading="lazy" /></td>
                 <td>{ap.item}</td>
-                <td>{ap.quantity}</td>
-                <td>{volumeFormat.format(ap.volume)} m³</td>
+                <td>{volumeFormat.format(ap.quantity)}</td>
+                {/* <td>{volumeFormat.format(ap.volume)} m³</td> */}
                 <td>{volumeFormat.format(ap.quantity * ap.volume)} m³ </td>
-                <td>{priceFormat.format(ap.sellOrderPrice)}</td>
-                <td>{priceFormat.format(ap.quantity * ap.sellOrderPrice)}</td>
-                <td>{priceFormat.format(ap.buyOrderPrice)}</td>
-                <td>{priceFormat.format(ap.quantity * ap.buyOrderPrice)}</td>
+                {/* <td>{priceFormat.format(ap.sellOrderPrice)}</td> */}
+                <td>{priceFormat.format((ap.quantity * ap.sellOrderPrice) * (props.pricePercentage/100))}</td>
+                {/* <td>{priceFormat.format(ap.buyOrderPrice)}</td> */}
+                <td>{priceFormat.format((ap.quantity * ap.buyOrderPrice) * (props.pricePercentage/100))}</td>
+                {/* <td>{priceFormat.format(ap.sellBuyOrderAverage)}</td> */}
+                <td>{priceFormat.format((ap.quantity * ap.splitPrice) * (props.pricePercentage/100))}</td>
               </tr>
             ))}
           </tbody>

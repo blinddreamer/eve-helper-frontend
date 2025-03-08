@@ -124,7 +124,7 @@ function CalculatorBody(props) {
                     advancedMode={props.advancedMode}
                     setFormDataPart={setFormDataPart}
                     setFormDataReaction={setFormDataReaction}
-                    regions={regions}
+                    stations={stations}
                     blueprintComplexity={blueprintComplexity}
                     setBlueprintComplexity={setBlueprintComplexity}
                     bpDetails={bpDetails}

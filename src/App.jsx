@@ -29,6 +29,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/Calculator" element={<CalculatorHome />} />
             <Route path="/Appraisal" element={<Appraisal />} />
+            <Route path="/Appraisal/:uuid" element={<Appraisal />} />
             <Route path="/error" element={<ErrorPage />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>

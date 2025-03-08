@@ -220,6 +220,12 @@ textarea {
   vertical-align: middle !important;
 }
 
+#apaverage {
+  color: #de08fa;
+  font-size: 2.2rem;
+  vertical-align: middle !important;
+}
+
 #apvolume {
   font-size: 2.2rem;
   vertical-align: middle !important;
