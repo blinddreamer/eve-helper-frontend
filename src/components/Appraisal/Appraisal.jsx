@@ -9,6 +9,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Alert from "react-bootstrap/Alert";
 import Animated from "../Animated";
+import AppraisalText from "./AppraisalText";
 
 function Appraisal() {
   const [onStart, setOnstart] = useState(true);
@@ -164,7 +165,7 @@ function Appraisal() {
           return;
         }
 
-        const match = line.match(/^(.+?)\s+(\d+)$/);
+        const match = line.match(/^(.+?)\s{1,3}(\d+)(?:\s.*)?$/);
 
         if (match) {
           const itemName = match[1].trim();
@@ -220,16 +221,16 @@ function Appraisal() {
           setOptionsSys={setOptionsSys}
         />
 
-        {appraisal.appraisalResult ? (
+        {appraisal.appraisalResult &&
           <AppraisalResult
             appraisal={appraisal}
             pricePercentage={pricePercentage}
+          />}
+          <AppraisalText 
+          uuid={uuid}
+          calculateAppraisal={calculateAppraisal}
+          handleCopy={handleCopy}
           />
-        ) : (
-          <div id="start-message">
-            <Alert variant="success">Paste a list from in-game items.</Alert>
-          </div>
-        )}
       </div>
     </Animated>
   );

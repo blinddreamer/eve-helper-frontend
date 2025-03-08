@@ -1,11 +1,8 @@
 import Form from "react-bootstrap/Form";
 import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
-import Button from "react-bootstrap/Button";
-import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
 import Animated from "../Animated";
-import { Clipboard } from "react-bootstrap-icons";
 import { useRef } from "react";
 
 function AppraisalForm(props) {
@@ -133,54 +130,6 @@ function AppraisalForm(props) {
               </div>
             </div>
           </div>
-          <Form.Group controlId="appraisalText">
-            <Form.Label>Appraisal:</Form.Label>
-            <Form.Control
-              key="appraisal"
-              as="textarea"
-              name="appraisal"
-              placeholder="Enter list of items to be appraised."
-            />
-          </Form.Group>
-
-          <Form.Group controlId="appraisalComment">
-            <Form.Label>Comment:</Form.Label>
-            <Form.Control
-              key="app-comment"
-              as="textarea"
-              name="comment"
-              value={props.comment}
-              onChange={(e) => {
-                props.setComment(e.target.value);
-              }}
-              placeholder="Enter your comment."
-            />
-          </Form.Group>
-          <p></p>
-          <Button variant="secondary" onClick={props.calculateAppraisal}>
-            {props.isLoading ? (
-              <>
-                <Spinner
-                  as="span"
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />
-                Loading...
-              </>
-            ) : (
-              "Submit"
-            )}
-          </Button>
-          <Button
-            disabled={!props.uuid}
-            onClick={props.handleCopy}
-            variant="outline"
-          >
-            <Clipboard className="mr-2 h-4 w-4" />
-            Copy URL
-          </Button>
         </Form>
       </div>
     </Animated>
