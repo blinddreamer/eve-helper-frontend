@@ -208,24 +208,20 @@ tr {
 #apbuy {
   color: #22babb;
   font-size: 2.2rem;
-  vertical-align: middle !important;
 }
 
 #apsel {
   color: #fa7f08;
   font-size: 2.2rem;
-  vertical-align: middle !important;
 }
 
 #apaverage {
   color: #de08fa;
   font-size: 2.2rem;
-  vertical-align: middle !important;
 }
 
 #apvolume {
   font-size: 2.2rem;
-  vertical-align: middle !important;
 }
 
 #apholddiv {
@@ -233,18 +229,13 @@ tr {
   margin-top: 20px;
   margin-bottom: 10px;
   padding: 10px;
-}
-
-#iskPerVol {
-  background-color: rgba(var(--bs-body-color-rgb), 0.03);
-  margin-top: 20px;
-  margin-bottom: 10px;
-  padding: 10px;
+  border-radius: 10px;
 }
 
 #apmaindiv {
   margin-left: auto;
   margin-right: auto;
+  vertical-align: bottom;
 }
 
 .positiveprice {
@@ -339,7 +330,7 @@ tr {
   display: flex;
   width: 100%; /* Adjust as needed */
   padding: 20px;
-  margin-bottom: 10px;
+  margin-bottom: -20px;
 }
 #appraisalformleft {
   width: 50%;
@@ -347,6 +338,8 @@ tr {
   border-radius: 15px 0px 0px 15px;
   padding: 20px;
   box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+#appraisalformmid {
 }
 #appraisalformright {
   width: 50%;
@@ -358,4 +351,75 @@ tr {
 
 #appraisalformelements {
   margin-bottom: 15px;
+}
+
+#appraisalformmid {
+  display: flex;
+  width: 100%; /* Adjust as needed */
+  padding: 20px;
+  margin-bottom: 10px;
+
+  margin-top: 10px;
+}
+
+#appraisalformresult {
+  padding: 20px;
+}
+
+#appraisalText {
+  min-height: 100px;
+  resize: vertical;
+  width: 100%;
+  padding: 20px;
+  border-radius: 15px 0px 0px 15px;
+  background-color: rgba(var(--bs-body-color-rgb), 0.03);
+}
+
+#appraisalComment {
+  min-height: 100px;
+  resize: vertical;
+  width: 100%;
+  padding: 20px;
+  border-radius: 0 15px 15px 0px;
+  background-color: rgba(var(--bs-body-color-rgb), 0.03);
+}
+
+#appraisaltextleft {
+  width: 49%;
+
+  box-sizing: border-box;
+  margin-right: 2%;
+}
+#appraisalcommentright {
+  width: 49%;
+
+  box-sizing: border-box;
+}
+
+#appraisaltable {
+  padding: 20px;
+}
+#appraisaltop {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  font-size: 20px;
+}
+#appraisalvolumebuy,
+#appraisalvolumeaverage,
+#appraisalvolumesell,
+#appraisaltopbuy,
+#appraisaltopsplit,
+#appraisaltopsell,
+#appraisaltopvolume {
+  margin-right: 5px;
+}
+
+#appraisaltopvolume {
+  margin-right: 45px;
+}
+
+#appraisaltd {
+  height: 20px;
+  padding: 1px;
 }
