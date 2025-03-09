@@ -64,15 +64,14 @@ function AppraisalResult(props) {
                 {" "}
                 volume:
                 <span id="apvolume">
-                  {volumeFormat.format(
+                  {formatPrice(
                     props.appraisal.appraisalResult.totalVolume
-                  )}
-                  m³
+                  )  +"  m³"} 
                 </span>
               </div>
               <div id="appraisalvolumebuy">
                 {" "}
-                isk per m³ buy:
+                ISK per m³ buy:
                 <span id="apbuy">
                   {formatPrice(
                     (props.appraisal.appraisalResult.estimateTotalBuy *
