@@ -4,8 +4,6 @@ import "react-bootstrap-typeahead/css/Typeahead.css";
 import Alert from "react-bootstrap/Alert";
 import Animated from "../Animated";
 import { useRef } from "react";
-import { Clipboard } from "react-bootstrap-icons";
-import { Button } from "react-bootstrap";
 
 function AppraisalForm(props) {
   const typeaheadRef = useRef(null);
@@ -108,18 +106,6 @@ function AppraisalForm(props) {
                       />
                     </div>
                   </Form.Group>
-                </div>
-                <div id="appraisalformelements">
-                  <div id="buttonappraisalright">
-                    <Button
-                      disabled={!props.uuid}
-                      onClick={props.handleCopy}
-                      variant="secondary"
-                    >
-                      <Clipboard className="mr-2 h-4 w-4" />
-                      Copy URL
-                    </Button>
-                  </div>
                 </div>
               </div>
             </div>

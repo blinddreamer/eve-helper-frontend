@@ -432,3 +432,8 @@ tr {
   height: 20px;
   padding: 1px;
 }
+
+#buttonappraisalright {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
