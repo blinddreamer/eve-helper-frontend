@@ -434,6 +434,10 @@ tr {
 }
 
 #buttonappraisalright {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: -10px;
+}
+
+#appraisalResponse {
+  padding: 20px;
 }
