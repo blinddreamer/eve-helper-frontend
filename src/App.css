@@ -349,8 +349,17 @@ tr {
   box-sizing: border-box; /* Ensures padding doesn't affect width */
 }
 
+#appraisalcontainer {
+  align-items: center;
+  display: flex;
+}
+
 #appraisalformelements {
-  margin-bottom: 15px;
+  align-items: center;
+
+  margin-right: 10px;
+  margin-bottom: 10px;
+  width: 40%;
 }
 
 #appraisalformmid {
