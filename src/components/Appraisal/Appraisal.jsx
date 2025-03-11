@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import axios from "axios";
 import AppraisalForm from "./AppraisalForm";
 import AppraisalResult from "./AppraisalResult";
@@ -194,47 +193,6 @@ function Appraisal() {
   return (
     <Animated>
       <div id="animateddiv">
-      <Helmet>
-                
-                {appraisal.transactionType  ? <meta property="og:title" content={`Appraisal @ ${appraisal.pricePercentage}% - ${appraisal.market} ${appraisal.transactionType}:
-                ${appraisal.transactionType === "split"
-                  ? appraisal.appraisalResult.estimateTotalSplit
-                  : appraisal.transactionType === "sell"
-                  ? appraisal.appraisalResult.estimateTotalSell
-                  : appraisal.appraisalResult.estimateTotalBuy} ISK`} />: 
-                <meta property="og:title"content="EVE Helper - Industry Calculator/Appraisal"/>}
-                <meta property="og:description" content="EVE Helper provides industrial calculation tools for EVE Online, including market appraisals and profit calculators." />
-                <meta
-      property="og:image"
-      content="https://eve-helper.com/social-preview.png"
-    />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta
-      property="og:image:alt"
-      content="EVE Helper - Industrial Calculator for EVE Online"
-    />
-    <meta property="og:url" content="https://eve-helper.com" />
-    <meta property="og:site_name" content="EVE Helper" />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:updated_time" content="2023-10-01T12:00:00Z" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="EVE Helper - Industry Calculator/Appraisal"
-    />
-    <meta
-      name="twitter:description"
-      content="EVE Helper provides industrial calculation tools for EVE Online, including market appraisals and profit calculators."
-    />
-    <meta
-      name="twitter:image"
-      content="https://eve-helper.com/social-preview.png"
-    />
-    <meta name="twitter:url" content="https://eve-helper.com" />
-    <meta name="twitter:site" content="@YourWebsiteHandle" />
-    <meta name="twitter:creator" content="@YourPersonalHandle" />
-            </Helmet>
         <AppraisalForm
           isLoading={isLoading}
           stations={stations}
@@ -245,8 +203,6 @@ function Appraisal() {
           setPricePercentage={setPricePercentage}
           transactionType={transactionType}
           setTransactionType={setTransactionType}
-          comment={comment}
-          setComment={setComment}
           market={market}
           setMarket={setMarket}
           updateStorage={updateStorage}
@@ -261,12 +217,14 @@ function Appraisal() {
         {appraisal.appraisalResult &&
           <AppraisalResult
             appraisal={appraisal}
+            uuid={uuid}
+            handleCopy={handleCopy}
             pricePercentage={pricePercentage}
           />}
-          <AppraisalText 
-          uuid={uuid}
+          <AppraisalText
           calculateAppraisal={calculateAppraisal}
-          handleCopy={handleCopy}
+          comment={comment}
+          setComment={setComment}
           />
       </div>
     </Animated>

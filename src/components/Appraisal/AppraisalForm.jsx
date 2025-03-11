@@ -3,7 +3,7 @@ import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import Alert from "react-bootstrap/Alert";
 import Animated from "../Animated";
-import { useRef } from "react";
+import React, { useRef } from "react";
 
 function AppraisalForm(props) {
   const typeaheadRef = useRef(null);
@@ -67,44 +67,11 @@ function AppraisalForm(props) {
                 <div id="appraisalformelements">
                   <Form.Group controlId="orderType">
                     <Form.Label>Order type</Form.Label>
-                    <div key={`inline-radio`} className="mb-3">
-                      <Form.Check
-                        inline
-                        type="radio"
-                        label="Buy"
-                        aria-label="radio 1"
-                        value={"buy"}
-                        id={`inline-radio-1`}
-                        checked={props.transactionType === "buy"}
-                        onChange={(e) =>
-                          props.setTransactionType(e.target.value)
-                        }
-                      />
-                      <Form.Check
-                        inline
-                        type="radio"
-                        label="Sell"
-                        aria-label="radio 1"
-                        value={"sell"}
-                        id={`inline-radio-2`}
-                        checked={props.transactionType === "sell"}
-                        onChange={(e) =>
-                          props.setTransactionType(e.target.value)
-                        }
-                      />
-                      <Form.Check
-                        inline
-                        type="radio"
-                        label="Split"
-                        aria-label="radio 1"
-                        value={"split"}
-                        id={`inline-radio-3`}
-                        checked={props.transactionType === "split"}
-                        onChange={(e) =>
-                          props.setTransactionType(e.target.value)
-                        }
-                      />
-                    </div>
+                    <Form.Select defaultValue={props.transactionType} onChange={(e) =>props.setTransactionType(e.target.value)} aria-label="Default select example">
+                      <option value={"buy"}>Buy</option>
+                      <option value={"sell"}>Sell</option>
+                      <option value={"split"}>Split</option>
+                    </Form.Select>
                   </Form.Group>
                 </div>
               </div>
