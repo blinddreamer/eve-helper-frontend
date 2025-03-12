@@ -64,10 +64,14 @@ function AppraisalForm(props) {
                 </div>
               </div>
               <div id="appraisalcontainer">
+                <div id="appraisalformelements">Order type:</div>
                 <div id="appraisalformelements">
                   <Form.Group controlId="orderType">
-                    <Form.Label>Order type</Form.Label>
-                    <Form.Select defaultValue={props.transactionType} onChange={(e) =>props.setTransactionType(e.target.value)} aria-label="Default select example">
+                    <Form.Select
+                      defaultValue={props.transactionType}
+                      onChange={(e) => props.setTransactionType(e.target.value)}
+                      aria-label="Default select example"
+                    >
                       <option value={"buy"}>Buy</option>
                       <option value={"sell"}>Sell</option>
                       <option value={"split"}>Split</option>
