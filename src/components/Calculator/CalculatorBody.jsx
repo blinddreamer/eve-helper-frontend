@@ -6,7 +6,6 @@ import Calculator from "./Calculator.jsx";
 import GetForm from "./CalculatorForm.jsx";
 import AdvancedModeToggle from "../AdvancedModeToggle.jsx";
 import axios from "axios";
-import { Helmet } from "react-helmet-async";
 import Animated from "../Animated";
 
 function CalculatorBody(props) {
@@ -131,7 +130,7 @@ function CalculatorBody(props) {
                     bpDetails={bpDetails}
                   ></GetForm>
                 </div>
-               </Col>
+              </Col>
             </Col>
             <Col xs={9}>
               <Calculator
