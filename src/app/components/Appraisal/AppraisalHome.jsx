@@ -112,6 +112,17 @@ function AppraisalHome() {
     updateStorage("system", system);
   }
 
+  function getMarketName(marketId) {
+    const marketMap = {
+        "10000002_60003760": "Jita",
+        "10000043_60008494": "Amarr", // Fixed spelling
+        "10000030_60004588": "Rens",
+        "10000032_60011866": "Dodixie",
+        "10000042_60005686": "Hek"
+    };
+    return marketMap[marketId] || "Unknown Market";
+  }
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -184,7 +195,7 @@ function AppraisalHome() {
           />
 
           {appraisal.appraisalResult && (
-            <AppraisalResult appraisal={appraisal} uuid={uuid} handleCopy={handleCopy} pricePercentage={pricePercentage} />
+            <AppraisalResult appraisal={appraisal} uuid={uuid} handleCopy={handleCopy} pricePercentage={pricePercentage} getMarketName={getMarketName} />
           )}
 
           <AppraisalText calculateAppraisal={calculateAppraisal} isLoading={isLoading} comment={comment} appraisalData={appraisalData} setAppraisalData={setAppraisalData} setComment={setComment} />

@@ -16,6 +16,7 @@ export async function generateMetadata({ params }) {
 
     return marketMap[marketId] || "Unknown Market";
 }
+
 function formatPrice(price) {
   if (price >= 1e9) {
     return (price / 1e9).toFixed(1) + "B"; // Convert to billion and add "B"

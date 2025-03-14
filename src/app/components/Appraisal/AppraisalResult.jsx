@@ -33,9 +33,10 @@ function AppraisalResult(props) {
       </div>
       <div id="appraisalResponse">
         <h5>
-          {props.appraisal.system} {props.appraisal.pricePercentage}% @{" "}
-          {props.appraisal.market === "10000002_60003760" ? "Jita 4-4" : "Amar"}{" "}
-          {props.appraisal.transactionType}
+          {props.appraisal.pricePercentage}% @{" "}
+          {props.getMarketName(props.appraisal.market)}{" "}
+          {props.appraisal.transactionType} @
+          {props.appraisal.system}
         </h5>
         <div id="apholddiv">
           <div id="appraisaltop">
