@@ -187,7 +187,7 @@ function AppraisalHome() {
             <AppraisalResult appraisal={appraisal} uuid={uuid} handleCopy={handleCopy} pricePercentage={pricePercentage} />
           )}
 
-          <AppraisalText calculateAppraisal={calculateAppraisal} comment={comment} appraisalData={appraisalData} setAppraisalData={setAppraisalData} setComment={setComment} />
+          <AppraisalText calculateAppraisal={calculateAppraisal} isLoading={isLoading} comment={comment} appraisalData={appraisalData} setAppraisalData={setAppraisalData} setComment={setComment} />
         </Animated>
       </div>
     </>
