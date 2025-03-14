@@ -16,6 +16,7 @@ export async function generateMetadata({ params }) {
 
     return marketMap[marketId] || "Unknown Market";
 }
+
 function formatPrice(price) {
   if (price >= 1e9) {
     return (price / 1e9).toFixed(1) + "B"; // Convert to billion and add "B"
@@ -53,29 +54,29 @@ function formatPrice(price) {
     if (response.status === 200) {
       const appraisal = response.data;
       // Update metadata with fetched data.
-      const title = `${appraisal.pricePercentage}% ${getMarketName(appraisal.market) || "Unknown Market"} ${appraisal.transactionType}: ${appraisal.transactionType === "split"
+      const title = `${appraisal.pricePercentage}% ${getMarketName(appraisal.market) || "Unknown Market"} ${appraisal.transactionType}: ${appraisal.transactionType === "SPLIT"
             ? formatPrice(appraisal.appraisalResult?.estimateTotalSplit)
-            : appraisal.transactionType === "sell"
+            : appraisal.transactionType === "SELL"
             ? formatPrice(appraisal.appraisalResult?.estimateTotalSell)
-            : formatPrice(appraisal.appraisalResult?.estimateTotalBuy)} ISK`;
+            : formatPrice(appraisal.appraisalResult?.estimateTotalBuy)} ISK @ ${appraisal.system}`;
       const description = appraisal.appraisalResult?.appraisals
-      ?.map(res => `${res.item}: ${appraisal.transactionType === "split" ? formatPrice(res.splitPrice) : appraisal.transactionType === "buy" ? formatPrice(res.buyOrderPrice) : formatPrice(res.sellOrderPrice)} &#xD;&#xA;`)
+      ?.map(res => `${res.item}: ${appraisal.transactionType === "SPLIT" ? formatPrice(res.splitPrice) : appraisal.transactionType === "BUY" ? formatPrice(res.buyOrderPrice) : formatPrice(res.sellOrderPrice)} &#xD;&#xA;`)
       ?.join("") ||  "No items available"; // Avoids potential undefined issues
     
     metadata = {
       title: title, // Dynamic title
       description: description, // Dynamic description
-      // openGraph: {
-      //   title: title, // Updated OG title
-      //   description: description, // No need for `{description}`, just use the variable
-      //   url: `${process.env.NEXT_PUBLIC_BASE_URL}/appraisal/${uuid}`,
-      //   type: "website",
-      // },
-      // twitter: {
-      //   title: title,
-      //   description: description,
-      //   card: "summary_large_image",
-      //   }
+      openGraph: {
+        title: title, // Updated OG title
+        description: description, // No need for `{description}`, just use the variable
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/appraisal/${uuid}`,
+        type: "website",
+      },
+      twitter: {
+        title: title,
+        description: description,
+        card: "summary_large_image",
+        }
     };
     }
   } catch (error) {
