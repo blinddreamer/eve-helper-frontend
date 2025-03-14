@@ -60,7 +60,7 @@ function formatPrice(price) {
             : formatPrice(appraisal.appraisalResult?.estimateTotalBuy)} ISK`;
       const description = appraisal.appraisalResult?.appraisals
       ?.map(res => `<p>${res.item}: ${appraisal.transactionType === "split" ? formatPrice(res.splitPrice) : appraisal.transactionType === "buy" ? formatPrice(res.buyOrderPrice) : formatPrice(res.sellOrderPrice)}</p>`)
-      ?.join("\n") ||  "No items available"; // Avoids potential undefined issues
+      ?.join("") ||  "No items available"; // Avoids potential undefined issues
     
     metadata = {
       title: title, // Dynamic title
