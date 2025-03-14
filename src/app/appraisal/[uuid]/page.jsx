@@ -33,17 +33,17 @@ function formatPrice(price) {
   let metadata = {
     title: "Appraisal - EVE Helper", // Default title.
     description: "Check out this appraisal!", // Default description.
-    openGraph: {
-      title: "Appraisal - EVE Helper", // Default OG title.
-      description: "Check out this appraisal!", // Default OG description.
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/appraisal/${uuid}`,
-      type: "website",
-    },
-    twitter: {
-      title: "Appraisal - EVE Helper",
-      description: "Check out this appraisal!",
-      card: "summary_large_image",
-      }
+    // openGraph: {
+    //   title: "Appraisal - EVE Helper", // Default OG title.
+    //   description: "Check out this appraisal!", // Default OG description.
+    //   url: `${process.env.NEXT_PUBLIC_BASE_URL}/appraisal/${uuid}`,
+    //   type: "website",
+    // },
+    // twitter: {
+    //   title: "Appraisal - EVE Helper",
+    //   description: "Check out this appraisal!",
+    //   card: "summary_large_image",
+    //   }
   };
 
   try {
