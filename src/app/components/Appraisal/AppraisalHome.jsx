@@ -58,6 +58,7 @@ function AppraisalHome() {
           setAppraisalData(response.data.appraisalResult.appraisals.map(app=> app.item + "  " + app.quantity).join("\n"));
           setEditMode(false);
           setLoadedApp(true);
+          setIsLoading(false);
         }
       } catch (error) {
         console.error("Error fetching appraisal:", error);
@@ -163,9 +164,8 @@ function AppraisalHome() {
       router.push(`/appraisal/${data}`);
     } catch (error) {
       setErrorMessage(error.message);
-    } finally {
       setIsLoading(false);
-    }
+    } 
   }
 
   return (
