@@ -53,15 +53,14 @@ function formatPrice(price) {
     if (response.status === 200) {
       const appraisal = response.data;
       // Update metadata with fetched data.
-      const title = `${appraisal.pricePercentage}% ${getMarketName(appraisal.market) || "Unknown Market"} ${appraisal.transactionType}: 
-          ${appraisal.transactionType === "split"
+      const title = `${appraisal.pricePercentage}% ${getMarketName(appraisal.market) || "Unknown Market"} ${appraisal.transactionType}: ${appraisal.transactionType === "split"
             ? formatPrice(appraisal.appraisalResult?.estimateTotalSplit)
             : appraisal.transactionType === "sell"
             ? formatPrice(appraisal.appraisalResult?.estimateTotalSell)
             : formatPrice(appraisal.appraisalResult?.estimateTotalBuy)} ISK`;
       const description = appraisal.appraisalResult?.appraisals
-      ?.map(res => `${res.item}: ${appraisal.transactionType === "split" ? formatPrice(res.splitPrice) : appraisal.transactionType === "buy" ? formatPrice(res.buyOrderPrice) : formatPrice(res.sellOrderPrice)}`)
-      ?.join("<br>") ||  "No items available"; // Avoids potential undefined issues
+      ?.map(res => `<p>${res.item}: ${appraisal.transactionType === "split" ? formatPrice(res.splitPrice) : appraisal.transactionType === "buy" ? formatPrice(res.buyOrderPrice) : formatPrice(res.sellOrderPrice)}</p>`)
+      ?.join("\n") ||  "No items available"; // Avoids potential undefined issues
     
     metadata = {
       title: title, // Dynamic title
