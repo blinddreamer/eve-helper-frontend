@@ -40,8 +40,8 @@ function formatPrice(price) {
       type: "website",
     },
     twitter: {
-      title: title,
-      description: description,
+      title: "Appraisal - EVE Helper",
+      description: "Check out this appraisal!",
       card: "summary_large_image",
       }
   };

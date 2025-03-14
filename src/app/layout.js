@@ -63,15 +63,6 @@ export default function RootLayout({ children }) {
         <meta property="og:site_name" content="EVE Helper" />
         <meta property="og:locale" content="en_US" />
         <meta property="og:updated_time" content="2023-10-01T12:00:00Z" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="EVE Helper - Industry Calculator/Appraisal"
-        />
-        <meta
-          name="twitter:description"
-          content="EVE Helper provides industrial calculation tools for EVE Online, including market appraisals and profit calculators."
-        />
         <meta
           name="twitter:image"
           content="https://eve-helper.com/social-preview.png"
