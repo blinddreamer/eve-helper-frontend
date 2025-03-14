@@ -1,5 +1,4 @@
 import Table from "react-bootstrap/Table";
-import Animated from "../Animated";
 import { Clipboard } from "react-bootstrap-icons";
 import { Button } from "react-bootstrap";
 

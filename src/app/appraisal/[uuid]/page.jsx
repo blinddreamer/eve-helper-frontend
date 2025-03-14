@@ -16,6 +16,17 @@ export async function generateMetadata({ params }) {
 
     return marketMap[marketId] || "Unknown Market";
 }
+function formatPrice(price) {
+  if (price >= 1e9) {
+    return (price / 1e9).toFixed(1) + "B"; // Convert to billion and add "B"
+  } else if (price >= 1e6) {
+    return (price / 1e6).toFixed(1) + "M"; // Convert to million and add "M"
+  } else if (price >= 1e3) {
+    return (price / 1e3).toFixed(1) + "K"; // Convert to thousand and add "K"
+  } else {
+    return price.toFixed(0); // Otherwise, return as it is
+  }
+}
   const backend = process.env.NEXT_PUBLIC_API_URL;
 
   // Set the default metadata with a placeholder.
@@ -28,6 +39,11 @@ export async function generateMetadata({ params }) {
       url: `${process.env.NEXT_PUBLIC_BASE_URL}/appraisal/${uuid}`,
       type: "website",
     },
+    twitter: {
+      title: title,
+      description: description,
+      card: "summary_large_image",
+      }
   };
 
   try {
@@ -37,24 +53,30 @@ export async function generateMetadata({ params }) {
     if (response.status === 200) {
       const appraisal = response.data;
       // Update metadata with fetched data.
+      const title = `${appraisal.pricePercentage}% ${getMarketName(appraisal.market) || "Unknown Market"} ${appraisal.transactionType}: 
+          ${appraisal.transactionType === "split"
+            ? formatPrice(appraisal.appraisalResult?.estimateTotalSplit)
+            : appraisal.transactionType === "sell"
+            ? formatPrice(appraisal.appraisalResult?.estimateTotalSell)
+            : formatPrice(appraisal.appraisalResult?.estimateTotalBuy)} ISK`;
       const description = appraisal.appraisalResult?.appraisals
-      ?.map(res => `${res.item}: ${appraisal.transactionType === "split" ? res.splitPrice : appraisal.transactionType === "buy" ? res.buyOrderPrice : res.sellOrderPrice}`)
-      ?.join("<br>") ||  "No items available"; // Avoids potential undefined issues
+      ?.map(res => `${res.item}: ${appraisal.transactionType === "split" ? formatPrice(res.splitPrice) : appraisal.transactionType === "buy" ? formatPrice(res.buyOrderPrice) : formatPrice(res.sellOrderPrice)}`)
+      ?.join("&#xD") ||  "No items available"; // Avoids potential undefined issues
     
     metadata = {
-      title: `${appraisal.system} ${appraisal.pricePercentage}% - ${appraisal.market}`, // Dynamic title
-      description: `Appraisal ${appraisal.uuid} @ ${appraisal.pricePercentage}% - ${appraisal.market}`, // Dynamic description
+      title: title, // Dynamic title
+      description: description, // Dynamic description
       openGraph: {
-        title: `${appraisal.pricePercentage}% ${getMarketName(appraisal.market) || "Unknown Market"} ${appraisal.transactionType}: 
-          ${appraisal.transactionType === "split"
-            ? appraisal.appraisalResult?.estimateTotalSplit
-            : appraisal.transactionType === "sell"
-            ? appraisal.appraisalResult?.estimateTotalSell
-            : appraisal.appraisalResult?.estimateTotalBuy} ISK`, // Updated OG title
-        description, // No need for `{description}`, just use the variable
+        title: title, // Updated OG title
+        description: description, // No need for `{description}`, just use the variable
         url: `${process.env.NEXT_PUBLIC_BASE_URL}/appraisal/${uuid}`,
         type: "website",
       },
+      twitter: {
+        title: title,
+        description: description,
+        card: "summary_large_image",
+        }
     };
     }
   } catch (error) {

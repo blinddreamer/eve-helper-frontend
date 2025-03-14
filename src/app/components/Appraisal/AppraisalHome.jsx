@@ -20,10 +20,9 @@ function AppraisalHome() {
   const [pricePercentage, setPricePercentage] = useState(100);
   const [transactionType, setTransactionType] = useState("buy");
   const [market, setMarket] = useState("10000002_60003760");
+  const [appraisalData, setAppraisalData]= useState("");
   const [editMode, setEditMode] = useState(true);
   const [comment, setComment] = useState("");
-  const [hydrated, setHydrated] = useState(false);
-
   const backend = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
   const { uuid } = useParams();
@@ -31,29 +30,32 @@ function AppraisalHome() {
   // Load stored values when the component mounts
   useEffect(() => {
     if (typeof window === "undefined") return;
-
+    if(!editMode) return;
     setMarket(localStorage.getItem("marketRegion") || market);
     setPricePercentage(parseFloat(localStorage.getItem("pricePercentage")) || pricePercentage);
     setTransactionType(localStorage.getItem("transactionType") || transactionType);
     setComment(localStorage.getItem("appraisalComment") || comment);
     setSystem(localStorage.getItem("system") || system);
     
-    setHydrated(true);
   }, []);
 
   // Fetch appraisal data if uuid exists
   useEffect(() => {
-    if (!uuid || loadedApp) return;
-
+    if (!uuid || loadedApp){ 
+      setEditMode(true);
+      return;
+    }
     const fetchAppraisal = async () => {
       try {
         const response = await axios.get(`${backend}appraisal/${uuid}`);
         if (response.status === 200) {
+          setEditMode(false);
           setAppraisal(response.data);
           setMarket(response.data.market);
           setPricePercentage(response.data.pricePercentage);
           setComment(response.data.comment);
           setTransactionType(response.data.transactionType);
+          setAppraisalData(response.data.appraisalResult.appraisals.map(app=> app.item + "  " + app.quantity).join("\n"));
           setEditMode(false);
           setLoadedApp(true);
         }
@@ -185,7 +187,7 @@ function AppraisalHome() {
             <AppraisalResult appraisal={appraisal} uuid={uuid} handleCopy={handleCopy} pricePercentage={pricePercentage} />
           )}
 
-          <AppraisalText calculateAppraisal={calculateAppraisal} comment={comment} setComment={setComment} />
+          <AppraisalText calculateAppraisal={calculateAppraisal} comment={comment} appraisalData={appraisalData} setAppraisalData={setAppraisalData} setComment={setComment} />
         </Animated>
       </div>
     </>

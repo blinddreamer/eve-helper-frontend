@@ -12,6 +12,10 @@ function AppraisalText(props) {
               <Form.Control
                 key="appraisal"
                 as="textarea"
+                value={props.appraisalData}
+                onChange={(e) => {
+                  props.setAppraisalData(e.target.value);
+                }}
                 name="appraisal"
                 placeholder="Enter list of items to be appraised."
               />

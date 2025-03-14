@@ -5,7 +5,7 @@ export async function generateMetadata({ params }) {
   
     // Set the default metadata with a placeholder.
     let metadata = {
-      title: "Eve Helper -Appraisals", // Default title.
+      title: "Eve Helper - Appraisals", // Default title.
       description: "EVE Helper provides industrial calculation tools for EVE Online, including market appraisals and profit calculators.", // Default description.
       openGraph: {
         title: "Appraisals - EVE Helper", // Default OG title.
@@ -13,6 +13,11 @@ export async function generateMetadata({ params }) {
         url: `${process.env.NEXT_PUBLIC_BASE_URL}/appraisal/`,
         type: "website",
       },
+      twitter: {
+        title: "Eve Helper - Appraisals",
+        description: "EVE Helper provides industrial calculation tools for EVE Online, including market appraisals and profit calculators.",
+        card: "summary_large_image",
+        }
     };
   
   

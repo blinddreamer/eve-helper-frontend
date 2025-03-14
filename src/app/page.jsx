@@ -15,6 +15,11 @@ export async function generateMetadata({ params }) {
       url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
       type: "website",
     },
+    twitter: {
+      title: "EVE Helper - Industry Calculator/Appraisal",
+      description: "EVE Helper provides industrial calculation tools for EVE Online, including market appraisals and profit calculators.",
+      card: "summary_large_image",
+      }
   };
 
 

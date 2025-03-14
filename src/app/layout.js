@@ -25,8 +25,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-      <link rel="canonical" href="https://eve-helper.com" />
-      <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="canonical" href="https://eve-helper.com" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" sizes="192x192" href="/android-chrome-192x192.png" />
@@ -49,14 +49,6 @@ export default function RootLayout({ children }) {
     <meta property="og:locale" content="en_US" />
     <meta property="og:updated_time" content="2023-10-01T12:00:00Z" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-            name="twitter:title"
-            content="EVE Helper - Industry Calculator/Appraisal"
-    />
-    <meta
-            name="twitter:description"
-            content="EVE Helper provides industrial calculation tools for EVE Online, including market appraisals and profit calculators."
-    />
     <meta
             name="twitter:image"
             content="https://eve-helper.com/social-preview.png"
