@@ -18,7 +18,7 @@ function AppraisalHome() {
   const [appraisal, setAppraisal] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
   const [pricePercentage, setPricePercentage] = useState(100);
-  const [transactionType, setTransactionType] = useState("buy");
+  const [transactionType, setTransactionType] = useState("BUY");
   const [market, setMarket] = useState("10000002_60003760");
   const [appraisalData, setAppraisalData]= useState("");
   const [editMode, setEditMode] = useState(true);
