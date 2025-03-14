@@ -1,32 +1,23 @@
-# Build stage
-FROM node:alpine AS builder
+# Use an official Node.js runtime as a parent image
+FROM node:18-alpine
 
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy the package.json and package-lock.json files first to install dependencies
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install production dependencies
+RUN npm install --production
 
-# Copy the rest of your application code
+# Copy the rest of the application files into the container
 COPY . .
 
-# Build the Next.js app
+# Build the Next.js app for production
 RUN npm run build
 
-# Production stage: Nginx
-FROM nginx:alpine
+# Expose the port the app will run on (default is 3000)
+EXPOSE 3000
 
-# Copy custom Nginx config to the container
-COPY nginx.conf /etc/nginx/nginx.conf
-
-# Copy the built Next.js app from the build stage
-COPY --from=builder /app/.next /usr/share/nginx/html/.next
-COPY --from=builder /app/public /usr/share/nginx/html/public
-
-# Expose port 82 to access the app
-EXPOSE 82
-
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start the Next.js app
+CMD ["npm", "start"]
