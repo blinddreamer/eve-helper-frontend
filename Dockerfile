@@ -1,5 +1,5 @@
 # Build stage
-FROM node:18.17.0-alpine AS builder
+FROM node:alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
@@ -7,7 +7,7 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM node:18.17.0-alpine
+FROM node:alpine
 WORKDIR /app
 COPY --from=builder /app/next.config.mjs ./next.config.mjs
 COPY --from=builder /app/public ./public
