@@ -25,11 +25,9 @@ export async function generateMetadata({ params }) {
   }
 
 export default function Appraisal() {
-    return (
-      <>
-     
-        <AppraisalHome />
-       
-      </>
-    );
-  }
+  return (
+    <>
+      <AppraisalHome />
+    </>
+  );
+}
