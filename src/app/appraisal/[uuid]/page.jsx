@@ -65,17 +65,17 @@ function formatPrice(price) {
     metadata = {
       title: title, // Dynamic title
       description: description, // Dynamic description
-      openGraph: {
-        title: title, // Updated OG title
-        description: description, // No need for `{description}`, just use the variable
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/appraisal/${uuid}`,
-        type: "website",
-      },
-      twitter: {
-        title: title,
-        description: description,
-        card: "summary_large_image",
-        }
+      // openGraph: {
+      //   title: title, // Updated OG title
+      //   description: description, // No need for `{description}`, just use the variable
+      //   url: `${process.env.NEXT_PUBLIC_BASE_URL}/appraisal/${uuid}`,
+      //   type: "website",
+      // },
+      // twitter: {
+      //   title: title,
+      //   description: description,
+      //   card: "summary_large_image",
+      //   }
     };
     }
   } catch (error) {
