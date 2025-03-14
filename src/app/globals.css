@@ -441,3 +441,38 @@ tr {
 #appraisalResponse {
   padding: 20px;
 }
+
+/* navbar */
+
+.navbar-custom {
+  padding: 0.5rem 1rem;
+}
+
+.navbar-custom .brand {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.navbar-custom .nav-item {
+  margin: 0 10px;
+  text-decoration: none;
+  font-size: 1rem;
+}
+
+.navbar-custom .nav-item:hover {
+  text-decoration: underline;
+}
+
+.navbar-custom .navbar-brand {
+  padding-top: 0;
+  padding-bottom: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* navbar */
