@@ -59,8 +59,8 @@ function formatPrice(price) {
             ? formatPrice(appraisal.appraisalResult?.estimateTotalSell)
             : formatPrice(appraisal.appraisalResult?.estimateTotalBuy)} ISK`;
       const description = appraisal.appraisalResult?.appraisals
-      ?.map(res => `${res.item}: ${appraisal.transactionType === "split" ? formatPrice(res.splitPrice) : appraisal.transactionType === "buy" ? formatPrice(res.buyOrderPrice) : formatPrice(res.sellOrderPrice)} \n`)
-      ?.join(";") ||  "No items available"; // Avoids potential undefined issues
+      ?.map(res => `${res.item}: ${appraisal.transactionType === "split" ? formatPrice(res.splitPrice) : appraisal.transactionType === "buy" ? formatPrice(res.buyOrderPrice) : formatPrice(res.sellOrderPrice)} &#xD;&#xA`)
+      ?.join("") ||  "No items available"; // Avoids potential undefined issues
     
     metadata = {
       title: title, // Dynamic title
