@@ -7,16 +7,14 @@ function Homepage() {
   return (
     <Animated>
       <div id="homebox">
-        <div>
-          <Alert variant="danger">UNDER CONSTRUCTION</Alert>
-        </div>
+        <div>{/* <Alert variant="danger">UNDER CONSTRUCTION</Alert> */}</div>
         <main style={{ lineHeight: "1.6" }}>
           eve-helper is an industrial calculator aiming to help with your
           industrial costs.
           <br />
-          Whether you're a seasoned industrialist or just starting out, eve-helper
-          provides comprehensive tools and features to streamline your industrial
-          operations in EVE.
+          Whether you're a seasoned industrialist or just starting out,
+          eve-helper provides comprehensive tools and features to streamline
+          your industrial operations in EVE.
           <br />
           With eve-helper, you can calculate material requirements, production
           costs, profit margins, and more for a wide range of industrial
@@ -26,7 +24,7 @@ function Homepage() {
           optimize your industry and maximize your profits.
         </main>
       </div>
-      </Animated>
+    </Animated>
   );
 }
 
