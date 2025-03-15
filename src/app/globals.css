@@ -92,17 +92,16 @@ a:visited {
 }
 
 #blueprintHeader {
+  margin-top: 20px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   border-radius: 5px;
-  border-color: var(--bs-border-color);
-  border-style: solid;
   width: 100%;
-  border-width: 1px;
   margin-bottom: 15px;
   font-size: var(--bs-body-font-size);
   padding: 15px;
+  background-color: rgba(var(--bs-body-color-rgb), 0.03);
 }
 
 #topcard {
@@ -206,17 +205,17 @@ tr {
 }
 
 #apbuy {
-  color: #22babb;
+  color: #83cfcf;
   font-size: 2.2rem;
 }
 
 #apsel {
-  color: #fa7f08;
+  color: #e1b489;
   font-size: 2.2rem;
 }
 
 #apaverage {
-  color: #de08fa;
+  color: #b778bf;
   font-size: 2.2rem;
 }
 
