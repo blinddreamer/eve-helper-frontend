@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import Head from "next/head"; // For setting OG metadata
 import axios from "axios";
 import AppraisalForm from "./AppraisalForm";
 import AppraisalResult from "./AppraisalResult";
