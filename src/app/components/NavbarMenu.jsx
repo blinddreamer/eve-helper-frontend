@@ -9,6 +9,7 @@ import NavbarCollapse from "react-bootstrap/NavbarCollapse";
 import NavbarBrand from "react-bootstrap/NavbarBrand"
 import ResponsiveAlert from "./ResponsiveAlert";
 import DarkModeToggle from "./DarkModeToggle";
+import Login from "./Auth/Login";
 
 function NavbarMenu() {
   return (
@@ -32,10 +33,17 @@ function NavbarMenu() {
               <Link  href="/appraisal" className="nav-item">
                 Appraisal
               </Link>
+              <Link href="/picalculator" className="nav-item">
+               Picalculator
+              </Link>
             </Nav>
 
             <Nav className="ms-auto align-items-center">
               <DarkModeToggle />
+            </Nav>
+
+            <Nav className="auth-info">
+              <Login />
             </Nav>
           </NavbarCollapse>
         </Container>

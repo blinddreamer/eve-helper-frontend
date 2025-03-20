@@ -672,9 +672,7 @@ function Calculator(props) {
     } finally {
       setIsLoading(false);
     }
-
-    // console.log(response.data.blueprintResult);
-  }
+}
 
   function calculatePriceDifferences() {
     return (
@@ -733,8 +731,7 @@ function Calculator(props) {
       );
       props.setMaterialsList(response.data.blueprintResult);
       props.setInitialBlueprint(response.data.blueprintResult[0]);
-      //    console.log(response.data.blueprintResult);
-    } catch {
+      } catch {
       console.error("Error updating material stats:", error);
      // navigate("/error", { state: { message: error.message } });
     } finally {
