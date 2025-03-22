@@ -1,31 +1,43 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Cookies from "js-cookie"; // Import to handle cookies
+import Cookies from "js-cookie";
 
-export default function Login() {
-  const [user, setUser] = useState(null);
+export default function Login(props) {
+ // const [user, setUser] = useState(null);
   const backend = process.env.NEXT_PUBLIC_API_URL;
+
   useEffect(() => {
     if (typeof window === "undefined") return;
-
-    const storedUser = localStorage.getItem("character");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+  
+   
+    
+    if (!props.user) {
+      getUserInfo(); // Only call if user is null and session exists
     }
+  }, [props.user]);
 
-    // Only call extendSession if the user has a session cookie
-    const sessionUUID = Cookies.get("sessionUUID");
-    if (sessionUUID) {
-      extendSession();
+  const getUserInfo = async () => {
+    try {
+      const response = await fetch(`${backend}auth/me`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (!response.ok) return;
+
+      const data = await response.json(); // Correctly parse response
+      props.setUser(data.character);
+      extendSession(); // Extend session after confirming user is valid
+    } catch (error) {
+      console.error("Error fetching user:", error);
     }
-  }, []);
+  };
 
-  // Function to extend the session
   const extendSession = async () => {
     try {
-      const response = await fetch(backend+"auth/extend-session", {
+        const response = await fetch(`${backend}auth/extend-session`, {
         method: "POST",
-        credentials: "include", // Ensure cookies are sent
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -36,7 +48,6 @@ export default function Login() {
     }
   };
 
-  // Handle the login by opening the OAuth2 popup
   const handleLogin = () => {
     const width = 600;
     const height = 800;
@@ -44,7 +55,7 @@ export default function Login() {
     const top = window.screen.height / 2 - height / 2;
 
     const authWindow = window.open(
-      process.env.NEXT_PUBLIC_LOGIN_API, // OAuth2 URL (set in .env)
+      process.env.NEXT_PUBLIC_LOGIN_API,
       "Eve Login",
       `width=${width},height=${height},top=${top},left=${left}`
     );
@@ -52,19 +63,14 @@ export default function Login() {
     const checkPopup = setInterval(() => {
       if (authWindow.closed) {
         clearInterval(checkPopup);
-        const storedUser = localStorage.getItem("character");
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-          extendSession(); // Extend session after login
-        }
+        getUserInfo();
       }
     }, 1000);
   };
 
-  // Handle logout
   const handleLogout = async () => {
     try {
-      await fetch(backend+"auth/logout", {
+      await fetch(`${backend}auth/logout`, {
         method: "POST",
         credentials: "include",
       });
@@ -72,17 +78,16 @@ export default function Login() {
       console.error("Logout failed:", error);
     }
 
-    setUser(null);
-    localStorage.removeItem("character");
-    Cookies.remove("sessionUUID"); // Remove session cookie
+    props.setUser(null);
+    Cookies.remove("sessionUUID");
   };
 
   return (
     <div>
-      {user ? (
+      {props.user ? (
         <div>
-          <img src={user.portrait} alt="Character Portrait" />
-          <h2>{user.name}</h2>
+          <img src={props.user.avatar} alt="Character Portrait" />
+          <h2>{props.user.name}</h2>
           <button onClick={handleLogout}>Logout</button>
         </div>
       ) : (

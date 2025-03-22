@@ -1,5 +1,6 @@
-// components/NavbarMenu.js
+"use client"
 import React from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
@@ -12,6 +13,7 @@ import DarkModeToggle from "./DarkModeToggle";
 import Login from "./Auth/Login";
 
 function NavbarMenu() {
+  const [user, setUser] = useState(null);
   return (
     <>
      <Navbar expand="lg" className="bg-body-tertiary navbar-custom">
@@ -36,14 +38,17 @@ function NavbarMenu() {
               <Link href="/picalculator" className="nav-item">
                Picalculator
               </Link>
+              {user && <Link href="/dashboard" className="nav-item">
+               Dashboard
+              </Link>}
             </Nav>
 
             <Nav className="ms-auto align-items-center">
               <DarkModeToggle />
             </Nav>
 
-            <Nav className="auth-info">
-              <Login />
+              <Nav className="auth-info">
+              <Login user={user} setUser={setUser}/>
             </Nav>
           </NavbarCollapse>
         </Container>
