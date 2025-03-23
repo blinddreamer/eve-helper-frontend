@@ -15,16 +15,41 @@ export default function CookieBanner() {
     setShowBanner(false);
   };
 
+  const closeBanner = () => {
+    setShowBanner(false);
+  };
+
   if (!showBanner) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 bg-gray-900 text-white p-4 rounded-lg shadow-lg flex justify-between items-center">
-      <p className="text-sm">
-        This site uses cookies to enhance your experience. By continuing, you agree to our use of cookies.
-      </p>
-      <button onClick={acceptCookies} className="ml-4 bg-blue-500 px-3 py-1 rounded text-white">
-        Accept
-      </button>
+    <div className="d-flex flex-column align-items-center justify-content-center bg-gray-800 text-white p-4">
+      <div className="flex-grow mb-4">
+        <p id="cookie" className="text-sm text-center">
+          This site uses cookies to enhance your experience, analyze site
+          traffic, and offer personalized content. By continuing, you agree to
+          our use of cookies.
+          <br /> You can learn more about how we use cookies and manage your
+          preferences in our{" "}
+          <a href="/cookie-policy" className="text-blue-300">
+            Cookie Policy
+          </a>
+          .
+        </p>
+      </div>
+      <div className="d-flex gap-3">
+        <button
+          onClick={acceptCookies}
+          className="btn btn-secondary px-4 py-2 rounded text-white"
+        >
+          Accept All Cookies
+        </button>
+        <button
+          onClick={closeBanner}
+          className="btn btn-secondary px-4 py-2 rounded text-white"
+        >
+          Close
+        </button>
+      </div>
     </div>
   );
 }

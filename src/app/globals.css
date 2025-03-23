@@ -475,3 +475,7 @@ tr {
 }
 
 /* navbar */
+
+#cookie {
+  color: var(--bs-body-color);
+}

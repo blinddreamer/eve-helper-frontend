@@ -4,37 +4,51 @@ import { useState, useEffect } from "react";
 
 export default function Picalculator() {
   const [piList, setPiList] = useState([]);
-  const [onStart, setOnstart] = useState(true);
-  const [hoveredResource, setHoveredResource] = useState(null); // Track hovered resource
+  const [hoveredResource, setHoveredResource] = useState(null);
+  const [hoveredDependencies, setHoveredDependencies] = useState(new Set());
   const backend = process.env.NEXT_PUBLIC_API_URL;
 
   const categories = ["Raw", "Basic", "Refined", "Specialized", "Advanced"];
 
-  // Dependencies between resources
-  const resourceDependencies = {
-    "Noble Gas": ["Oxygen"],
-    Oxygen: ["Synthetic Oil"],
-    // Add more dependencies as needed
-  };
+  const planets = [
+    { id: 1, name: "Barren", src: "/assets/barren.png" },
+    { id: 2, name: "Gas", src: "/assets/gas.png" },
+    { id: 3, name: "Ice", src: "/assets/ice.png" },
+    { id: 4, name: "Lava", src: "/assets/lava.png" },
+    { id: 5, name: "Oceanic", src: "/assets/oceanic.png" },
+    { id: 6, name: "Plasma", src: "/assets/plasma.png" },
+    { id: 7, name: "Storm", src: "/assets/storm.png" },
+    { id: 8, name: "Temperate", src: "/assets/temperate.png" },
+  ];
 
   useEffect(() => {
-    if (!onStart) return;
-
     const fetchPiData = async () => {
       try {
         const response = await axios.get(backend + "pi");
-        if (response.status !== 200) {
+        if (response.status === 200) {
+          setPiList(response.data);
+        } else {
           throw new Error(`Server Error: ${response.statusText}`);
         }
-        setPiList(response.data);
       } catch (error) {
         console.error("Error:", error.message);
       }
     };
 
     fetchPiData();
-    setOnstart(false);
-  }, [onStart]);
+  }, []);
+
+  const findAllDependencies = (itemId, visited = new Set()) => {
+    if (visited.has(itemId)) return;
+    visited.add(itemId);
+
+    const item = piList.find((pi) => pi.id === itemId);
+    if (item && item.dependencies.length > 0) {
+      item.dependencies.forEach((dep) =>
+        findAllDependencies(dep.typeID, visited)
+      );
+    }
+  };
 
   const drawOnCanvas = (canvasId, data) => {
     const canvas = document.getElementById(canvasId);
@@ -60,20 +74,15 @@ export default function Picalculator() {
     canvas.height = totalHeight;
 
     let yPosition = 10;
-    const resourcePositions = [];
+    const resourcePositions = new Map();
 
-    // Iterate over resources and draw them
-    data.forEach((pi, index) => {
+    data.forEach((pi) => {
       const xPosition = 10;
       const img = new Image();
       img.onload = () => {
-        // Draw background for the resource box
         ctx.fillStyle = "#6c757d";
-        if (
-          hoveredResource === pi.name ||
-          resourceDependencies[pi.name]?.includes(hoveredResource)
-        ) {
-          ctx.fillStyle = "#444"; // Darker background on hover
+        if (hoveredResource === pi.id || hoveredDependencies.has(pi.id)) {
+          ctx.fillStyle = "#444";
         }
         drawRoundedRect(
           ctx,
@@ -85,10 +94,7 @@ export default function Picalculator() {
         );
         ctx.fill();
 
-        // Draw icon
         ctx.drawImage(img, xPosition, yPosition, imgSize, imgSize);
-
-        // Draw text
         ctx.fillStyle = "white";
         ctx.fillText(
           pi.name,
@@ -96,9 +102,7 @@ export default function Picalculator() {
           yPosition + imgSize / 2 + 4
         );
 
-        // Track the position of each resource
-        resourcePositions.push({
-          name: pi.name,
+        resourcePositions.set(pi.id, {
           x: xPosition,
           y: yPosition,
           width: boxWidth,
@@ -108,96 +112,41 @@ export default function Picalculator() {
         yPosition += boxHeight + verticalSpacing;
       };
       img.src = pi.icon;
-
-      // Draw arrows for dependencies on hover
-      if (hoveredResource === pi.name) {
-        const dependentResources = resourceDependencies[pi.name];
-        if (dependentResources) {
-          dependentResources.forEach((depResource) => {
-            const depResourceObj = data.find(
-              (item) => item.name === depResource
-            );
-            if (depResourceObj) {
-              const depYPosition = data.indexOf(depResourceObj) * 100 + 10;
-              drawArrow(
-                ctx,
-                10 + 50,
-                yPosition - 50,
-                10 + 50,
-                depYPosition + 50
-              );
-            }
-          });
-        }
-      }
-
-      // Draw arrows pointing back to the hovered resource (if it is a dependent resource)
-      if (
-        resourceDependencies[pi.name] &&
-        hoveredResource &&
-        resourceDependencies[pi.name].includes(hoveredResource)
-      ) {
-        const dependentResourceObj = data.find((item) => item.name === pi.name);
-        if (dependentResourceObj) {
-          const depYPosition = data.indexOf(dependentResourceObj) * 100 + 10;
-          drawArrow(ctx, 10 + 50, depYPosition + 50, 10 + 50, yPosition - 50);
-        }
-      }
     });
 
-    // Detect hover on canvas
-    canvas.addEventListener("mousemove", (e) => {
-      const canvasRect = canvas.getBoundingClientRect();
-      const mouseX = e.clientX - canvasRect.left;
-      const mouseY = e.clientY - canvasRect.top;
-
+    canvas.onmousemove = (e) => {
+      const { left, top } = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - left;
+      const mouseY = e.clientY - top;
       let hovered = null;
 
-      // Check if mouse is inside any resource box
-      resourcePositions.forEach((resource) => {
+      resourcePositions.forEach((pos, id) => {
         if (
-          mouseX >= resource.x &&
-          mouseX <= resource.x + resource.width &&
-          mouseY >= resource.y &&
-          mouseY <= resource.y + resource.height
+          mouseX >= pos.x &&
+          mouseX <= pos.x + pos.width &&
+          mouseY >= pos.y &&
+          mouseY <= pos.y + pos.height
         ) {
-          hovered = resource.name;
+          hovered = id;
         }
       });
 
-      setHoveredResource(hovered);
-    });
+      if (hovered !== hoveredResource) {
+        setHoveredResource(hovered);
+        if (hovered) {
+          const dependencies = new Set();
+          findAllDependencies(hovered, dependencies);
+          setHoveredDependencies(dependencies);
+        } else {
+          setHoveredDependencies(new Set());
+        }
+      }
+    };
 
-    // Reset hover state when mouse leaves the canvas
-    canvas.addEventListener("mouseleave", () => {
+    canvas.onmouseleave = () => {
       setHoveredResource(null);
-    });
-  };
-
-  const drawArrow = (ctx, x1, y1, x2, y2) => {
-    const headlen = 10;
-    const angle = Math.atan2(y2 - y1, x2 - x1);
-
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(x2, y2);
-    ctx.lineTo(
-      x2 - headlen * Math.cos(angle - Math.PI / 6),
-      y2 - headlen * Math.sin(angle - Math.PI / 6)
-    );
-    ctx.lineTo(
-      x2 - headlen * Math.cos(angle + Math.PI / 6),
-      y2 - headlen * Math.sin(angle + Math.PI / 6)
-    );
-    ctx.closePath();
-    ctx.fillStyle = "#000";
-    ctx.fill();
+      setHoveredDependencies(new Set());
+    };
   };
 
   const drawRoundedRect = (ctx, x, y, width, height, radius) => {
@@ -223,7 +172,7 @@ export default function Picalculator() {
         }
       });
     }
-  }, [piList, hoveredResource]);
+  }, [piList, hoveredResource, hoveredDependencies]);
 
   return (
     <div id="pi-diagram">
@@ -244,14 +193,7 @@ export default function Picalculator() {
         ))}
       </div>
 
-      {/* PLANETS SECTION */}
-      <div
-        id="planets"
-        style={{
-          marginTop: "20px",
-          textAlign: "center",
-        }}
-      >
+      <div id="planets" style={{ marginTop: "20px", textAlign: "center" }}>
         <h3 style={{ color: "white" }}>Planets:</h3>
         <div
           style={{
@@ -261,22 +203,15 @@ export default function Picalculator() {
             gap: "10px",
           }}
         >
-          {[
-            { id: 1, name: "Barren", src: "/assets/barren.png" },
-            { id: 2, name: "Gas", src: "/assets/gas.png" },
-            { id: 3, name: "Ice", src: "/assets/ice.png" },
-            { id: 4, name: "Lava", src: "/assets/lava.png" },
-            { id: 5, name: "Oceanic", src: "/assets/oceanic.png" },
-            { id: 6, name: "Plasma", src: "/assets/plasma.png" },
-            { id: 7, name: "Storm", src: "/assets/storm.png" },
-            { id: 8, name: "Temperate", src: "/assets/temperate.png" },
-          ].map((planet) => (
+          {planets.map((planet) => (
             <span
               key={planet.id}
               style={{
                 display: "flex",
                 alignItems: "center",
-                backgroundColor: "#6c757d",
+                backgroundColor: hoveredDependencies.has(planet.id)
+                  ? "#444"
+                  : "#6c757d",
                 padding: "4px 8px",
                 borderRadius: "4px",
                 color: "white",
