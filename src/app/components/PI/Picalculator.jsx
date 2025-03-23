@@ -72,7 +72,7 @@ export default function Picalculator() {
 
   return (
     <div id="pi-diagram">
-      <Alert variant="danger">UNDER CONSTRUCTION!</Alert>
+      <Alert variant="warning">UNDER CONSTRUCTION!</Alert>
       <h2 id="diagram-label">DIAGRAM</h2>
 
       {/* PI Categories */}

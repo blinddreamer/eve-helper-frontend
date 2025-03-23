@@ -48,9 +48,9 @@ function NavbarMenu() {
               )}
             </Nav>
 
-            <Nav className="auth-info">
+            {/* <Nav className="auth-info">
               <Login user={user} setUser={setUser} />
-            </Nav>
+            </Nav> */}
 
             <Nav className="ms-auto align-items-center">
               <DarkModeToggle />
