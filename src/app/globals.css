@@ -479,3 +479,7 @@ tr {
 #cookie {
   color: var(--bs-body-color);
 }
+
+#container-cookie {
+  text-align: left;
+}
