@@ -1,6 +1,7 @@
 "use client";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Alert from "react-bootstrap/Alert";
 
 export default function Picalculator() {
   const [piList, setPiList] = useState([]);
@@ -9,7 +10,7 @@ export default function Picalculator() {
   const [hoveredDependents, setHoveredDependents] = useState(new Set());
   const backend = process.env.NEXT_PUBLIC_API_URL;
 
-  const categories = ["Raw", "Basic", "Refined", "Specialized", "Advanced"];
+  const categories = ["Raw", "T1", "T2", "T3", "T4"];
 
   useEffect(() => {
     const fetchPiData = async () => {
@@ -71,12 +72,18 @@ export default function Picalculator() {
 
   return (
     <div id="pi-diagram">
-      <h2 id="diagram-label">PI DIAGRAM</h2>
+      <Alert variant="danger">UNDER CONSTRUCTION!</Alert>
+      <h2 id="diagram-label">DIAGRAM</h2>
 
       {/* PI Categories */}
       <div
         id="pi-columns"
-        style={{ display: "flex", justifyContent: "space-between" }}
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: "10px",
+          textAlign: "left",
+        }}
       >
         {categories.map((category, index) => {
           const filteredData = piList.filter((pi) => pi.type === index + 1);
@@ -86,7 +93,9 @@ export default function Picalculator() {
               id={category.toLowerCase()}
               style={{ flex: 1, padding: "2px" }}
             >
-              <h3>{category}</h3>
+              <div class="picategory">
+                <h3>{category}</h3>
+              </div>
               {filteredData.map((pi) => (
                 <div
                   key={pi.id}
@@ -124,7 +133,9 @@ export default function Picalculator() {
 
       {/* Planets Section */}
       <div id="planets" style={{ marginTop: "20px", textAlign: "center" }}>
-        <h3 style={{ color: "white" }}>Planets:</h3>
+        <span id="pipanetstext" style={{ color: "white" }}>
+          PLANETS
+        </span>
         <div
           style={{
             display: "flex",
