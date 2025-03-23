@@ -5,9 +5,17 @@ import { useState, useEffect } from "react";
 export default function Picalculator() {
   const [piList, setPiList] = useState([]);
   const [onStart, setOnstart] = useState(true);
+  const [hoveredResource, setHoveredResource] = useState(null); // Track hovered resource
   const backend = process.env.NEXT_PUBLIC_API_URL;
 
   const categories = ["Raw", "Basic", "Refined", "Specialized", "Advanced"];
+
+  // Dependencies between resources
+  const resourceDependencies = {
+    "Noble Gas": ["Oxygen"],
+    Oxygen: ["Synthetic Oil"],
+    // Add more dependencies as needed
+  };
 
   useEffect(() => {
     if (!onStart) return;
@@ -42,25 +50,31 @@ export default function Picalculator() {
     const cornerRadius = 4;
     const verticalSpacing = 8;
 
-    // **1. Calculate the widest text in this column**
-    ctx.font = "12px Arial";
     let maxTextWidth = Math.max(
       ...data.map((pi) => ctx.measureText(pi.name).width)
     );
     let boxWidth = imgSize + maxTextWidth + textPadding + padding * 2;
-
-    // **2. Calculate the total required height**
     let totalHeight = data.length * (boxHeight + verticalSpacing) + padding * 2;
+
     canvas.width = boxWidth + 20;
     canvas.height = totalHeight;
 
     let yPosition = 10;
-    data.forEach((pi) => {
+    const resourcePositions = [];
+
+    // Iterate over resources and draw them
+    data.forEach((pi, index) => {
       const xPosition = 10;
       const img = new Image();
       img.onload = () => {
-        // **Draw background**
+        // Draw background for the resource box
         ctx.fillStyle = "#6c757d";
+        if (
+          hoveredResource === pi.name ||
+          resourceDependencies[pi.name]?.includes(hoveredResource)
+        ) {
+          ctx.fillStyle = "#444"; // Darker background on hover
+        }
         drawRoundedRect(
           ctx,
           xPosition - padding,
@@ -71,10 +85,10 @@ export default function Picalculator() {
         );
         ctx.fill();
 
-        // **Draw icon**
+        // Draw icon
         ctx.drawImage(img, xPosition, yPosition, imgSize, imgSize);
 
-        // **Draw text**
+        // Draw text
         ctx.fillStyle = "white";
         ctx.fillText(
           pi.name,
@@ -82,10 +96,108 @@ export default function Picalculator() {
           yPosition + imgSize / 2 + 4
         );
 
+        // Track the position of each resource
+        resourcePositions.push({
+          name: pi.name,
+          x: xPosition,
+          y: yPosition,
+          width: boxWidth,
+          height: boxHeight,
+        });
+
         yPosition += boxHeight + verticalSpacing;
       };
       img.src = pi.icon;
+
+      // Draw arrows for dependencies on hover
+      if (hoveredResource === pi.name) {
+        const dependentResources = resourceDependencies[pi.name];
+        if (dependentResources) {
+          dependentResources.forEach((depResource) => {
+            const depResourceObj = data.find(
+              (item) => item.name === depResource
+            );
+            if (depResourceObj) {
+              const depYPosition = data.indexOf(depResourceObj) * 100 + 10;
+              drawArrow(
+                ctx,
+                10 + 50,
+                yPosition - 50,
+                10 + 50,
+                depYPosition + 50
+              );
+            }
+          });
+        }
+      }
+
+      // Draw arrows pointing back to the hovered resource (if it is a dependent resource)
+      if (
+        resourceDependencies[pi.name] &&
+        hoveredResource &&
+        resourceDependencies[pi.name].includes(hoveredResource)
+      ) {
+        const dependentResourceObj = data.find((item) => item.name === pi.name);
+        if (dependentResourceObj) {
+          const depYPosition = data.indexOf(dependentResourceObj) * 100 + 10;
+          drawArrow(ctx, 10 + 50, depYPosition + 50, 10 + 50, yPosition - 50);
+        }
+      }
     });
+
+    // Detect hover on canvas
+    canvas.addEventListener("mousemove", (e) => {
+      const canvasRect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - canvasRect.left;
+      const mouseY = e.clientY - canvasRect.top;
+
+      let hovered = null;
+
+      // Check if mouse is inside any resource box
+      resourcePositions.forEach((resource) => {
+        if (
+          mouseX >= resource.x &&
+          mouseX <= resource.x + resource.width &&
+          mouseY >= resource.y &&
+          mouseY <= resource.y + resource.height
+        ) {
+          hovered = resource.name;
+        }
+      });
+
+      setHoveredResource(hovered);
+    });
+
+    // Reset hover state when mouse leaves the canvas
+    canvas.addEventListener("mouseleave", () => {
+      setHoveredResource(null);
+    });
+  };
+
+  const drawArrow = (ctx, x1, y1, x2, y2) => {
+    const headlen = 10;
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(
+      x2 - headlen * Math.cos(angle - Math.PI / 6),
+      y2 - headlen * Math.sin(angle - Math.PI / 6)
+    );
+    ctx.lineTo(
+      x2 - headlen * Math.cos(angle + Math.PI / 6),
+      y2 - headlen * Math.sin(angle + Math.PI / 6)
+    );
+    ctx.closePath();
+    ctx.fillStyle = "#000";
+    ctx.fill();
   };
 
   const drawRoundedRect = (ctx, x, y, width, height, radius) => {
@@ -111,7 +223,7 @@ export default function Picalculator() {
         }
       });
     }
-  }, [piList]);
+  }, [piList, hoveredResource]);
 
   return (
     <div id="pi-diagram">
@@ -124,7 +236,7 @@ export default function Picalculator() {
           <div
             key={category}
             id={category.toLowerCase()}
-            style={{ flex: 1, padding: "2px" }}
+            style={{ flex: 1, padding: "2px", position: "relative" }}
           >
             <h3>{category}</h3>
             <canvas id={`${category.toLowerCase()}-canvas`}></canvas>
@@ -133,7 +245,13 @@ export default function Picalculator() {
       </div>
 
       {/* PLANETS SECTION */}
-      <div id="planets" style={{ marginTop: "20px", textAlign: "center" }}>
+      <div
+        id="planets"
+        style={{
+          marginTop: "20px",
+          textAlign: "center",
+        }}
+      >
         <h3 style={{ color: "white" }}>Planets:</h3>
         <div
           style={{
