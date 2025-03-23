@@ -1,13 +1,11 @@
 // components/Homepage.js
 import React from "react";
-import Alert from "react-bootstrap/Alert";
 import Animated from "./Animated";
 
 function Homepage() {
   return (
     <Animated>
       <div id="homebox">
-        <div>{/* <Alert variant="danger">UNDER CONSTRUCTION</Alert> */}</div>
         <main style={{ lineHeight: "1.6" }}>
           eve-helper is an industrial calculator aiming to help with your
           industrial costs.

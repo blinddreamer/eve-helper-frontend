@@ -3,14 +3,12 @@ import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 
 export default function Login(props) {
- // const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
   const backend = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-  
-   
-    
+
     if (!props.user) {
       getUserInfo(); // Only call if user is null and session exists
     }
@@ -35,7 +33,7 @@ export default function Login(props) {
 
   const extendSession = async () => {
     try {
-        const response = await fetch(`${backend}auth/extend-session`, {
+      const response = await fetch(`${backend}auth/extend-session`, {
         method: "POST",
         credentials: "include",
       });
@@ -91,7 +89,10 @@ export default function Login(props) {
           <button onClick={handleLogout}>Logout</button>
         </div>
       ) : (
-        <button onClick={handleLogin} className="bg-blue-500 text-white px-4 py-2 rounded">
+        <button
+          class="d-flex align-items-center justify-content-center btn btn-secondary"
+          onClick={handleLogin}
+        >
           Login with EVE
         </button>
       )}
