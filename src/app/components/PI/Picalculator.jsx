@@ -10,7 +10,7 @@ export default function Picalculator() {
   const [hoveredDependents, setHoveredDependents] = useState(new Set());
   const backend = process.env.NEXT_PUBLIC_API_URL;
 
-  const categories = ["Raw", "T1", "T2", "T3", "T4"];
+  const categories = ["RAW", "T1", "T2", "T3", "T4"];
 
   useEffect(() => {
     const fetchPiData = async () => {
