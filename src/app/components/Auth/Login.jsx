@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
+import {api} from "../../utils/axios"
 
 export default function Login(props) {
   // const [user, setUser] = useState(null);
@@ -16,14 +17,11 @@ export default function Login(props) {
 
   const getUserInfo = async () => {
     try {
-      const response = await fetch(`${backend}auth/me`, {
-        method: "GET",
-        credentials: "include",
-      });
+      const response = api.get(`${backend}auth/me`);
 
       if (!response.ok) return;
 
-      const data = await response.json(); // Correctly parse response
+      const data = await response.data; // Correctly parse response
       props.setUser(data.character);
       extendSession(); // Extend session after confirming user is valid
     } catch (error) {

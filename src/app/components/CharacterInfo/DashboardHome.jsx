@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import {api} from "../../utils/axios"
 export default function DashboardHome() {
  const [wallet, setWallet] = useState(0); 
-    const backend = process.env.NEXT_PUBLIC_API_URL;   
+     
     useEffect(() => {
        
     
