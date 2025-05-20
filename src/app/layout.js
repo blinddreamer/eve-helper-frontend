@@ -1,10 +1,11 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Cookie, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import NavbarMenu from "./components/NavbarMenu";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Footer from "./components/Footer";
 import Video from "./components/Video";
+import CookieBanner from "./components/CookieBanner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -112,6 +113,7 @@ export default function RootLayout({ children }) {
         <div id="root">
           <div id="HukuBartopolos">
             <Video />
+            <CookieBanner />
             <NavbarMenu />
             {children}
             <Footer />
