@@ -89,25 +89,39 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
+        {/* Statcounter Analytics */}
+        <Script id="statcounter-config" strategy="afterInteractive">
+          {`
+            var sc_project = 13161325; 
+            var sc_invisible = 1; 
+            var sc_security = "9ec34468"; 
+          `}
+        </Script>
+
         <Script
-          id="site-behaviour-tracking"
-          strategy="lazyOnload" // Loads after page is interactive
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function () {
-                var sbSiteSecret = "cc3cae2c-f2b1-4bec-8bdd-45a71fb70bf8";
-                window.sitebehaviourTrackingSecret = sbSiteSecret;
-                var scriptElement = document.createElement("script");
-                scriptElement.async = true;
-                scriptElement.id = "site-behaviour-script-v2";
-                scriptElement.src =
-                  "https://sitebehaviour-cdn.fra1.cdn.digitaloceanspaces.com/index.min.js?sitebehaviour-secret=" +
-                  sbSiteSecret;
-                document.head.appendChild(scriptElement);
-              })();
-            `,
-          }}
+          src="https://www.statcounter.com/counter/counter.js"
+          strategy="afterInteractive"
+          async
         />
+
+        <noscript>
+          <div className="statcounter">
+            <a
+              title="Web Analytics"
+              href="https://statcounter.com/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                className="statcounter"
+                src="https://c.statcounter.com/13161325/0/9ec34468/1/"
+                alt="Web Analytics"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </a>
+          </div>
+        </noscript>
+        {/* Statcounter Analytics */}
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <div id="root">
