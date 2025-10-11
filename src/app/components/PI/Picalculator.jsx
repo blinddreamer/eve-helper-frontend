@@ -2,13 +2,40 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Alert from "react-bootstrap/Alert";
+import PiForm from "./PiForm";
+import PiResult from "./PiResult";
 
 export default function Picalculator() {
   const [piList, setPiList] = useState([]);
   const [hoveredResource, setHoveredResource] = useState(null);
   const [hoveredDependencies, setHoveredDependencies] = useState(new Set());
   const [hoveredDependents, setHoveredDependents] = useState(new Set());
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [volume,setVolume] = useState(1);
+  const [basicFactory, setBasicFactory] = useState(1);
+  const [advancedFactory, setAdvancedFactory] = useState(1);
+  const [specialFactory, setSpecialFactory] = useState(1);
+  const [selectedPi, setSelectedPi] = useState(null);
+
   const backend = process.env.NEXT_PUBLIC_API_URL;
+
+  // Update chain highlighting when selectedItem changes
+  useEffect(() => {
+    if (selectedItem && piList.length > 0) {
+      const selected = piList.find(pi => pi.name === selectedItem);
+      if (selected) {
+        const dependencies = new Set();
+        const dependents = new Set();
+        findAllDependencies(selected.id, dependencies);
+        findAllDependents(selected.id, dependents);
+        setHoveredDependencies(dependencies);
+        setHoveredDependents(dependents);
+      }
+    } else {
+      setHoveredDependencies(new Set());
+      setHoveredDependents(new Set());
+    }
+  }, [selectedItem, piList]);
 
   const categories = ["T0", "T1", "T2", "T3", "T4"];
 
@@ -56,6 +83,9 @@ export default function Picalculator() {
   };
 
   const handleHover = (hovered) => {
+    // Only allow hover effects if nothing is selected
+    if (selectedItem) return;
+
     setHoveredResource(hovered);
     if (hovered) {
       const dependencies = new Set();
@@ -67,6 +97,26 @@ export default function Picalculator() {
     } else {
       setHoveredDependencies(new Set());
       setHoveredDependents(new Set());
+    }
+  };
+
+  const handleSelection = (pi) => {
+    if (pi.type <= 1) return; // Only T2+ can be selected
+
+    if (selectedItem === pi.name) {
+      // Deselect
+      setSelectedItem(null);
+      setHoveredDependencies(new Set());
+      setHoveredDependents(new Set());
+    } else {
+      // Select and highlight chain
+      setSelectedItem(pi.name);
+      const dependencies = new Set();
+      const dependents = new Set();
+      findAllDependencies(pi.id, dependencies);
+      findAllDependents(pi.id, dependents);
+      setHoveredDependencies(dependencies);
+      setHoveredDependents(dependents);
     }
   };
 
@@ -96,36 +146,55 @@ export default function Picalculator() {
               <div class="picategory">
                 <h3>{category}</h3>
               </div>
-              {filteredData.map((pi) => (
-                <div
-                  key={pi.id}
-                  onMouseEnter={() => handleHover(pi.id)}
-                  onMouseLeave={() => handleHover(null)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    backgroundColor:
-                      hoveredResource === pi.id ||
-                      hoveredDependencies.has(pi.id) ||
-                      hoveredDependents.has(pi.id)
-                        ? "#444"
-                        : "#6c757d",
-                    padding: "4px 8px",
-                    borderRadius: "4px",
-                    color: "white",
-                    fontSize: "14px",
-                    marginBottom: "5px",
-                    cursor: "pointer",
-                  }}
-                >
-                  <img
-                    src={pi.icon}
-                    alt={pi.name}
-                    style={{ width: "20px", marginRight: "6px" }}
-                  />
-                  {pi.name}
-                </div>
-              ))}
+              {filteredData.map((pi) => {
+                const isSelected = selectedItem === pi.name;
+                const isInChain = hoveredDependencies.has(pi.id) || hoveredDependents.has(pi.id);
+                const isHovered = hoveredResource === pi.id;
+
+                return (
+                  <div
+                    key={pi.id}
+                    onMouseEnter={() => handleHover(pi.id)}
+                    onMouseLeave={() => handleHover(null)}
+                    onClick={() => handleSelection(pi)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      backgroundColor:
+                        isSelected
+                          ? "#0d6efd"
+                          : isInChain || isHovered
+                          ? "#444"
+                          : "#6c757d",
+                      padding: "4px 8px",
+                      borderRadius: "4px",
+                      color: "white",
+                      fontSize: "14px",
+                      marginBottom: "5px",
+                      cursor: pi.type > 1 ? "pointer" : "default",
+                      border: isSelected
+                        ? "2px solid #ffc107"
+                        : isInChain && selectedItem
+                        ? "2px solid rgba(255, 193, 7, 0.6)"
+                        : "2px solid transparent",
+                      boxShadow: isSelected
+                        ? "0 0 10px rgba(255, 193, 7, 0.5)"
+                        : isInChain && selectedItem
+                        ? "0 0 8px rgba(255, 193, 7, 0.3)"
+                        : "none",
+                      transition: "all 0.2s ease",
+                      opacity: selectedItem && !isSelected && !isInChain ? 0.5 : 1,
+                    }}
+                  >
+                    <img
+                      src={pi.icon}
+                      alt={pi.name}
+                      style={{ width: "20px", marginRight: "6px" }}
+                    />
+                    {pi.name}
+                  </div>
+                );
+              })}
             </div>
           );
         })}
@@ -146,38 +215,69 @@ export default function Picalculator() {
         >
           {piList
             .filter((pi) => pi.type === 0) // Filter planets (type 0)
-            .map((planet) => (
-              <span
-                key={planet.id}
-                onMouseEnter={() => handleHover(planet.id)}
-                onMouseLeave={() => handleHover(null)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  backgroundColor:
-                    hoveredDependencies.has(planet.id) ||
-                    hoveredDependents.has(planet.id)
-                      ? "#444"
-                      : "#6c757d",
-                  padding: "4px 8px",
-                  borderRadius: "4px",
-                  color: "white",
-                  fontSize: "14px",
-                  minWidth: "100px",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                }}
-              >
-                <img
-                  src={planet.icon}
-                  alt={planet.name}
-                  style={{ width: "20px", marginRight: "6px" }}
-                />
-                {planet.name}
-              </span>
-            ))}
+            .map((planet) => {
+              const isInChain = hoveredDependencies.has(planet.id) || hoveredDependents.has(planet.id);
+              const isHovered = hoveredResource === planet.id;
+
+              return (
+                <span
+                  key={planet.id}
+                  onMouseEnter={() => handleHover(planet.id)}
+                  onMouseLeave={() => handleHover(null)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    backgroundColor: isInChain || isHovered ? "#444" : "#6c757d",
+                    padding: "4px 8px",
+                    borderRadius: "4px",
+                    color: "white",
+                    fontSize: "14px",
+                    minWidth: "100px",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    border: isInChain && selectedItem
+                      ? "2px solid rgba(255, 193, 7, 0.6)"
+                      : "2px solid transparent",
+                    boxShadow: isInChain && selectedItem
+                      ? "0 0 8px rgba(255, 193, 7, 0.3)"
+                      : "none",
+                    transition: "all 0.2s ease",
+                    opacity: selectedItem && !isInChain ? 0.5 : 1,
+                  }}
+                >
+                  <img
+                    src={planet.icon}
+                    alt={planet.name}
+                    style={{ width: "20px", marginRight: "6px" }}
+                  />
+                  {planet.name}
+                </span>
+              );
+            })}
         </div>
       </div>
+      <PiForm
+        piList={piList}
+        setPiList={setPiList}
+        setAdvancedFactory={setAdvancedFactory}
+        setVolume={setVolume}
+        setBasicFactory={setBasicFactory}
+        setSpecialFactory={setSpecialFactory}
+        selectedItem={selectedItem}
+        setSelectedItem={setSelectedItem}
+        volume={volume}
+        basicFactory={basicFactory}
+        advancedFactory={advancedFactory}
+        specialFactory={specialFactory}
+      />
+      <PiResult
+        piList={piList}
+        selectedItem={selectedItem}
+        basicFactory={basicFactory}
+        advancedFactory={advancedFactory}
+        specialFactory={specialFactory}
+        volume={volume}
+      />
     </div>
   );
 }
