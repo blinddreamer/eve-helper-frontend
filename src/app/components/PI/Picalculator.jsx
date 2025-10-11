@@ -37,7 +37,7 @@ export default function Picalculator() {
     }
   }, [selectedItem, piList]);
 
-  const categories = ["T0", "T1", "T2", "T3", "T4"];
+  const categories = ["T1", "T2", "T3", "T4", "T5"];
 
   useEffect(() => {
     const fetchPiData = async () => {
@@ -202,7 +202,7 @@ export default function Picalculator() {
 
       {/* Planets Section */}
       <div id="planets" style={{ marginTop: "20px", textAlign: "center" }}>
-        <span id="pipanetstext" style={{ color: "white" }}>
+        <span id="pipanetstext">
           PLANETS
         </span>
         <div
