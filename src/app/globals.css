@@ -34,6 +34,7 @@
 }
 body {
   background-color: rgb(94, 86, 97);
+  transition: color 0.3s ease-in-out;
 }
 
 .read-the-docs {
@@ -502,4 +503,42 @@ tr {
 
 #pi-diagram {
   padding: 20px;
+}
+
+#picalculator {
+  padding: 10px;
+  display: flex;
+  font-size: 0.75rem;
+}
+
+#picalculatorleft {
+  padding: 15px;
+  background-color: rgba(var(--bs-body-color-rgb), 0.03);
+  width: 13%;
+  border-radius: 5px;
+  margin-top: 20px;
+  height: 350px;
+}
+#picalculatorright {
+  width: 88%;
+  margin-left: 10px;
+}
+
+#bakteria {
+  font-size: 30px;
+  font-family: var(--bs-body-font-family);
+}
+
+#gnomagpt {
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: rgba(var(--bs-body-color-rgb), 0.03);
+  border-radius: 5px;
+  font-family: var(--bs-body-font-family);
+  font-size: 1rem;
+}
+
+#gnomagps1 {
+  width: 40%;
+  margin-right: 50px;
 }

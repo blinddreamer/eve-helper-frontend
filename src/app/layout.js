@@ -89,13 +89,14 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
+
         {/* Statcounter Analytics */}
         <Script id="statcounter-config" strategy="afterInteractive">
           {`
-            var sc_project = 13161325; 
-            var sc_invisible = 1; 
-            var sc_security = "9ec34468"; 
-          `}
+          var sc_project = 13161325; 
+          var sc_invisible = 1; 
+          var sc_security = "9ec34468"; 
+        `}
         </Script>
 
         <Script
