@@ -1,22 +1,29 @@
-"use client"
+"use client";
 import { useMemo } from "react";
 import Table from "react-bootstrap/Table";
 
 function PiResult(props) {
-  const { piList, selectedItem, basicFactory, advancedFactory, specialFactory, volume } = props;
+  const {
+    piList,
+    selectedItem,
+    basicFactory,
+    advancedFactory,
+    specialFactory,
+    volume,
+  } = props;
 
   // Calculate the production chain
   const productionChain = useMemo(() => {
     if (!selectedItem || !piList.length) return [];
 
-    const selectedPi = piList.find(pi => pi.name === selectedItem);
+    const selectedPi = piList.find((pi) => pi.name === selectedItem);
     if (!selectedPi) return [];
 
     const results = [];
 
     // Recursive function to calculate requirements
     const calculateRequirements = (itemId, requiredQuantity, depth = 0) => {
-      const item = piList.find(pi => pi.id === itemId);
+      const item = piList.find((pi) => pi.id === itemId);
       if (!item || item.type === 0) return; // Skip planets (T0)
 
       // Determine factory count based on tier
@@ -58,12 +65,12 @@ function PiResult(props) {
         totalTime,
         depth,
         price: item.price || 0,
-        totalPrice
+        totalPrice,
       });
 
       // Process dependencies
       if (item.dependencies && item.dependencies.length > 0) {
-        item.dependencies.forEach(dep => {
+        item.dependencies.forEach((dep) => {
           if (dep.isInput && dep.quantity) {
             // Calculate how much of this dependency we need
             const depQuantityNeeded = dep.quantity * cyclesNeeded;
@@ -77,7 +84,14 @@ function PiResult(props) {
 
     // Sort by tier (type) in descending order (T4 -> T3 -> T2 -> T1)
     return results.sort((a, b) => b.tier - a.tier);
-  }, [selectedItem, piList, volume, basicFactory, advancedFactory, specialFactory]);
+  }, [
+    selectedItem,
+    piList,
+    volume,
+    basicFactory,
+    advancedFactory,
+    specialFactory,
+  ]);
 
   // Format time from seconds to readable format
   const formatTime = (seconds) => {
@@ -107,7 +121,7 @@ function PiResult(props) {
   // Calculate total T1 cost (must be before early returns)
   const totalT1Cost = useMemo(() => {
     return productionChain
-      .filter(item => item.tier === 1)
+      .filter((item) => item.tier === 1)
       .reduce((sum, item) => sum + item.totalPrice, 0);
   }, [productionChain]);
 
@@ -117,7 +131,7 @@ function PiResult(props) {
 
     // Group by tier and sum times within each tier
     const tierTimes = {};
-    productionChain.forEach(item => {
+    productionChain.forEach((item) => {
       if (!tierTimes[item.tier]) {
         tierTimes[item.tier] = 0;
       }
@@ -130,8 +144,13 @@ function PiResult(props) {
 
   if (!selectedItem) {
     return (
-      <div id="piResult" style={{ marginTop: "20px" }}>
-        <p>Select an end material to see production requirements</p>
+      <div
+        role="alert"
+        class="fade alert alert-success show"
+        id="piResult"
+        style={{ marginTop: "20px", fontSize: "1rem" }}
+      >
+        <span>Select an end material to see production requirements</span>
       </div>
     );
   }
@@ -145,47 +164,31 @@ function PiResult(props) {
   }
 
   const formatISK = (amount) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'decimal',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(amount) + ' ISK';
+    return (
+      new Intl.NumberFormat("en-US", {
+        style: "decimal",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(amount) + " ISK"
+    );
   };
 
   return (
     <div id="piResult" style={{ marginTop: "20px" }}>
-      <h3>Production Requirements for {selectedItem}</h3>
       {totalT1Cost > 0 && (
-        <div style={{
-          marginBottom: "15px",
-          padding: "12px 16px",
-          backgroundColor: "var(--bs-primary)",
-          borderRadius: "6px",
-          border: "2px solid var(--bs-primary-border-subtle)",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "15px"
-        }}>
-          <strong style={{
-            color: "white",
-            fontSize: "16px",
-            letterSpacing: "0.3px"
-          }}>
-            Total T1 Material Cost: {formatISK(totalT1Cost)}
-          </strong>
-          <strong style={{
-            color: "white",
-            fontSize: "16px",
-            letterSpacing: "0.3px"
-          }}>
-            Total Build Time: {formatTime(totalBuildTime)}
-          </strong>
+        <div id="gnomagpt">
+          <span id="gnomagps1">
+            <strong>Total T1 Material Cost: {formatISK(totalT1Cost)}</strong>
+          </span>
+          <span id="gnomagps1">
+            <strong>Total Build Time: {formatTime(totalBuildTime)}</strong>
+          </span>
         </div>
       )}
-      <Table striped bordered hover responsive>
+
+      <span id="bakteria">Production Requirements for {selectedItem}</span>
+
+      <Table striped bordered hover size="sm">
         <thead>
           <tr>
             <th>Material</th>
@@ -210,23 +213,54 @@ function PiResult(props) {
               // Add separator row BEFORE starting a new tier (showing what's needed to build this tier)
               if (currentTier !== item.tier) {
                 // Calculate totals for the NEW tier we're about to show
-                const tierItemsPrice = productionChain.filter(i => i.tier === item.tier-1);
-                const tierItemsTime = productionChain.filter(i=> i.tier === item.tier)
-                const tierTotalPrice = tierItemsPrice.reduce((sum, i) => sum + i.totalPrice, 0);
+                const tierItemsPrice = productionChain.filter(
+                  (i) => i.tier === item.tier - 1
+                );
+                const tierItemsTime = productionChain.filter(
+                  (i) => i.tier === item.tier
+                );
+                const tierTotalPrice = tierItemsPrice.reduce(
+                  (sum, i) => sum + i.totalPrice,
+                  0
+                );
                 // Total build time = sum of all individual times (sequential production with given factories)
-                 let factoryCount = 1;
-                 if (item.tier === 2) factoryCount = basicFactory || 1;
-                 else if (item.tier === 3) factoryCount = advancedFactory || 1;
-                 else if (item.tier === 4) factoryCount = specialFactory || 1;
-                const availableCyclePerJob = Math.ceil(tierItemsTime.reduce((sum,i) => sum + i.cyclesNeeded, 0) / factoryCount);
+                let factoryCount = 1;
+                if (item.tier === 2) factoryCount = basicFactory || 1;
+                else if (item.tier === 3) factoryCount = advancedFactory || 1;
+                else if (item.tier === 4) factoryCount = specialFactory || 1;
+                const availableCyclePerJob = Math.ceil(
+                  tierItemsTime.reduce((sum, i) => sum + i.cyclesNeeded, 0) /
+                    factoryCount
+                );
                 const tierTotalTime = availableCyclePerJob * item.cycleTime;
 
                 rows.push(
-                  <tr key={`separator-${item.tier}`} style={{ backgroundColor: "var(--bs-warning)", fontWeight: "bold", color: "#000" }}>
+                  <tr
+                    key={`separator-${item.tier}`}
+                    style={{
+                      backgroundColor: "var(--bs-warning)",
+                      fontWeight: "bold",
+                      color: "#000",
+                    }}
+                  >
                     <td colSpan="11" style={{ padding: "10px 15px" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "10px" }}>
-                        <strong>Total {getTierName(item.tier-1)} Material Cost: {tierTotalPrice > 0 ? formatISK(tierTotalPrice) : "-"}</strong>
-                        <strong>Total {getTierName(item.tier)} Build Time: {formatTime(tierTotalTime)}</strong>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          flexWrap: "wrap",
+                          gap: "10px",
+                        }}
+                      >
+                        <strong>
+                          Total {getTierName(item.tier - 1)} Material Cost:{" "}
+                          {tierTotalPrice > 0 ? formatISK(tierTotalPrice) : "-"}
+                        </strong>
+                        <strong>
+                          Total {getTierName(item.tier)} Build Time:{" "}
+                          {formatTime(tierTotalTime)}
+                        </strong>
                       </div>
                     </td>
                   </tr>
@@ -239,9 +273,21 @@ function PiResult(props) {
               rows.push(
                 <tr key={`${item.id}-${index}`}>
                   <td>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      <img src={item.icon} alt={item.name} style={{ width: "24px" }} />
-                      <span style={{ paddingLeft: `${item.depth * 20}px` }}>{item.name}</span>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <img
+                        src={item.icon}
+                        alt={item.name}
+                        style={{ width: "24px" }}
+                      />
+                      <span style={{ paddingLeft: `${item.depth * 20}px` }}>
+                        {item.name}
+                      </span>
                     </div>
                   </td>
                   <td>{getTierName(item.tier)}</td>

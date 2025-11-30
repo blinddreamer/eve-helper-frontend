@@ -11,7 +11,7 @@ export default function Picalculator() {
   const [hoveredDependencies, setHoveredDependencies] = useState(new Set());
   const [hoveredDependents, setHoveredDependents] = useState(new Set());
   const [selectedItem, setSelectedItem] = useState(null);
-  const [volume,setVolume] = useState(1);
+  const [volume, setVolume] = useState(1);
   const [basicFactory, setBasicFactory] = useState(1);
   const [advancedFactory, setAdvancedFactory] = useState(1);
   const [specialFactory, setSpecialFactory] = useState(1);
@@ -22,7 +22,7 @@ export default function Picalculator() {
   // Update chain highlighting when selectedItem changes
   useEffect(() => {
     if (selectedItem && piList.length > 0) {
-      const selected = piList.find(pi => pi.name === selectedItem);
+      const selected = piList.find((pi) => pi.name === selectedItem);
       if (selected) {
         const dependencies = new Set();
         const dependents = new Set();
@@ -122,8 +122,37 @@ export default function Picalculator() {
 
   return (
     <div id="pi-diagram">
-      <Alert variant="warning">UNDER CONSTRUCTION!</Alert>
-      <h2 id="diagram-label">DIAGRAM</h2>
+      <h2>PI CALCULATOR</h2>
+      <div id="picalculator">
+        <h2 id="diagram-label"></h2>
+        <div id="picalculatorleft">
+          <PiForm
+            piList={piList}
+            setPiList={setPiList}
+            setAdvancedFactory={setAdvancedFactory}
+            setVolume={setVolume}
+            setBasicFactory={setBasicFactory}
+            setSpecialFactory={setSpecialFactory}
+            selectedItem={selectedItem}
+            setSelectedItem={setSelectedItem}
+            volume={volume}
+            basicFactory={basicFactory}
+            advancedFactory={advancedFactory}
+            specialFactory={specialFactory}
+          />
+        </div>
+        <div id="picalculatorright">
+          <PiResult
+            piList={piList}
+            selectedItem={selectedItem}
+            basicFactory={basicFactory}
+            advancedFactory={advancedFactory}
+            specialFactory={specialFactory}
+            volume={volume}
+          />
+        </div>
+      </div>
+      <h2 id="diagram-label">PLANET DIAGRAM</h2>
 
       {/* PI Categories */}
       <div
@@ -148,7 +177,9 @@ export default function Picalculator() {
               </div>
               {filteredData.map((pi) => {
                 const isSelected = selectedItem === pi.name;
-                const isInChain = hoveredDependencies.has(pi.id) || hoveredDependents.has(pi.id);
+                const isInChain =
+                  hoveredDependencies.has(pi.id) ||
+                  hoveredDependents.has(pi.id);
                 const isHovered = hoveredResource === pi.id;
 
                 return (
@@ -160,12 +191,11 @@ export default function Picalculator() {
                     style={{
                       display: "flex",
                       alignItems: "center",
-                      backgroundColor:
-                        isSelected
-                          ? "#0d6efd"
-                          : isInChain || isHovered
-                          ? "#444"
-                          : "#6c757d",
+                      backgroundColor: isSelected
+                        ? "#0d6efd"
+                        : isInChain || isHovered
+                        ? "#444"
+                        : "#6c757d",
                       padding: "4px 8px",
                       borderRadius: "4px",
                       color: "white",
@@ -183,7 +213,8 @@ export default function Picalculator() {
                         ? "0 0 8px rgba(255, 193, 7, 0.3)"
                         : "none",
                       transition: "all 0.2s ease",
-                      opacity: selectedItem && !isSelected && !isInChain ? 0.5 : 1,
+                      opacity:
+                        selectedItem && !isSelected && !isInChain ? 0.5 : 1,
                     }}
                   >
                     <img
@@ -202,9 +233,7 @@ export default function Picalculator() {
 
       {/* Planets Section */}
       <div id="planets" style={{ marginTop: "20px", textAlign: "center" }}>
-        <span id="pipanetstext">
-          PLANETS
-        </span>
+        <span id="pipanetstext">PLANETS</span>
         <div
           style={{
             display: "flex",
@@ -216,7 +245,9 @@ export default function Picalculator() {
           {piList
             .filter((pi) => pi.type === 0) // Filter planets (type 0)
             .map((planet) => {
-              const isInChain = hoveredDependencies.has(planet.id) || hoveredDependents.has(planet.id);
+              const isInChain =
+                hoveredDependencies.has(planet.id) ||
+                hoveredDependents.has(planet.id);
               const isHovered = hoveredResource === planet.id;
 
               return (
@@ -227,7 +258,8 @@ export default function Picalculator() {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: isInChain || isHovered ? "#444" : "#6c757d",
+                    backgroundColor:
+                      isInChain || isHovered ? "#444" : "#6c757d",
                     padding: "4px 8px",
                     borderRadius: "4px",
                     color: "white",
@@ -235,12 +267,14 @@ export default function Picalculator() {
                     minWidth: "100px",
                     justifyContent: "center",
                     cursor: "pointer",
-                    border: isInChain && selectedItem
-                      ? "2px solid rgba(255, 193, 7, 0.6)"
-                      : "2px solid transparent",
-                    boxShadow: isInChain && selectedItem
-                      ? "0 0 8px rgba(255, 193, 7, 0.3)"
-                      : "none",
+                    border:
+                      isInChain && selectedItem
+                        ? "2px solid rgba(255, 193, 7, 0.6)"
+                        : "2px solid transparent",
+                    boxShadow:
+                      isInChain && selectedItem
+                        ? "0 0 8px rgba(255, 193, 7, 0.3)"
+                        : "none",
                     transition: "all 0.2s ease",
                     opacity: selectedItem && !isInChain ? 0.5 : 1,
                   }}
@@ -256,28 +290,6 @@ export default function Picalculator() {
             })}
         </div>
       </div>
-      <PiForm
-        piList={piList}
-        setPiList={setPiList}
-        setAdvancedFactory={setAdvancedFactory}
-        setVolume={setVolume}
-        setBasicFactory={setBasicFactory}
-        setSpecialFactory={setSpecialFactory}
-        selectedItem={selectedItem}
-        setSelectedItem={setSelectedItem}
-        volume={volume}
-        basicFactory={basicFactory}
-        advancedFactory={advancedFactory}
-        specialFactory={specialFactory}
-      />
-      <PiResult
-        piList={piList}
-        selectedItem={selectedItem}
-        basicFactory={basicFactory}
-        advancedFactory={advancedFactory}
-        specialFactory={specialFactory}
-        volume={volume}
-      />
     </div>
   );
 }

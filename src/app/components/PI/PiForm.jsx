@@ -1,54 +1,52 @@
-"use client"
+"use client";
 import Form from "react-bootstrap/Form";
 
-function PiForm(props){
-
-  function endMatHandler(e){
-    props.setSelectedItem(e.target.value)
+function PiForm(props) {
+  function endMatHandler(e) {
+    props.setSelectedItem(e.target.value);
   }
 
-  function volumeHandler(e){
-    props.setVolume(Number(e.target.value))
+  function volumeHandler(e) {
+    props.setVolume(Number(e.target.value));
   }
 
-  function basicFacHandler(e){
-    props.setBasicFactory(Number(e.target.value))
+  function basicFacHandler(e) {
+    props.setBasicFactory(Number(e.target.value));
   }
 
-  function advFacHandler(e){
-    props.setAdvancedFactory(Number(e.target.value))
+  function advFacHandler(e) {
+    props.setAdvancedFactory(Number(e.target.value));
   }
 
-  function specFacHandler(e){
-    props.setSpecialFactory(Number(e.target.value))
+  function specFacHandler(e) {
+    props.setSpecialFactory(Number(e.target.value));
   }
 
-    return(
-       <div id="piForm">
+  return (
+    <div id="piForm">
       <Form>
-         <Form.Group id="endMat" controlId="end-material">
-                  <Form.Label>End Material</Form.Label>
-                  <Form.Select
-                    key="material-select"
-                    aria-label="Select PI Material"
-                    onChange={endMatHandler}
-                    value={props.selectedItem || ""}
-                  >
-                    <option value="">Select Material...</option>
-                    {props.piList.filter(pi=> pi.type>1).map((pi, index) => {
-                      return (
-                        <option
-                          key={pi.id || index}
-                          value={pi.name}
-                        >
-                          {pi.name}
-                        </option>
-                      );
-                    })}
-                  </Form.Select>
-                </Form.Group>
+        <Form.Group id="endMat" controlId="end-material">
+          <Form.Label>End Material</Form.Label>
+          <Form.Select
+            key="material-select"
+            aria-label="Select PI Material"
+            onChange={endMatHandler}
+            value={props.selectedItem || ""}
+          >
+            <option value="">Select Material...</option>
+            {props.piList
+              .filter((pi) => pi.type > 1)
+              .map((pi, index) => {
+                return (
+                  <option key={pi.id || index} value={pi.name}>
+                    {pi.name}
+                  </option>
+                );
+              })}
+          </Form.Select>
+        </Form.Group>
         <Form.Group id="vol" controlId="volume">
-          <Form.Label>Volume</Form.Label>
+          <Form.Label>Units</Form.Label>
           <Form.Control
             type="number"
             onChange={volumeHandler}
@@ -58,7 +56,7 @@ function PiForm(props){
             value={props.volume || ""}
           />
         </Form.Group>
-         <Form.Group id="facBasic" controlId="factory-basic">
+        <Form.Group id="facBasic" controlId="factory-basic">
           <Form.Label>Basic Factory</Form.Label>
           <Form.Control
             type="number"
@@ -69,7 +67,7 @@ function PiForm(props){
             value={props.basicFactory || ""}
           />
         </Form.Group>
-         <Form.Group id="facAdv" controlId="factory-adv">
+        <Form.Group id="facAdv" controlId="factory-adv">
           <Form.Label>Advanced Factory</Form.Label>
           <Form.Control
             type="number"
@@ -80,8 +78,8 @@ function PiForm(props){
             value={props.advancedFactory || ""}
           />
         </Form.Group>
-         <Form.Group id="facSpec" controlId="factory-spc">
-          <Form.Label>Special Factory</Form.Label>
+        <Form.Group id="facSpec" controlId="factory-spc">
+          <Form.Label>High-Tech Factory</Form.Label>
           <Form.Control
             onChange={specFacHandler}
             type="number"
@@ -91,8 +89,8 @@ function PiForm(props){
             value={props.specialFactory || ""}
           />
         </Form.Group>
-        </Form>
+      </Form>
     </div>
-    )
+  );
 }
 export default PiForm;
