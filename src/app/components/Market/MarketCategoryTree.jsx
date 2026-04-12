@@ -132,6 +132,7 @@ function MarketCategoryTree({ onTypeSelect, selectedTypeId }) {
           );
           const sorted = namesRes.data
             .filter((t) => t.category === "inventory_type")
+            .filter((t) => !t.name.includes("Abyssal"))
             .sort((a, b) => a.name.localeCompare(b.name));
           setTypesMap((prev) => ({
             ...prev,
