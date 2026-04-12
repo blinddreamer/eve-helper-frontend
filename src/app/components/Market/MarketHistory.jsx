@@ -16,6 +16,7 @@ const RANGES = [
   { label: "30d", days: 30 },
   { label: "90d", days: 90 },
   { label: "1y", days: 365 },
+  { label: "All", days: null },
 ];
 
 function formatISK(value) {
@@ -30,7 +31,7 @@ function MarketHistory({ history }) {
 
   if (!history || history.length === 0) return null;
 
-  const data = history.slice(-range).map((d) => ({
+  const data = (range ? history.slice(-range) : history).map((d) => ({
     date: d.date,
     average: d.average,
     highest: d.highest,

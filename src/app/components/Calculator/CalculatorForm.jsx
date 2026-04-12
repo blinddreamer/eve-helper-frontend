@@ -115,11 +115,10 @@ function CalculatorForm(props) {
         {/* Market Region */}
         <Form.Group className="calc-form-group" controlId="marketRegion">
           <Form.Label>Buy Materials From</Form.Label>
-          <Form.Select>
+          <Form.Select defaultValue="10000002_60003760">
             {props.stations.map((station, index) => (
               <option
                 key={index}
-                defaultValue={station.stationId === 60003760}
                 value={station.regionId + "_" + station.stationId}
               >
                 {station.regionName + " — " + station.stationName}

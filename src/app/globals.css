@@ -222,17 +222,20 @@ a:visited {
 }
 
 .calc-stat-label {
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   color: var(--bs-secondary-color);
 }
 
 .calc-stat-value {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
 }
 
 .calc-header-actions {
   min-width: 150px;
   max-width: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .calc-order-toggle {
@@ -240,6 +243,11 @@ a:visited {
   border: 1px solid var(--bs-border-color);
   border-radius: 4px;
   padding: 8px 10px;
+  text-align: center;
+}
+
+.calc-order-toggle .d-flex {
+  justify-content: center;
 }
 
 .calc-toggle-label {
@@ -262,7 +270,7 @@ svg {
 }
 
 #button-top {
-  width: 140px !important;
+  width: 100% !important;
 }
 
 #propimage {
