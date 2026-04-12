@@ -22,6 +22,10 @@ function AppraisalHome() {
   const [appraisalData, setAppraisalData]= useState("");
   const [editMode, setEditMode] = useState(true);
   const [comment, setComment] = useState("");
+  const [reprocessData, setReprocessData] = useState(null);
+  const [compressData, setCompressData] = useState(null);
+  const [reprocessLoading, setReprocessLoading] = useState(false);
+  const [compressLoading, setCompressLoading] = useState(false);
   const backend = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
   const { uuid } = useParams();
@@ -123,6 +127,32 @@ function AppraisalHome() {
     return marketMap[marketId] || "Unknown Market";
   }
 
+  async function loadReprocess(efficiency = 0.875) {
+    if (!uuid) return;
+    setReprocessLoading(true);
+    try {
+      const { data } = await axios.get(`${backend}appraisal/${uuid}/reprocess?efficiency=${efficiency}`);
+      setReprocessData(data);
+    } catch (e) {
+      console.error("Reprocess fetch failed", e);
+    } finally {
+      setReprocessLoading(false);
+    }
+  }
+
+  async function loadCompress() {
+    if (!uuid) return;
+    setCompressLoading(true);
+    try {
+      const { data } = await axios.get(`${backend}appraisal/${uuid}/compress`);
+      setCompressData(data);
+    } catch (e) {
+      console.error("Compress fetch failed", e);
+    } finally {
+      setCompressLoading(false);
+    }
+  }
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -136,14 +166,25 @@ function AppraisalHome() {
     updateStorageOnSubmit();
     try {
       setIsLoading(true);
-      const text = document.getElementById("appraisalText").value || "";
-      const lines = text.split("\n").map((line) => line.trim()).filter((line) => line !== "");
+      const lines = appraisalData
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line !== "");
       const items = [];
 
-      lines.forEach((line, index) => {
-        const match = line.match(/^(.+?)\s{1,3}(\d+)(?:\s.*)?$/);
+      lines.forEach((line) => {
+        // Match "Item Name <whitespace> Quantity [optional extra columns]"
+        // \s+ allows any number of spaces/tabs (EVE client uses tabs)
+        // [\d,]+ handles comma-formatted numbers like 1,000,000
+        const match = line.match(/^(.+?)\s+([\d,]+)(?:\s.*)?$/);
         if (match) {
-          items.push({ name: match[1].trim(), quantity: parseInt(match[2], 10) });
+          items.push({
+            name: match[1].trim(),
+            quantity: parseInt(match[2].replace(/,/g, ""), 10),
+          });
+        } else {
+          // No quantity found — treat whole line as item name, default qty to 1 (like Janice)
+          items.push({ name: line.trim(), quantity: 1 });
         }
       });
 
@@ -194,7 +235,19 @@ function AppraisalHome() {
           />
 
           {appraisal.appraisalResult && (
-            <AppraisalResult appraisal={appraisal} uuid={uuid} handleCopy={handleCopy} pricePercentage={pricePercentage} getMarketName={getMarketName} />
+            <AppraisalResult
+              appraisal={appraisal}
+              uuid={uuid}
+              handleCopy={handleCopy}
+              pricePercentage={pricePercentage}
+              getMarketName={getMarketName}
+              reprocessData={reprocessData}
+              reprocessLoading={reprocessLoading}
+              loadReprocess={loadReprocess}
+              compressData={compressData}
+              compressLoading={compressLoading}
+              loadCompress={loadCompress}
+            />
           )}
 
           <AppraisalText calculateAppraisal={calculateAppraisal} isLoading={isLoading} comment={comment} appraisalData={appraisalData} setAppraisalData={setAppraisalData} setComment={setComment} />

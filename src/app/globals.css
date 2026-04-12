@@ -503,8 +503,6 @@ tr {
   padding: 20px;
   box-sizing: border-box; /* Ensures padding doesn't affect width */
 }
-#appraisalformmid {
-}
 #appraisalformright {
   width: 50%;
   background-color: rgba(var(--bs-body-color-rgb), 0.03);
@@ -714,6 +712,178 @@ tr {
 #gnomagps1 {
   width: 40%;
   margin-right: 50px;
+}
+
+/* ── Appraisal ──────────────────────────────────────── */
+
+.appr-settings {
+  background-color: rgba(var(--bs-body-color-rgb), 0.03);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 16px;
+  margin-bottom: 12px;
+}
+
+.appr-settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  align-items: end;
+}
+
+.appr-input-area {
+  margin-top: 4px;
+}
+
+.appr-textareas {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.appr-textarea-group {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.appr-textarea {
+  flex: 1;
+  min-height: 80px;
+  resize: none;
+  font-size: 0.78rem !important;
+}
+
+.appr-side-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.appr-comment {
+  height: 80px;
+  resize: none;
+  font-size: 0.78rem !important;
+}
+
+.appr-result {
+  margin-top: 20px;
+  margin-bottom: 16px;
+}
+
+.appr-result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: rgba(var(--bs-body-color-rgb), 0.03);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 6px 6px 0 0;
+  border-bottom: none;
+}
+
+.appr-result-meta {
+  font-size: 0.75rem;
+  color: var(--bs-secondary-color);
+}
+
+.appr-stat-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0 0 6px 6px;
+  overflow: hidden;
+}
+
+.appr-stat-card {
+  padding: 14px 16px;
+  text-align: center;
+  border-right: 1px solid var(--bs-border-color);
+}
+
+.appr-stat-card:last-child {
+  border-right: none;
+}
+
+.appr-stat-card-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--bs-secondary-color);
+  margin-bottom: 4px;
+}
+
+.appr-stat-card-value {
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.appr-stat-card-sub {
+  font-size: 0.68rem;
+  color: var(--bs-secondary-color);
+}
+
+.appr-buy   { color: #83cfcf; }
+.appr-split { color: #b778bf; }
+.appr-sell  { color: #e1b489; }
+
+.appr-table thead th {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.appr-table td {
+  font-size: 0.78rem;
+}
+
+.appr-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--bs-border-color);
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+.appr-tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 6px 16px;
+  font-size: 0.78rem;
+  color: var(--bs-secondary-color);
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.appr-tab-btn:hover {
+  color: var(--bs-body-color);
+}
+
+.appr-tab-btn.active {
+  color: #9CDCFE;
+  border-bottom-color: #9CDCFE;
+}
+
+.appr-tab-content {
+  padding-top: 12px;
+}
+
+.appr-tab-empty {
+  padding: 32px;
+  text-align: center;
+  color: var(--bs-secondary-color);
+  font-size: 0.82rem;
+}
+
+.appr-reprocess-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
 }
 
 /* ── Market Browser ─────────────────────────────────── */
