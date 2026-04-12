@@ -58,13 +58,15 @@ function AppraisalHome() {
           setPricePercentage(response.data.pricePercentage);
           setComment(response.data.comment);
           setTransactionType(response.data.transactionType);
-          setAppraisalData(response.data.appraisalResult.appraisals.map(app=> app.item + "  " + app.quantity).join("\n"));
+          setAppraisalData(response.data.appraisalResult.appraisals.filter(app => app != null).map(app=> app.item + "  " + app.quantity).join("\n"));
           setEditMode(false);
           setLoadedApp(true);
           setIsLoading(false);
         }
       } catch (error) {
         console.error("Error fetching appraisal:", error);
+        setErrorMessage("Could not load appraisal — it may have expired or the server is unavailable.");
+        setIsLoading(false);
       }
     };
 

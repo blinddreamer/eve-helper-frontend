@@ -10,7 +10,7 @@ const TABS = ["Appraisal", "Reprocess", "Compress"];
 function AppraisalResult(props) {
   const [activeTab, setActiveTab] = useState("Appraisal");
   const { appraisalResult } = props.appraisal;
-  const pct = props.pricePercentage / 100;
+  const pct = (props.pricePercentage || 100) / 100;
   const volumeFormat = new Intl.NumberFormat();
   const priceFormat  = new Intl.NumberFormat("en-US");
 
@@ -51,17 +51,17 @@ function AppraisalResult(props) {
         <div className="appr-stat-card">
           <div className="appr-stat-card-label">Buy</div>
           <div className="appr-stat-card-value appr-buy">{formatPrice(buy)}</div>
-          <div className="appr-stat-card-sub">{formatPrice(buy / vol)} / m³</div>
+          <div className="appr-stat-card-sub">{vol > 0 ? `${formatPrice(buy / vol)} / m³` : "—"}</div>
         </div>
         <div className="appr-stat-card">
           <div className="appr-stat-card-label">Split</div>
           <div className="appr-stat-card-value appr-split">{formatPrice(split)}</div>
-          <div className="appr-stat-card-sub">{formatPrice(split / vol)} / m³</div>
+          <div className="appr-stat-card-sub">{vol > 0 ? `${formatPrice(split / vol)} / m³` : "—"}</div>
         </div>
         <div className="appr-stat-card">
           <div className="appr-stat-card-label">Sell</div>
           <div className="appr-stat-card-value appr-sell">{formatPrice(sell)}</div>
-          <div className="appr-stat-card-sub">{formatPrice(sell / vol)} / m³</div>
+          <div className="appr-stat-card-sub">{vol > 0 ? `${formatPrice(sell / vol)} / m³` : "—"}</div>
         </div>
         <div className="appr-stat-card">
           <div className="appr-stat-card-label">Volume</div>
@@ -86,6 +86,9 @@ function AppraisalResult(props) {
       {/* Tab content */}
       {activeTab === "Appraisal" && (
         <div style={{ overflowX: "auto" }}>
+          {appraisalResult.appraisals.filter(ap => ap != null).length === 0 && (
+            <div className="appr-tab-empty">No recognised items — check that item names match exactly (case-sensitive).</div>
+          )}
           <Table bordered hover size="sm" className="appr-table mt-0">
             <thead>
               <tr>
@@ -99,15 +102,15 @@ function AppraisalResult(props) {
               </tr>
             </thead>
             <tbody>
-              {appraisalResult.appraisals.map((ap, index) => (
+              {appraisalResult.appraisals.filter(ap => ap != null).map((ap, index) => (
                 <tr key={index}>
                   <td><img src={ap.icon} loading="lazy" alt={ap.item} /></td>
                   <td>{ap.item}</td>
                   <td>{volumeFormat.format(ap.quantity)}</td>
-                  <td>{volumeFormat.format(ap.quantity * ap.volume)} m³</td>
-                  <td>{priceFormat.format(ap.quantity * ap.sellOrderPrice * pct)}</td>
-                  <td>{priceFormat.format(ap.quantity * ap.buyOrderPrice * pct)}</td>
-                  <td>{priceFormat.format(ap.quantity * ap.splitPrice * pct)}</td>
+                  <td>{volumeFormat.format(ap.quantity * (ap.volume || 0))} m³</td>
+                  <td>{priceFormat.format(ap.quantity * (ap.sellOrderPrice || 0) * pct)}</td>
+                  <td>{priceFormat.format(ap.quantity * (ap.buyOrderPrice || 0) * pct)}</td>
+                  <td>{priceFormat.format(ap.quantity * (ap.splitPrice || 0) * pct)}</td>
                 </tr>
               ))}
             </tbody>
