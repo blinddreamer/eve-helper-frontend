@@ -20,8 +20,6 @@ function NavbarMenu() {
         <Container>
           <NavbarBrand className="brand">
             <Link href="/" className="brand">
-              {" "}
-              eve-helper
             </Link>
           </NavbarBrand>
 
@@ -31,6 +29,9 @@ function NavbarMenu() {
             <Nav className="me-auto">
               <Link href="/" className="nav-item">
                 Home
+              </Link>
+              <Link href="/market" className="nav-item">
+                Market
               </Link>
               <Link href="/calculator" className="nav-item">
                 Calculator
