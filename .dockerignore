@@ -1,0 +1,11 @@
+.git
+.gitignore
+.claude
+node_modules
+.next
+/out
+/build
+*.log
+.env*
+.DS_Store
+README.md
