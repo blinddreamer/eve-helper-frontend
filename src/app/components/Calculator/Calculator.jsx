@@ -45,116 +45,88 @@ function Calculator(props) {
         {props.initialBlueprint.materialsList && (
           <>
             <div id="blueprintHeader">
-              <div>
-                <img
-                  id="propimage"
-                  src={props.initialBlueprint.icon}
-                  loading="lazy"
-                />{" "}
+              {/* Icon */}
+              <div className="calc-header-icon">
+                <img id="propimage" src={props.initialBlueprint.icon} loading="lazy" />
+                <div className="calc-header-name">{props.initialBlueprint.name}</div>
               </div>
-              <div id="propvolume">
-                Volume :{" "}
-                {volumeFormat.format(props.initialBlueprint.totalVolume) +
-                  " m³"}
-                <p id="bpheader" />
-                Crafting price:{" "}
-                {(transactionType === "sell"
-                  ? props.initialBlueprint.sellCraftPrice
-                  : props.initialBlueprint.buyCraftPrice
-                ).toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "ISK",
-                  minimumFractionDigits: 2,
-                })}{" "}
-                <p id="bpheader" />
-                Sell order :{" "}
-                {props.initialBlueprint.totalSellPrice.toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "ISK",
-                  minimumFractionDigits: 2,
-                })}
-                <p id="bpheader" />
-                Buy order :{" "}
-                {props.initialBlueprint.totalBuyPrice.toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "ISK",
-                  minimumFractionDigits: 2,
-                })}
-                <p id="bpheader" />
-                Profit :{" "}
-                <span
-                  className={
-                    calculatePriceDifferences() < 0
-                      ? "redmilcho"
-                      : "greenmilcho"
-                  }
-                >
-                  {calculatePriceDifferences().toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "ISK",
-                    minimumFractionDigits: 2,
-                  })}
-                </span>
-                <p id="bpheader" />
-                Margin :{" "}
-                <span
-                  className={
-                    calculatePriceDifferences() < 0
-                      ? "negativeprice"
-                      : "positiveprice"
-                  }
-                >
-                  {calculateMarginPercent().toFixed(2) + " %"}
-                </span>
-                <p id="bpheader" />
+
+              {/* Stats */}
+              <div className="calc-header-stats">
+                <div className="calc-stat-row">
+                  <span className="calc-stat-label">Volume</span>
+                  <span className="calc-stat-value">{volumeFormat.format(props.initialBlueprint.totalVolume)} m³</span>
+                </div>
+                <div className="calc-stat-row">
+                  <span className="calc-stat-label">Craft Cost</span>
+                  <span className="calc-stat-value">
+                    {(transactionType === "sell"
+                      ? props.initialBlueprint.sellCraftPrice
+                      : props.initialBlueprint.buyCraftPrice
+                    ).toLocaleString("en-US", { style: "currency", currency: "ISK", minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+                <div className="calc-stat-row">
+                  <span className="calc-stat-label">Sell Order</span>
+                  <span className="calc-stat-value">
+                    {props.initialBlueprint.totalSellPrice.toLocaleString("en-US", { style: "currency", currency: "ISK", minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+                <div className="calc-stat-row">
+                  <span className="calc-stat-label">Buy Order</span>
+                  <span className="calc-stat-value">
+                    {props.initialBlueprint.totalBuyPrice.toLocaleString("en-US", { style: "currency", currency: "ISK", minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+                <div className="calc-stat-row">
+                  <span className="calc-stat-label">Profit</span>
+                  <span className={`calc-stat-value fw-bold ${calculatePriceDifferences() < 0 ? "negativeprice" : "positiveprice"}`}>
+                    {calculatePriceDifferences().toLocaleString("en-US", { style: "currency", currency: "ISK", minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+                <div className="calc-stat-row">
+                  <span className="calc-stat-label">Margin</span>
+                  <span className={`calc-stat-value fw-bold ${calculatePriceDifferences() < 0 ? "negativeprice" : "positiveprice"}`}>
+                    {calculateMarginPercent().toFixed(2)} %
+                  </span>
+                </div>
               </div>
-              <div>
+
+              {/* Actions + order type controls */}
+              <div className="calc-header-actions">
                 <Button
                   id="button-top"
                   variant="secondary"
-                  onClick={() =>
-                    handleMultiBuyCopy("copy_" + props.initialBlueprint.name)
-                  }
+                  className="w-100 mb-3"
+                  onClick={() => handleMultiBuyCopy("copy_" + props.initialBlueprint.name)}
                 >
-                  {!props.isCopied["copy_" + props.initialBlueprint.name] ? (
-                    <>
-                      <GiBasket /> Copy Mats
-                    </>
-                  ) : (
-                    "Copied"
-                  )}
+                  {!props.isCopied["copy_" + props.initialBlueprint.name]
+                    ? <><GiBasket /> Copy Mats</>
+                    : "Copied ✓"}
                 </Button>
-                <p />
-                <div id="akwarddiv">
-                  <span id="akwardspan">
-                    Sell item to buy or sell order
-                    <div key={`inline-radio`}>
-                      <Form.Check
-                        inline
-                        type="radio"
-                        label="Sell"
-                        aria-label="radio 1"
-                        value={"sell"}
-                        id={`inline-radio-master-1`}
-                        checked={masterTransactionType === "sell"}
-                        onChange={(e) =>
-                          setMasterTransactionType(e.target.value)
-                        }
-                      />
-                      <Form.Check
-                        inline
-                        type="radio"
-                        label="Buy"
-                        aria-label="radio 1"
-                        value={"buy"}
-                        id={`inline-radio-master-2`}
-                        checked={masterTransactionType === "buy"}
-                        onChange={(e) =>
-                          setMasterTransactionType(e.target.value)
-                        }
-                      />{" "}
-                    </div>
-                  </span>
+
+                <div className="calc-order-toggle">
+                  <div className="calc-toggle-label">Sell item via</div>
+                  <div className="d-flex gap-3">
+                    <Form.Check inline type="radio" label="Sell order" value="sell"
+                      id="inline-radio-master-1" checked={masterTransactionType === "sell"}
+                      onChange={(e) => setMasterTransactionType(e.target.value)} />
+                    <Form.Check inline type="radio" label="Buy order" value="buy"
+                      id="inline-radio-master-2" checked={masterTransactionType === "buy"}
+                      onChange={(e) => setMasterTransactionType(e.target.value)} />
+                  </div>
+                </div>
+
+                <div className="calc-order-toggle mt-2">
+                  <div className="calc-toggle-label">Buy materials via</div>
+                  <div className="d-flex gap-3">
+                    <Form.Check inline type="radio" label="Sell order" value="sell"
+                      id="inline-radio-1" checked={transactionType === "sell"}
+                      onChange={(e) => setTransactionType(e.target.value)} />
+                    <Form.Check inline type="radio" label="Buy order" value="buy"
+                      id="inline-radio-2" checked={transactionType === "buy"}
+                      onChange={(e) => setTransactionType(e.target.value)} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -312,6 +284,7 @@ function Calculator(props) {
           </p>
         )}
         {isFuel && <p>You will need the following Fuel Blocks </p>}
+        <div style={{ overflowX: "auto" }}>
         <Table key={"tab_" + tier} bordered hover size="sm">
           <thead>
             <tr>
@@ -319,33 +292,7 @@ function Calculator(props) {
               <th>Item</th>
               <th>Quantity</th>
               <th>Volume m³</th>
-              <th>
-                <div id="akwarddiv">
-                  Market Cost ISK per unit/total
-                  <div key={`inline-radio`}>
-                    <Form.Check
-                      inline
-                      type="radio"
-                      label="Sell"
-                      aria-label="radio 1"
-                      value={"sell"}
-                      id={`inline-radio-1`}
-                      checked={transactionType === "sell"}
-                      onChange={(e) => setTransactionType(e.target.value)}
-                    />
-                    <Form.Check
-                      inline
-                      type="radio"
-                      label="Buy"
-                      aria-label="radio 1"
-                      value={"buy"}
-                      id={`inline-radio-2`}
-                      checked={transactionType === "buy"}
-                      onChange={(e) => setTransactionType(e.target.value)}
-                    />{" "}
-                  </div>
-                </div>{" "}
-              </th>
+              <th>Market Cost ISK (unit / total)</th>
               <th>Type</th>
               <th>Excess</th>
               <th>Buy / Craft</th>
@@ -575,6 +522,7 @@ function Calculator(props) {
             </tr>
           </tbody>
         </Table>
+        </div>
       </>
     );
   }

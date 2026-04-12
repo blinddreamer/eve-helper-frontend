@@ -109,10 +109,6 @@ a:visited {
   color: var(--bs-card-color);
 }
 
-#bpheader {
-  margin-top: -15px;
-}
-
 #advmode {
   padding: 2px;
   width: 138px;
@@ -131,17 +127,127 @@ a:visited {
   z-index: -1;
 }
 
+/* ── Calculator form layout ── */
+.calc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.calc-form-group {
+  margin-bottom: 10px;
+}
+
+.calc-form-group .form-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--bs-secondary-color);
+  margin-bottom: 3px;
+}
+
+.calc-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  align-items: end;
+}
+
+/* ── Sub-form (Component / Reaction structure) ── */
+.calc-subform {
+  background-color: rgba(var(--bs-body-color-rgb), 0.04);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 5px;
+  padding: 12px;
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+
+.calc-subform-title {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--bs-secondary-color);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* ── Blueprint result header ── */
 #blueprintHeader {
   margin-top: 20px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  grid-template-columns: 120px 1fr auto;
+  gap: 16px;
+  align-items: start;
   border-radius: 5px;
   width: 100%;
   margin-bottom: 15px;
   font-size: var(--bs-body-font-size);
-  padding: 15px;
+  padding: 16px;
   background-color: rgba(var(--bs-body-color-rgb), 0.03);
+  border: 1px solid var(--bs-border-color);
+  text-align: left;
+}
+
+.calc-header-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.calc-header-name {
+  font-size: 0.7rem;
+  text-align: center;
+  color: var(--bs-secondary-color);
+  word-break: break-word;
+}
+
+.calc-header-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.calc-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(var(--bs-body-color-rgb), 0.06);
+}
+
+.calc-stat-row:last-child {
+  border-bottom: none;
+}
+
+.calc-stat-label {
+  font-size: 0.72rem;
+  color: var(--bs-secondary-color);
+}
+
+.calc-stat-value {
+  font-size: 0.75rem;
+}
+
+.calc-header-actions {
+  min-width: 150px;
+  max-width: 180px;
+}
+
+.calc-order-toggle {
+  background-color: rgba(var(--bs-body-color-rgb), 0.04);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 4px;
+  padding: 8px 10px;
+}
+
+.calc-toggle-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--bs-secondary-color);
+  margin-bottom: 4px;
 }
 
 #topcard {
@@ -160,11 +266,10 @@ svg {
 }
 
 #propimage {
-  width: 150px;
-}
-
-#propvolume {
-  text-align: left;
+  width: 90px;
+  height: 90px;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 4px !important;
 }
 
 #matsdiv {
@@ -177,6 +282,12 @@ svg {
   padding: 15px;
   border-radius: 5px;
   margin-top: 20px;
+  text-align: center;
+}
+
+#menuleft .form-control,
+#menuleft .form-select {
+  text-align: center;
 }
 
 #HukuBartopolos {
@@ -187,7 +298,7 @@ svg {
 }
 
 .col-9 {
-  width: 83% !important;
+  width: 76% !important;
 }
 
 #animateddiv {
@@ -205,6 +316,7 @@ th {
 #start-message {
   font-size: 1rem;
   margin-top: 20px;
+  text-align: left;
 }
 
 input,

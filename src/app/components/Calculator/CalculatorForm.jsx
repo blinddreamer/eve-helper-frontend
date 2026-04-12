@@ -1,10 +1,4 @@
-import {
-  Form,
-  Button,
-  Spinner,
-  OverlayTrigger,
-  Tooltip,
-} from "react-bootstrap";
+import { Form, Button, Spinner } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import "react-bootstrap-typeahead/css/Typeahead.bs5.css";
@@ -18,265 +12,153 @@ function CalculatorForm(props) {
   const typeaheadRef = useRef(null);
 
   function sendData() {
-    let building = document.getElementById("building").value;
-    let runs = document.getElementById("quantity").value;
-    let buildingRig = document.getElementById("buildingRig").value;
-    let blueprintMe = document.getElementById("blueprintMe").value;
-    let facilityTax = document.getElementById("facility").value;
-    let count = document.getElementById("blueprintCount").value;
-    let regionId = document.getElementById("marketRegion").value;
+    let building     = document.getElementById("building").value;
+    let runs         = document.getElementById("quantity").value;
+    let buildingRig  = document.getElementById("buildingRig").value;
+    let blueprintMe  = document.getElementById("blueprintMe").value;
+    let facilityTax  = document.getElementById("facility").value;
+    let count        = document.getElementById("blueprintCount").value;
+    let regionId     = document.getElementById("marketRegion").value;
     props.setFormData({
       blueprintName: blueprint,
-      runs: runs,
-      blueprintMe: blueprintMe,
-      buildingRig: buildingRig,
-      building: building,
-      system: system,
-      facilityTax: facilityTax,
-      count: count,
-      regionId: regionId,
+      runs,
+      blueprintMe,
+      buildingRig,
+      building,
+      system,
+      facilityTax,
+      count,
+      regionId,
     });
     props.setIsClicked(true);
   }
 
   return (
     <>
-      <Form>
-      <OverlayTrigger
-          placement="left" // Position of tooltip
-          overlay={
-            <Tooltip id="bps-tooltip">
-              Type Blueprint
-            </Tooltip>
-          }
-        >
-        <Form.Group id="bp_bn" controlId="blueprintName">
+      <Form className="calc-form">
+
+        {/* Blueprint */}
+        <Form.Group className="calc-form-group" controlId="blueprintName">
+          <Form.Label>Blueprint</Form.Label>
           <Typeahead
             ref={typeaheadRef}
             minLength={2}
             clearButton
-            onChange={(selected) => {
-              setBlueprint(selected[0]);
-            }}
+            onChange={(selected) => setBlueprint(selected[0])}
             id="basic-behaviors-example"
             options={props.optionsBp}
-            placeholder="Choose a Blueprint"
+            placeholder="Search blueprint…"
           />
         </Form.Group>
-        </OverlayTrigger>
-        
-        <OverlayTrigger
-          placement="left" // Position of tooltip
-          overlay={
-            <Tooltip id="runs-tooltip">
-              Number of runs for single manufacturing job/line.
-            </Tooltip>
-          }
-        >
-          <Form.Group id="bp_quantity" controlId="quantity">
-            <Form.Control
-              type="number"
-              min={1}
-              name="quantity"
-              placeholder="Runs"
-            />
+
+        {/* Runs + ME side by side */}
+        <div className="calc-form-row">
+          <Form.Group className="calc-form-group" controlId="quantity">
+            <Form.Label>Runs</Form.Label>
+            <Form.Control type="number" min={1} placeholder="1" />
           </Form.Group>
-        </OverlayTrigger>
-
-        <OverlayTrigger
-          placement="left" // Position of tooltip
-          overlay={
-            <Tooltip id="bp_me-tooltip">
-              Material Efficiency value
-            </Tooltip>
-          }
-        >
-        <Form.Group id="bp_me" controlId="blueprintMe">
-          <Form.Control
-            type="number"
-            min={0}
-            name="blueprintMe"
-            placeholder="Blueprint ME"
-          />
-        </Form.Group>
-        </OverlayTrigger>
-
-        <OverlayTrigger
-          placement="left" // Position of tooltip
-          overlay={
-            <Tooltip id="build-tooltip">
-              Crafting Structure.
-            </Tooltip>
-          }
-        >
-        <Form.Group id="bp_build" controlId="building">
-          <Form.Select defaultValue="0" aria-label="Default select example">
-            <option value={0}>Building.</option>
-            {(!blueprint ||
-              props.bpDetails.some(
-                (bp) => bp.blueprint === blueprint && bp.activity !== 11
-              )) && <option value="1">Azbel</option>}
-            {(!blueprint ||
-              props.bpDetails.some(
-                (bp) => bp.blueprint === blueprint && bp.activity !== 11
-              )) && <option value="2">Raitaru</option>}
-            {(!blueprint ||
-              props.bpDetails.some(
-                (bp) => bp.blueprint === blueprint && bp.activity !== 11
-              )) && <option value="3">Sotiyo</option>}
-            {(!blueprint ||
-              props.bpDetails.some(
-                (bp) => bp.blueprint === blueprint && bp.activity !== 1
-              )) && <option value="4">Athanor</option>}
-            {(!blueprint ||
-              props.bpDetails.some(
-                (bp) => bp.blueprint === blueprint && bp.activity !== 1
-              )) && <option value="5">Tatara</option>}
-          </Form.Select>
-        </Form.Group>
-        </OverlayTrigger>
-        
-        <OverlayTrigger
-          placement="left" // Position of tooltip
-          overlay={
-            <Tooltip id="rig-tooltip">
-              Building Rig
-            </Tooltip>
-          }
-        >
-        <Form.Group id="bp_rig" controlId="buildingRig">
-          <Form.Select aria-label="Default select example" defaultValue="0">
-            <option value={0}>Building Rig.</option>
-            <option value="1">T1</option>
-            <option value="2">T2</option>
-          </Form.Select>
-        </Form.Group>
-        </OverlayTrigger>
-
-        <OverlayTrigger
-          placement="left" // Position of tooltip
-          overlay={
-            <Tooltip id="system-tooltip">
-              System of the building
-            </Tooltip>
-          }
-        >
-        <Form.Group id="bp_system" controlId="systemName">
-          <Typeahead
-            ref={typeaheadRef}
-            clearButton={true}
-            minLength={2}
-            onChange={(selected) => {
-              setSystem(selected[0]);
-            }}
-            id="basic-behaviors-example"
-            options={props.optionsSys}
-            oo
-            placeholder="Choose a system"
-          />
-        </Form.Group>
-        </OverlayTrigger>
-
-        <OverlayTrigger
-          placement="left" // Position of tooltip
-          overlay={
-            <Tooltip id="ft-tooltip">
-              Stucture Facility Tax
-            </Tooltip>
-          }
-        >
-        <Form.Group id="bp_ft" controlId="facility">
-          <Form.Control
-            type="number"
-            min={0}
-            name="facility"
-            placeholder="Facility tax."
-          />
-        </Form.Group>
-        </OverlayTrigger>
-
-        <OverlayTrigger
-          placement="left" // Position of tooltip
-          overlay={
-            <Tooltip id="count-tooltip">
-              How many manufacturing jobs you are going to start
-            </Tooltip>
-          }
-        >
-          <Form.Group id="bp_count" controlId="blueprintCount">
-            <Form.Control
-              type="number"
-              min={1}
-              name="blueprintCount"
-              placeholder="Job Count."
-            />
+          <Form.Group className="calc-form-group" controlId="blueprintMe">
+            <Form.Label>Blueprint ME %</Form.Label>
+            <Form.Control type="number" min={0} max={10} placeholder="0" />
           </Form.Group>
-        </OverlayTrigger>
-        <OverlayTrigger
-          placement="left" // Position of tooltip
-          overlay={
-            <Tooltip id="market-tooltip">
-              Region you are buying mats from. For Jita leave Forge
-            </Tooltip>
-          }
-        >
-          <Form.Group id="bp_market" controlId="marketRegion">
-            <Form.Select aria-label="Default select example">
-              {props.stations.map((station, index) => {
-                return (
-                  <option
-                    key={index}
-                    selected={station.stationId == 60003760}
-                    value={station.regionId+"_"+station.stationId}
-                  >
-                    {station.regionName+ " - " + station.stationName}
-                  </option>
-                );
-              })}
+        </div>
+
+        {/* Structure + Rig side by side */}
+        <div className="calc-form-row">
+          <Form.Group className="calc-form-group" controlId="building">
+            <Form.Label>Structure</Form.Label>
+            <Form.Select defaultValue="0">
+              <option value={0}>— select —</option>
+              {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 11)) && <option value="1">Azbel</option>}
+              {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 11)) && <option value="2">Raitaru</option>}
+              {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 11)) && <option value="3">Sotiyo</option>}
+              {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 1))  && <option value="4">Athanor</option>}
+              {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 1))  && <option value="5">Tatara</option>}
             </Form.Select>
           </Form.Group>
-        </OverlayTrigger>
+          <Form.Group className="calc-form-group" controlId="buildingRig">
+            <Form.Label>Structure Rig</Form.Label>
+            <Form.Select defaultValue="0">
+              <option value={0}>— none —</option>
+              <option value="1">T1</option>
+              <option value="2">T2</option>
+            </Form.Select>
+          </Form.Group>
+        </div>
+
+        {/* System */}
+        <Form.Group className="calc-form-group" controlId="systemName">
+          <Form.Label>System</Form.Label>
+          <Typeahead
+            ref={typeaheadRef}
+            clearButton
+            minLength={2}
+            onChange={(selected) => setSystem(selected[0])}
+            id="system-typeahead"
+            options={props.optionsSys}
+            placeholder="Search system…"
+          />
+        </Form.Group>
+
+        {/* Facility Tax + Job Count side by side */}
+        <div className="calc-form-row">
+          <Form.Group className="calc-form-group" controlId="facility">
+            <Form.Label>Facility Tax %</Form.Label>
+            <Form.Control type="number" min={0} step="0.1" placeholder="0.0" />
+          </Form.Group>
+          <Form.Group className="calc-form-group" controlId="blueprintCount">
+            <Form.Label>Job Count</Form.Label>
+            <Form.Control type="number" min={1} placeholder="1" />
+          </Form.Group>
+        </div>
+
+        {/* Market Region */}
+        <Form.Group className="calc-form-group" controlId="marketRegion">
+          <Form.Label>Buy Materials From</Form.Label>
+          <Form.Select>
+            {props.stations.map((station, index) => (
+              <option
+                key={index}
+                defaultValue={station.stationId === 60003760}
+                value={station.regionId + "_" + station.stationId}
+              >
+                {station.regionName + " — " + station.stationName}
+              </option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+
       </Form>
-      <p />
+
+      {/* Advanced sub-forms */}
       {props.advancedMode &&
         blueprint != null &&
-        props.bpDetails
-          .filter((bp) => bp.blueprint === blueprint)
-          .some((bp) => bp.complexity === 3) && (
+        props.bpDetails.filter((bp) => bp.blueprint === blueprint).some((bp) => bp.complexity === 3) && (
           <ShortForm
             reaction={false}
             setFormDataPart={props.setFormDataPart}
             setFormDataReaction={props.setFormDataReaction}
             optionsSys={props.optionsSys}
             advancedMode={props.advancedMode}
-           // regions={props.regions}
           />
         )}
       {props.advancedMode &&
         blueprint != null &&
-        props.bpDetails
-          .filter((bp) => bp.blueprint === blueprint)
-          .some((bp) => bp.complexity >= 2) && (
+        props.bpDetails.filter((bp) => bp.blueprint === blueprint).some((bp) => bp.complexity >= 2) && (
           <ShortForm
             reaction={true}
             setFormDataPart={props.setFormDataPart}
             setFormDataReaction={props.setFormDataReaction}
             optionsSys={props.optionsSys}
             advancedMode={props.advancedMode}
-           // regions={props.regions}
           />
         )}
-      <Button variant="secondary" onClick={sendData}>
+
+      <Button className="w-100 mt-3" variant="secondary" onClick={sendData}>
         {props.isLoading ? (
           <>
-            <Spinner
-              as="span"
-              animation="border"
-              size="sm"
-              role="status"
-              aria-hidden="true"
-            />
-            Loading...
+            <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />{" "}
+            Calculating…
           </>
         ) : (
           "Calculate"
@@ -285,4 +167,5 @@ function CalculatorForm(props) {
     </>
   );
 }
+
 export default CalculatorForm;
