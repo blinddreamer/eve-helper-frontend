@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useCallback } from "react";
 import axios from "axios";
+import { Alert } from "react-bootstrap";
 import MarketSearch from "./MarketSearch";
 import MarketCategoryTree from "./MarketCategoryTree";
 import MarketOrders from "./MarketOrders";
@@ -143,9 +144,9 @@ function MarketHome() {
 
           {/* Placeholder */}
           {!selectedItem && (
-            <div id="market-placeholder">
+            <Alert variant="success" style={{ marginTop: 20, fontSize: "1rem" }}>
               Select an item from the category tree or search to view market data.
-            </div>
+            </Alert>
           )}
 
           {/* All-region summary + expanded detail */}

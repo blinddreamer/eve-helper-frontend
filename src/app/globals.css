@@ -1076,9 +1076,6 @@ tr {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #555;
-  font-size: 0.85rem;
-  text-align: center;
   padding: 40px;
 }
 
