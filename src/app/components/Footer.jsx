@@ -9,10 +9,10 @@ function Footer() {
       <Card className="text-center cardh">
         <CardBody>
           <CardText>
-            Made with ❤️ by{" "}
+            {/* Made with ❤️ by{" "}
             <a href="https://evewho.com/character/92997815">
               <span id="linkz">Gnomcho Kraitan</span>
-            </a>
+            </a> */}
           </CardText>
         </CardBody>
 

@@ -17,13 +17,17 @@ export default function Login(props) {
 
   const getUserInfo = async () => {
     try {
-      const response = api.get(`${backend}auth/me`);
+      const response = await api.get(`${backend}auth/me`);
+     
+      
+      if (response.status === 200) {
+        const data = response.data; // Correctly parse response
+        props.setUser(data);
+        extendSession(); // Extend session after confirming user is valid
+      }
+     
 
-      if (!response.ok) return;
-
-      const data = await response.data; // Correctly parse response
-      props.setUser(data.character);
-      extendSession(); // Extend session after confirming user is valid
+    
     } catch (error) {
       console.error("Error fetching user:", error);
     }
@@ -88,7 +92,7 @@ export default function Login(props) {
         </div>
       ) : (
         <button
-          class="d-flex align-items-center justify-content-center btn btn-secondary"
+          className="d-flex align-items-center justify-content-center btn btn-secondary"
           onClick={handleLogin}
         >
           Login with EVE

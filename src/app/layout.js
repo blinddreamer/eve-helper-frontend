@@ -1,8 +1,8 @@
 import { Cookie, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import Script from "next/script";
 import NavbarMenu from "./components/NavbarMenu";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Footer from "./components/Footer";
 import Video from "./components/Video";
 import CookieBanner from "./components/CookieBanner";
@@ -89,13 +89,14 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
+
         {/* Statcounter Analytics */}
         <Script id="statcounter-config" strategy="afterInteractive">
           {`
-            var sc_project = 13161325; 
-            var sc_invisible = 1; 
-            var sc_security = "9ec34468"; 
-          `}
+          var sc_project = 13161325; 
+          var sc_invisible = 1; 
+          var sc_security = "9ec34468"; 
+        `}
         </Script>
 
         <Script

@@ -1,0 +1,231 @@
+"use client";
+import React, { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import { FaFolder, FaFolderOpen } from "react-icons/fa";
+
+const ESI   = "https://esi.evetech.net/latest";
+const IMGS  = "https://images.evetech.net";
+
+async function esiGet(path, params = {}) {
+  const res = await axios.get(`${ESI}${path}`, { params: { datasource: "tranquility", ...params } });
+  return res.data;
+}
+
+function CatIcon({ categoryId, expanded }) {
+  return (
+    <img
+      src={`${IMGS}/categories/${categoryId}/icon?size=32`}
+      alt=""
+      width={18}
+      height={18}
+      style={{ marginRight: 6, borderRadius: 2, flexShrink: 0, opacity: expanded ? 1 : 0.75 }}
+      onError={(e) => { e.target.style.display = "none"; }}
+    />
+  );
+}
+
+function GroupIcon({ expanded }) {
+  return expanded
+    ? <FaFolderOpen size={13} style={{ marginRight: 6, color: "#9CDCFE", flexShrink: 0 }} />
+    : <FaFolder     size={13} style={{ marginRight: 6, color: "#858585", flexShrink: 0 }} />;
+}
+
+function TypeIcon({ typeId }) {
+  return (
+    <img
+      src={`${IMGS}/types/${typeId}/icon?size=32`}
+      alt=""
+      width={16}
+      height={16}
+      style={{ marginRight: 6, borderRadius: 2, flexShrink: 0, opacity: 0.85 }}
+      onError={(e) => { e.target.style.display = "none"; }}
+    />
+  );
+}
+
+function MarketCategoryTree({ onTypeSelect, selectedTypeId }) {
+  const [categories, setCategories] = useState([]);
+  const [expandedCategories, setExpandedCategories] = useState(new Set());
+  const [expandedGroups, setExpandedGroups] = useState(new Set());
+  const [groupsMap, setGroupsMap] = useState({});   // categoryId → [{ id, name, types }]
+  const [typesMap, setTypesMap] = useState({});     // groupId → [{ typeId, name }]
+  const [loadingCategories, setLoadingCategories] = useState(true);
+  const [loadingGroups, setLoadingGroups] = useState(new Set());
+  const [loadingTypes, setLoadingTypes] = useState(new Set());
+
+  // Load all published categories on mount
+  useEffect(() => {
+    async function load() {
+      try {
+        const ids = await esiGet("/universe/categories/");
+        const all = await Promise.all(ids.map((id) => esiGet(`/universe/categories/${id}/`)));
+        const published = all
+          .filter((c) => c.published)
+          .sort((a, b) => a.name.localeCompare(b.name));
+        setCategories(published);
+      } catch {
+        // silently fail
+      } finally {
+        setLoadingCategories(false);
+      }
+    }
+    load();
+  }, []);
+
+  const toggleCategory = useCallback(
+    async (category) => {
+      const id = category.category_id;
+      const isExpanded = expandedCategories.has(id);
+
+      setExpandedCategories((prev) => {
+        const next = new Set(prev);
+        isExpanded ? next.delete(id) : next.add(id);
+        return next;
+      });
+
+      if (!isExpanded && !groupsMap[id]) {
+        setLoadingGroups((prev) => new Set(prev).add(id));
+        try {
+          const groups = await Promise.all(
+            category.groups.map((gid) => esiGet(`/universe/groups/${gid}/`))
+          );
+          const published = groups
+            .filter((g) => g.published)
+            .sort((a, b) => a.name.localeCompare(b.name));
+          setGroupsMap((prev) => ({ ...prev, [id]: published }));
+        } catch {
+          // silently fail
+        } finally {
+          setLoadingGroups((prev) => {
+            const next = new Set(prev);
+            next.delete(id);
+            return next;
+          });
+        }
+      }
+    },
+    [expandedCategories, groupsMap]
+  );
+
+  const toggleGroup = useCallback(
+    async (group) => {
+      const id = group.group_id;
+      const isExpanded = expandedGroups.has(id);
+
+      setExpandedGroups((prev) => {
+        const next = new Set(prev);
+        isExpanded ? next.delete(id) : next.add(id);
+        return next;
+      });
+
+      if (!isExpanded && !typesMap[id]) {
+        setLoadingTypes((prev) => new Set(prev).add(id));
+        try {
+          const typeIds = group.types.slice(0, 100); // cap at 100 per group
+          if (typeIds.length === 0) {
+            setTypesMap((prev) => ({ ...prev, [id]: [] }));
+            return;
+          }
+          const namesRes = await axios.post(
+            `${ESI}/universe/names/?datasource=tranquility`,
+            typeIds
+          );
+          const sorted = namesRes.data
+            .filter((t) => t.category === "inventory_type")
+            .filter((t) => !t.name.includes("Abyssal"))
+            .sort((a, b) => a.name.localeCompare(b.name));
+          setTypesMap((prev) => ({
+            ...prev,
+            [id]: sorted.map((t) => ({ typeId: t.id, name: t.name })),
+          }));
+        } catch {
+          setTypesMap((prev) => ({ ...prev, [id]: [] }));
+        } finally {
+          setLoadingTypes((prev) => {
+            const next = new Set(prev);
+            next.delete(id);
+            return next;
+          });
+        }
+      }
+    },
+    [expandedGroups, typesMap]
+  );
+
+  if (loadingCategories) {
+    return (
+      <div className="market-tree-loading">
+        <div className="spinner-border spinner-border-sm" role="status" />
+        <span> Loading categories...</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="market-category-tree">
+      {categories.map((cat) => {
+        const catExpanded = expandedCategories.has(cat.category_id);
+        return (
+          <div key={cat.category_id}>
+            {/* Category row */}
+            <div
+              className="market-tree-category"
+              onClick={() => toggleCategory(cat)}
+            >
+              <CatIcon categoryId={cat.category_id} expanded={catExpanded} />
+              {cat.name}
+              {loadingGroups.has(cat.category_id) && (
+                <span className="spinner-border spinner-border-sm ms-1" style={{ width: 10, height: 10 }} />
+              )}
+            </div>
+
+            {/* Groups */}
+            {catExpanded && groupsMap[cat.category_id] && (
+              <div className="market-tree-groups">
+                {groupsMap[cat.category_id].map((group) => {
+                  const groupExpanded = expandedGroups.has(group.group_id);
+                  return (
+                    <div key={group.group_id}>
+                      {/* Group row */}
+                      <div
+                        className="market-tree-group"
+                        onClick={() => toggleGroup(group)}
+                      >
+                        <GroupIcon expanded={groupExpanded} />
+                        {group.name}
+                        {loadingTypes.has(group.group_id) && (
+                          <span className="spinner-border spinner-border-sm ms-1" style={{ width: 10, height: 10 }} />
+                        )}
+                      </div>
+
+                      {/* Types */}
+                      {groupExpanded && typesMap[group.group_id] && (
+                        <div className="market-tree-types">
+                          {typesMap[group.group_id].length === 0 && (
+                            <div className="market-tree-type text-muted">No items</div>
+                          )}
+                          {typesMap[group.group_id].map((type) => (
+                            <div
+                              key={type.typeId}
+                              className={`market-tree-type ${selectedTypeId === type.typeId ? "active" : ""}`}
+                              onClick={() => onTypeSelect(type)}
+                            >
+                              <TypeIcon typeId={type.typeId} />
+                              {type.name}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+export default MarketCategoryTree;

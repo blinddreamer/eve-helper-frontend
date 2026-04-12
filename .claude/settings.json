@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "additionalDirectories": [
+      "C:\\eve-helper-backend\\src\\main\\java\\com\\example\\pandatribe\\models\\dbmodels\\market",
+      "C:\\eve-helper-backend\\src\\main\\java\\com\\example\\pandatribe\\repositories\\interfaces",
+      "C:\\eve-helper-backend\\src\\main\\java\\com\\example\\pandatribe\\scheduledjobs"
+    ]
+  }
+}
