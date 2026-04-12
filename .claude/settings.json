@@ -5,7 +5,9 @@
       "Bash(git commit -m ':*)",
       "Bash(git checkout:*)",
       "Bash(git merge login-and-pi --no-ff -m ':*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(git pull:*)",
+      "Bash(git push:*)"
     ],
     "additionalDirectories": [
       "C:\\eve-helper-backend\\src\\main\\java\\com\\example\\pandatribe\\models\\dbmodels\\market",
