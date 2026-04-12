@@ -4,6 +4,16 @@ import axios from "axios";
 
 const BACKEND = process.env.NEXT_PUBLIC_API_URL;
 
+function typeIconUrl(typeId, name) {
+  if (name && name.endsWith(" Blueprint Copy")) {
+    return `https://images.evetech.net/types/${typeId}/bpc?size=32`;
+  }
+  if (name && name.endsWith(" Blueprint")) {
+    return `https://images.evetech.net/types/${typeId}/bp?size=32`;
+  }
+  return `https://images.evetech.net/types/${typeId}/icon?size=32`;
+}
+
 async function buildTypeIndex() {
   const res = await axios.get(`${BACKEND}market/types`);
   // backend returns [{ typeId, name }, ...]
@@ -97,7 +107,7 @@ function MarketSearch({ onItemSelect }) {
               onMouseDown={() => handleSelect(item)}
             >
               <img
-                src={`https://images.evetech.net/types/${item.typeId}/icon?size=32`}
+                src={typeIconUrl(item.typeId, item.name)}
                 alt=""
                 width={18}
                 height={18}

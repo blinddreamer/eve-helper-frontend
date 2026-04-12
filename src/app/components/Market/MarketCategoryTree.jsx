@@ -30,10 +30,16 @@ function GroupIcon({ expanded }) {
     : <FaFolder     size={13} style={{ marginRight: 6, color: "#858585", flexShrink: 0 }} />;
 }
 
-function TypeIcon({ typeId }) {
+function typeIconEndpoint(name) {
+  if (name && name.endsWith(" Blueprint Copy")) return "bpc";
+  if (name && name.endsWith(" Blueprint")) return "bp";
+  return "icon";
+}
+
+function TypeIcon({ typeId, name }) {
   return (
     <img
-      src={`${IMGS}/types/${typeId}/icon?size=32`}
+      src={`${IMGS}/types/${typeId}/${typeIconEndpoint(name)}?size=32`}
       alt=""
       width={16}
       height={16}
@@ -210,7 +216,7 @@ function MarketCategoryTree({ onTypeSelect, selectedTypeId }) {
                               className={`market-tree-type ${selectedTypeId === type.typeId ? "active" : ""}`}
                               onClick={() => onTypeSelect(type)}
                             >
-                              <TypeIcon typeId={type.typeId} />
+                              <TypeIcon typeId={type.typeId} name={type.name} />
                               {type.name}
                             </div>
                           ))}
