@@ -97,7 +97,7 @@ function Calculator(props) {
                 <Button
                   id="button-top"
                   variant="secondary"
-                  className="w-100 mb-3"
+                  className="w-100 mb-2"
                   onClick={() => handleMultiBuyCopy("copy_" + props.initialBlueprint.name)}
                 >
                   {!props.isCopied["copy_" + props.initialBlueprint.name]
@@ -105,25 +105,23 @@ function Calculator(props) {
                     : "Copied ✓"}
                 </Button>
 
-                <div className="calc-order-toggle">
-                  <div className="calc-toggle-label">Sell item via</div>
-                  <div className="d-flex gap-3">
-                    <Form.Check inline type="radio" label="Sell order" value="sell"
+                <div className="calc-toggles-row">
+                  <div className="calc-order-toggle">
+                    <div className="calc-toggle-label">Sell item via</div>
+                    <Form.Check type="radio" label="Sell order" value="sell"
                       id="inline-radio-master-1" checked={masterTransactionType === "sell"}
                       onChange={(e) => setMasterTransactionType(e.target.value)} />
-                    <Form.Check inline type="radio" label="Buy order" value="buy"
+                    <Form.Check type="radio" label="Buy order" value="buy"
                       id="inline-radio-master-2" checked={masterTransactionType === "buy"}
                       onChange={(e) => setMasterTransactionType(e.target.value)} />
                   </div>
-                </div>
 
-                <div className="calc-order-toggle mt-2">
-                  <div className="calc-toggle-label">Buy materials via</div>
-                  <div className="d-flex gap-3">
-                    <Form.Check inline type="radio" label="Sell order" value="sell"
+                  <div className="calc-order-toggle">
+                    <div className="calc-toggle-label">Buy mats via</div>
+                    <Form.Check type="radio" label="Sell order" value="sell"
                       id="inline-radio-1" checked={transactionType === "sell"}
                       onChange={(e) => setTransactionType(e.target.value)} />
-                    <Form.Check inline type="radio" label="Buy order" value="buy"
+                    <Form.Check type="radio" label="Buy order" value="buy"
                       id="inline-radio-2" checked={transactionType === "buy"}
                       onChange={(e) => setTransactionType(e.target.value)} />
                   </div>
