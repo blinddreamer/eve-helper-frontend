@@ -6,6 +6,38 @@ import { FaFolder, FaFolderOpen } from "react-icons/fa";
 const ESI   = "https://esi.evetech.net/latest";
 const IMGS  = "https://images.evetech.net";
 
+// Whitelist of player-visible market categories.
+// Excludes non-item categories like Celestial (space objects), Asteroid (raw rocks),
+// Planetary Resources / Colony Resources (raw surface resources), and Personalization (cosmetics).
+const PLAYER_CATEGORY_IDS = new Set([
+  4,    // Material
+  5,    // Accessories
+  6,    // Ship
+  7,    // Module
+  8,    // Charge
+  9,    // Blueprint
+  16,   // Skill
+  17,   // Commodity
+  18,   // Drone
+  20,   // Implant
+  22,   // Deployable
+  23,   // Starbase
+  24,   // Reaction
+  30,   // Apparel
+  32,   // Subsystem
+  34,   // Ancient Relics
+  35,   // Decryptors
+  39,   // Infrastructure Upgrades
+  40,   // Sovereignty Structures
+  41,   // Planetary Industry
+  43,   // Planetary Commodities
+  46,   // Orbitals
+  63,   // Special Edition Assets
+  87,   // Fighter
+  91,   // SKINs
+  2100, // Expert Systems
+]);
+
 async function esiGet(path, params = {}) {
   const res = await axios.get(`${ESI}${path}`, { params: { datasource: "tranquility", ...params } });
   return res.data;
@@ -66,7 +98,7 @@ function MarketCategoryTree({ onTypeSelect, selectedTypeId }) {
         const ids = await esiGet("/universe/categories/");
         const all = await Promise.all(ids.map((id) => esiGet(`/universe/categories/${id}/`)));
         const published = all
-          .filter((c) => c.published)
+          .filter((c) => c.published && PLAYER_CATEGORY_IDS.has(c.category_id))
           .sort((a, b) => a.name.localeCompare(b.name));
         setCategories(published);
       } catch {
