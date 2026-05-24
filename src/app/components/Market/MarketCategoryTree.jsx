@@ -38,6 +38,16 @@ const PLAYER_CATEGORY_IDS = new Set([
   2100, // Expert Systems
 ]);
 
+function isDevItem(name) {
+  return (
+    name.startsWith("QA ") ||
+    name.includes("DO NOT") ||
+    name.includes("Test Server") ||
+    name.includes("UNUSED") ||
+    name.includes("Abyssal")
+  );
+}
+
 async function esiGet(path, params = {}) {
   const res = await axios.get(`${ESI}${path}`, { params: { datasource: "tranquility", ...params } });
   return res.data;
@@ -170,7 +180,7 @@ function MarketCategoryTree({ onTypeSelect, selectedTypeId }) {
           );
           const sorted = namesRes.data
             .filter((t) => t.category === "inventory_type")
-            .filter((t) => !t.name.includes("Abyssal"))
+            .filter((t) => !isDevItem(t.name))
             .sort((a, b) => a.name.localeCompare(b.name));
           setTypesMap((prev) => ({
             ...prev,
