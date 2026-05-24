@@ -9,9 +9,11 @@ import ShortForm from "./ShortForm";
 function CalculatorForm(props) {
   const [system, setSystem] = useState("");
   const [blueprint, setBlueprint] = useState("");
-  const typeaheadRef = useRef(null);
+  const blueprintRef = useRef(null);
+  const systemRef = useRef(null);
 
   function sendData() {
+    if (!blueprint) return;
     let building     = document.getElementById("building").value;
     let runs         = document.getElementById("quantity").value;
     let buildingRig  = document.getElementById("buildingRig").value;
@@ -41,7 +43,7 @@ function CalculatorForm(props) {
         <Form.Group className="calc-form-group" controlId="blueprintName">
           <Form.Label>Blueprint</Form.Label>
           <Typeahead
-            ref={typeaheadRef}
+            ref={blueprintRef}
             minLength={2}
             clearButton
             onChange={(selected) => setBlueprint(selected[0])}
@@ -69,8 +71,8 @@ function CalculatorForm(props) {
             <Form.Label>Structure</Form.Label>
             <Form.Select defaultValue="0">
               <option value={0}>— select —</option>
-              {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 11)) && <option value="1">Azbel</option>}
-              {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 11)) && <option value="2">Raitaru</option>}
+              {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 11)) && <option value="1">Raitaru</option>}
+              {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 11)) && <option value="2">Azbel</option>}
               {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 11)) && <option value="3">Sotiyo</option>}
               {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 1))  && <option value="4">Athanor</option>}
               {(!blueprint || props.bpDetails.some((bp) => bp.blueprint === blueprint && bp.activity !== 1))  && <option value="5">Tatara</option>}
@@ -90,7 +92,7 @@ function CalculatorForm(props) {
         <Form.Group className="calc-form-group" controlId="systemName">
           <Form.Label>System</Form.Label>
           <Typeahead
-            ref={typeaheadRef}
+            ref={systemRef}
             clearButton
             minLength={2}
             onChange={(selected) => setSystem(selected[0])}

@@ -576,7 +576,7 @@ function Calculator(props) {
       setTimeout(() => {
         props.setIsCopied({ [id]: false });
       }, 500);
-    } catch {
+    } catch (error) {
       console.error("Error copying text: ", error);
       alert("Failed to copy text.");
     }
@@ -636,6 +636,7 @@ function Calculator(props) {
       masterTransactionType === "sell"
         ? props.initialBlueprint.totalSellPrice
         : props.initialBlueprint.totalBuyPrice;
+    if (!price) return 0;
     const craftPrice =
       transactionType === "sell"
         ? props.initialBlueprint.sellCraftPrice
@@ -677,7 +678,7 @@ function Calculator(props) {
       );
       props.setMaterialsList(response.data.blueprintResult);
       props.setInitialBlueprint(response.data.blueprintResult[0]);
-      } catch {
+      } catch (error) {
       console.error("Error updating material stats:", error);
      // navigate("/error", { state: { message: error.message } });
     } finally {

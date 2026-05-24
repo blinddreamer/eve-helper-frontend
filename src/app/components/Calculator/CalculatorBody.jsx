@@ -19,7 +19,6 @@ function CalculatorBody(props) {
   const [isClicked, setIsClicked] = useState(false);
   const [optionsBp, setOptionsBp] = useState([]);
   const [optionsSys, setOptionsSys] = useState([]);
-  const [onStart, setOnstart] = useState(true);
   const [regions, setRegions] = useState([{}]);
   const [stations, setStations] = useState([{}]);
   const [isCopied, setIsCopied] = useState({});
@@ -31,11 +30,13 @@ function CalculatorBody(props) {
 
   useEffect(() => {
     isClicked && submitForm();
-  });
+  }, [isClicked]);
   useEffect(() => {
-    onStart && getRegions() && getSystems() && getBlueprints() && getStations();
-    setOnstart(false);
-  });
+    getRegions();
+    getSystems();
+    getBlueprints();
+    getStations();
+  }, []);
 
   async function getRegions() {
     const response = await axios.get(backend + "regions");
