@@ -85,7 +85,10 @@ function MarketHistory({ history }) {
             width={65}
           />
           <Tooltip
-            formatter={(value, name) => [formatISK(value) + " ISK", name]}
+            formatter={(value, name) => [
+              name === "Volume" ? formatISK(value) : formatISK(value) + " ISK",
+              name,
+            ]}
             contentStyle={{
               background: "#252526",
               border: "1px solid #454545",

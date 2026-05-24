@@ -127,7 +127,7 @@ function MarketCategoryTree({ onTypeSelect, selectedTypeId }) {
       if (!isExpanded && !typesMap[id]) {
         setLoadingTypes((prev) => new Set(prev).add(id));
         try {
-          const typeIds = group.types.slice(0, 100); // cap at 100 per group
+          const typeIds = group.types.slice(0, 100);
           if (typeIds.length === 0) {
             setTypesMap((prev) => ({ ...prev, [id]: [] }));
             return;
@@ -220,6 +220,11 @@ function MarketCategoryTree({ onTypeSelect, selectedTypeId }) {
                               {type.name}
                             </div>
                           ))}
+                          {group.types.length > 100 && (
+                            <div className="market-tree-type text-muted" style={{ fontStyle: "italic", cursor: "default" }}>
+                              Showing 100 of {group.types.length} — use search for more
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
