@@ -44,7 +44,8 @@ function isDevItem(name) {
     name.includes("DO NOT") ||
     name.includes("Test Server") ||
     name.includes("UNUSED") ||
-    name.includes("Abyssal")
+    name.includes("Abyssal") ||
+    name.includes("Billboard")
   );
 }
 
