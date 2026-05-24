@@ -11,6 +11,12 @@ import Animated from "../Animated";
 const ESI     = "https://esi.evetech.net/latest";
 const BACKEND = process.env.NEXT_PUBLIC_API_URL;
 
+function typeIconEndpoint(name) {
+  if (name && name.endsWith(" Blueprint Copy")) return "bpc";
+  if (name && name.endsWith(" Blueprint")) return "bp";
+  return "icon";
+}
+
 export const REGIONS = [
   { id: 10000002, name: "Jita",    full: "The Forge"     },
   { id: 10000043, name: "Amarr",   full: "Domain"        },
@@ -125,7 +131,7 @@ function MarketHome() {
           {typeInfo && (
             <div id="market-item-header">
               <img
-                src={`https://images.evetech.net/types/${typeInfo.type_id}/icon?size=64`}
+                src={`https://images.evetech.net/types/${typeInfo.type_id}/${typeIconEndpoint(typeInfo.name)}?size=64`}
                 alt={typeInfo.name}
                 width={52}
                 height={52}
