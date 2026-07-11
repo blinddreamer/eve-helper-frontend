@@ -82,7 +82,7 @@ export default function RootLayout({ children }) {
               (function() {
                 try {
                   const storedDarkMode = JSON.parse(localStorage.getItem("darkMode"));
-                  const isDark = storedDarkMode ?? false;
+                  const isDark = storedDarkMode ?? true;
                   document.documentElement.setAttribute("data-bs-theme", isDark ? "dark" : "light");
                 } catch (e) {}
               })();

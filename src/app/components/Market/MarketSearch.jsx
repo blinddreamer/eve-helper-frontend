@@ -89,13 +89,13 @@ function MarketSearch({ onItemSelect }) {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => results.length > 0 && setOpen(true)}
-        style={{ fontSize: "0.75rem", background: "#3C3C3C", borderColor: "#454545", color: "#D4D4D4" }}
+        style={{ fontSize: "0.75rem" }}
         autoComplete="off"
       />
       {status === "loading" && (
         <span
           className="spinner-border spinner-border-sm"
-          style={{ position: "absolute", right: 8, top: 7, width: 12, height: 12, color: "#858585" }}
+          style={{ position: "absolute", right: 8, top: 7, width: 12, height: 12, color: "var(--market-text-dim)" }}
         />
       )}
       {open && (

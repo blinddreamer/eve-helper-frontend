@@ -69,8 +69,8 @@ function CatIcon({ categoryId, expanded }) {
 
 function GroupIcon({ expanded }) {
   return expanded
-    ? <FaFolderOpen size={13} style={{ marginRight: 6, color: "#9CDCFE", flexShrink: 0 }} />
-    : <FaFolder     size={13} style={{ marginRight: 6, color: "#858585", flexShrink: 0 }} />;
+    ? <FaFolderOpen size={13} style={{ marginRight: 6, color: "var(--market-accent-alt)", flexShrink: 0 }} />
+    : <FaFolder     size={13} style={{ marginRight: 6, color: "var(--market-text-dim)", flexShrink: 0 }} />;
 }
 
 function typeIconEndpoint(name) {

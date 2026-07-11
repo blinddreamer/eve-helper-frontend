@@ -1,11 +1,12 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import {api} from "../../utils/axios"
 
 export default function Login(props) {
   // const [user, setUser] = useState(null);
   const backend = process.env.NEXT_PUBLIC_API_URL;
+  const popupPollRef = useRef(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -14,6 +15,10 @@ export default function Login(props) {
       getUserInfo(); // Only call if user is null and session exists
     }
   }, [props.user]);
+
+  useEffect(() => {
+    return () => clearInterval(popupPollRef.current);
+  }, []);
 
   const getUserInfo = async () => {
     try {
@@ -60,9 +65,9 @@ export default function Login(props) {
       `width=${width},height=${height},top=${top},left=${left}`
     );
 
-    const checkPopup = setInterval(() => {
+    popupPollRef.current = setInterval(() => {
       if (authWindow.closed) {
-        clearInterval(checkPopup);
+        clearInterval(popupPollRef.current);
         getUserInfo();
       }
     }, 1000);

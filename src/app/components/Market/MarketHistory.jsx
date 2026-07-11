@@ -64,23 +64,23 @@ function MarketHistory({ history }) {
       </div>
       <ResponsiveContainer width="100%" height={260}>
         <ComposedChart data={data} margin={{ top: 4, right: 10, left: 10, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#3C3C3C" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--market-grid-line)" />
           <XAxis
             dataKey="date"
-            tick={{ fontSize: 10, fill: "#858585" }}
+            tick={{ fontSize: 10, fill: "var(--market-text-dim)" }}
             tickFormatter={(d) => d.slice(5)}
             interval="preserveStartEnd"
           />
           <YAxis
             yAxisId="price"
-            tick={{ fontSize: 10, fill: "#858585" }}
+            tick={{ fontSize: 10, fill: "var(--market-text-dim)" }}
             tickFormatter={formatISK}
             width={65}
           />
           <YAxis
             yAxisId="volume"
             orientation="right"
-            tick={{ fontSize: 10, fill: "#858585" }}
+            tick={{ fontSize: 10, fill: "var(--market-text-dim)" }}
             tickFormatter={formatISK}
             width={65}
           />
@@ -90,18 +90,18 @@ function MarketHistory({ history }) {
               name,
             ]}
             contentStyle={{
-              background: "#252526",
-              border: "1px solid #454545",
+              background: "var(--market-chart-bg)",
+              border: "1px solid var(--market-border)",
               borderRadius: 4,
               fontSize: 11,
             }}
-            labelStyle={{ color: "#D4D4D4" }}
+            labelStyle={{ color: "var(--market-text)" }}
           />
           <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
           <Bar
             yAxisId="volume"
             dataKey="volume"
-            fill="#3C3C3C"
+            fill="var(--market-bar-fill)"
             opacity={0.7}
             name="Volume"
           />
@@ -109,7 +109,7 @@ function MarketHistory({ history }) {
             yAxisId="price"
             type="monotone"
             dataKey="highest"
-            stroke="#e1b489"
+            stroke="var(--market-sell)"
             dot={false}
             name="High"
             strokeWidth={1}
@@ -119,7 +119,7 @@ function MarketHistory({ history }) {
             yAxisId="price"
             type="monotone"
             dataKey="lowest"
-            stroke="#83cfcf"
+            stroke="var(--market-buy)"
             dot={false}
             name="Low"
             strokeWidth={1}
@@ -129,7 +129,7 @@ function MarketHistory({ history }) {
             yAxisId="price"
             type="monotone"
             dataKey="average"
-            stroke="#9CDCFE"
+            stroke="var(--market-accent-alt)"
             dot={false}
             name="Avg"
             strokeWidth={2}

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import axios from "axios";
 import { Alert } from "react-bootstrap";
 import MarketSearch from "./MarketSearch";
@@ -32,6 +32,7 @@ function MarketHome() {
   const [expandedRegion,  setExpandedRegion]  = useState(null); // regionId
   const [history,         setHistory]         = useState([]);
   const [historyLoading,  setHistoryLoading]  = useState(false);
+  const activeTypeIdRef = useRef(null); // guards against stale responses when switching items quickly
 
   // Fetch orders for all 5 regions in parallel — served from backend DB (15-min cache)
   const loadAllRegions = useCallback(async (typeId) => {
@@ -42,7 +43,9 @@ function MarketHome() {
     // Fetch EVE type info (description, volume, mass) directly from ESI — no DB for this
     axios
       .get(`${ESI}/universe/types/${typeId}/`, { params: { datasource: "tranquility" } })
-      .then((res) => setTypeInfo(res.data))
+      .then((res) => {
+        if (activeTypeIdRef.current === typeId) setTypeInfo(res.data);
+      })
       .catch(() => {});
 
     // Fetch each region independently so they render as they arrive
@@ -51,6 +54,7 @@ function MarketHome() {
         const res = await axios.get(`${BACKEND}market/orders`, {
           params: { typeId, regionId: region.id },
         });
+        if (activeTypeIdRef.current !== typeId) return; // a newer item was selected meanwhile
         const all = res.data;
         setRegionData((prev) => ({
           ...prev,
@@ -62,6 +66,7 @@ function MarketHome() {
           },
         }));
       } catch {
+        if (activeTypeIdRef.current !== typeId) return;
         setRegionData((prev) => ({
           ...prev,
           [region.id]: { buy: [], sell: [], loading: false, error: "No data" },
@@ -78,16 +83,19 @@ function MarketHome() {
       const res = await axios.get(`${BACKEND}market/history`, {
         params: { typeId, regionId },
       });
+      if (activeTypeIdRef.current !== typeId) return;
       setHistory(res.data);
     } catch {
+      if (activeTypeIdRef.current !== typeId) return;
       setHistory([]);
     } finally {
-      setHistoryLoading(false);
+      if (activeTypeIdRef.current === typeId) setHistoryLoading(false);
     }
   }, []);
 
   const handleTypeSelect = useCallback(
     (item) => {
+      activeTypeIdRef.current = item.typeId;
       setSelectedItem(item);
       setTypeInfo(null);
       setExpandedRegion(null);
@@ -135,7 +143,7 @@ function MarketHome() {
                 alt={typeInfo.name}
                 width={52}
                 height={52}
-                style={{ borderRadius: 3, border: "1px solid #454545", flexShrink: 0 }}
+                style={{ borderRadius: 3, border: "1px solid var(--market-border)", flexShrink: 0 }}
               />
               <div>
                 <div style={{ fontSize: "1rem", fontWeight: 600 }}>{typeInfo.name}</div>

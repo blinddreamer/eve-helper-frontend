@@ -16,12 +16,12 @@ function formatVol(value) {
 }
 
 function OrderTable({ title, orders, isBuy }) {
-  const color = isBuy ? "#83cfcf" : "#e1b489";
+  const color = isBuy ? "var(--market-buy)" : "var(--market-sell)";
   return (
     <div style={{ flex: 1, minWidth: 0 }}>
       <div className="market-orders-title" style={{ color }}>
         {title}
-        <span className="text-muted" style={{ fontSize: "0.72rem", marginLeft: 6, color: "#858585" }}>
+        <span className="text-muted" style={{ fontSize: "0.72rem", marginLeft: 6 }}>
           {orders.length} orders
         </span>
       </div>
@@ -54,7 +54,7 @@ function OrderTable({ title, orders, isBuy }) {
         </tbody>
       </Table>
       {orders.length > 15 && (
-        <div style={{ fontSize: "0.7rem", color: "#555", marginTop: -6 }}>
+        <div style={{ fontSize: "0.7rem", color: "var(--market-text-dim)", marginTop: -6 }}>
           Showing top 15 of {orders.length}
         </div>
       )}
@@ -71,9 +71,9 @@ function MarketOrders({ regions, regionData, expandedRegion, onRegionExpand, his
         <thead>
           <tr>
             <th>Region</th>
-            <th style={{ color: "#e1b489" }}>Best Sell</th>
+            <th style={{ color: "var(--market-sell)" }}>Best Sell</th>
             <th>Sell Vol</th>
-            <th style={{ color: "#83cfcf" }}>Best Buy</th>
+            <th style={{ color: "var(--market-buy)" }}>Best Buy</th>
             <th>Buy Vol</th>
             <th>Spread</th>
           </tr>
@@ -103,19 +103,19 @@ function MarketOrders({ regions, regionData, expandedRegion, onRegionExpand, his
                     {region.full}
                   </span>
                 </td>
-                <td style={{ color: "#e1b489" }}>
+                <td style={{ color: "var(--market-sell)" }}>
                   {d.loading
                     ? <span className="spinner-border spinner-border-sm" style={{ width: 10, height: 10 }} />
                     : formatISK(bestSell)}
                 </td>
                 <td className="text-muted">{d.loading ? "—" : formatVol(sellVol)}</td>
-                <td style={{ color: "#83cfcf" }}>
+                <td style={{ color: "var(--market-buy)" }}>
                   {d.loading
                     ? <span className="spinner-border spinner-border-sm" style={{ width: 10, height: 10 }} />
                     : formatISK(bestBuy)}
                 </td>
                 <td className="text-muted">{d.loading ? "—" : formatVol(buyVol)}</td>
-                <td style={{ color: "#b778bf" }}>{d.loading ? "—" : spread}</td>
+                <td style={{ color: "var(--market-spread)" }}>{d.loading ? "—" : spread}</td>
               </tr>
             );
           })}
@@ -131,7 +131,7 @@ function MarketOrders({ regions, regionData, expandedRegion, onRegionExpand, his
 
           {/* Price history */}
           {historyLoading && (
-            <div style={{ padding: "12px 0", color: "#858585", fontSize: "0.8rem" }}>
+            <div style={{ padding: "12px 0", color: "var(--market-text-dim)", fontSize: "0.8rem" }}>
               <span className="spinner-border spinner-border-sm me-2" style={{ width: 12, height: 12 }} />
               Loading price history...
             </div>

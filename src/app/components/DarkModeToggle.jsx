@@ -8,7 +8,7 @@ export default function DarkModeToggle() {
 
   useEffect(() => {
     const storedDarkMode = JSON.parse(localStorage.getItem("darkMode"));
-    setDarkMode(storedDarkMode ?? false); // Load theme on mount
+    setDarkMode(storedDarkMode ?? true); // Load theme on mount
   }, []);
 
   useEffect(() => {
