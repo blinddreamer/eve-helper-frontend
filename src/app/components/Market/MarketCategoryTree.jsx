@@ -44,7 +44,7 @@ function GroupNode({ group, childrenByParent, typesByGroup, loadingTypes, expand
         onClick={() => onToggle(group)}
       >
         <GroupIcon expanded={isExpanded} />
-        {group.marketGroupName}
+        <span className="market-tree-label" title={group.marketGroupName}>{group.marketGroupName}</span>
         {loadingTypes.has(group.marketGroupId) && (
           <span className="spinner-border spinner-border-sm ms-1" style={{ width: 10, height: 10 }} />
         )}
@@ -77,7 +77,7 @@ function GroupNode({ group, childrenByParent, typesByGroup, loadingTypes, expand
                   onClick={() => onTypeSelect(type)}
                 >
                   <TypeIcon typeId={type.typeId} name={type.name} />
-                  {type.name}
+                  <span className="market-tree-label" title={type.name}>{type.name}</span>
                 </div>
               ))}
             </div>

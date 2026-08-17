@@ -1016,12 +1016,10 @@ tr {
   cursor: pointer;
   color: var(--market-text);
   font-size: 0.78rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   user-select: none;
   display: flex;
   align-items: center;
+  min-width: 0;
 }
 
 .market-tree-category:hover {
@@ -1039,12 +1037,10 @@ tr {
   cursor: pointer;
   color: var(--market-text-secondary);
   font-size: 0.75rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   user-select: none;
   display: flex;
   align-items: center;
+  min-width: 0;
 }
 
 .market-tree-group:hover {
@@ -1062,12 +1058,17 @@ tr {
   cursor: pointer;
   color: var(--market-text-muted);
   font-size: 0.73rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   user-select: none;
   display: flex;
   align-items: center;
+  min-width: 0;
+}
+
+.market-tree-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
 }
 
 .market-tree-type:hover {
