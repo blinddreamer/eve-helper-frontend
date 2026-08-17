@@ -913,7 +913,7 @@ tr {
   --market-bar-fill: #3C3C3C;
 
   display: flex;
-  height: calc(100vh - 140px);
+  align-items: flex-start;
   gap: 0;
   font-size: 0.8rem;
   text-align: left;
@@ -951,7 +951,6 @@ tr {
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--market-border);
-  overflow: hidden;
 }
 
 #market-panel-header {
@@ -1003,9 +1002,6 @@ tr {
 }
 
 .market-category-tree {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
   padding: 4px 0;
 }
 
@@ -1090,7 +1086,6 @@ tr {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   padding: 0 16px 16px 16px;
 }
 
