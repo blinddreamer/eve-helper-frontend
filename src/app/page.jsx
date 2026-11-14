@@ -8,11 +8,12 @@ export async function generateMetadata({ params }) {
     title: "Eve Helper - Industry Calculator/Appraisal", // Default title.
     description:
       "EVE Helper provides industrial calculation tools for EVE Online, including market appraisals and profit calculators.", // Default description.
+    alternates: { canonical: "/" },
     openGraph: {
       title: "EVE Helper - Industry Calculator/Appraisal", // Default OG title.
       description:
         "EVE Helper provides industrial calculation tools for EVE Online, including market appraisals and profit calculators.", // Default OG description.
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+      url: "/",
       type: "website",
     },
     twitter: {

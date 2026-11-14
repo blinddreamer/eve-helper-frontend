@@ -1,9 +1,7 @@
 "use client";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import axios from "axios";
 import { FaFolder, FaFolderOpen } from "react-icons/fa";
-
-const BACKEND = process.env.NEXT_PUBLIC_API_URL;
+import { publicApi } from "../../utils/axios";
 const IMGS    = "https://images.evetech.net";
 
 function typeIconEndpoint(name) {
@@ -96,8 +94,8 @@ function MarketCategoryTree({ onTypeSelect, selectedTypeId }) {
   const [loadingTypes, setLoadingTypes] = useState(new Set());
 
   useEffect(() => {
-    axios
-      .get(`${BACKEND}market/groups`)
+    publicApi
+      .get(`market/groups`)
       .then((res) => setGroups(res.data))
       .catch(() => {})
       .finally(() => setLoadingGroups(false));
@@ -130,8 +128,8 @@ function MarketCategoryTree({ onTypeSelect, selectedTypeId }) {
 
       if (group.hasTypes && !typesByGroup[id] && !loadingTypes.has(id)) {
         setLoadingTypes((prev) => new Set(prev).add(id));
-        axios
-          .get(`${BACKEND}market/groups/${id}/types`)
+        publicApi
+          .get(`market/groups/${id}/types`)
           .then((res) => setTypesByGroup((prev) => ({ ...prev, [id]: res.data })))
           .catch(() => setTypesByGroup((prev) => ({ ...prev, [id]: [] })))
           .finally(() =>

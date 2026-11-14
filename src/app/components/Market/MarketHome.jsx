@@ -7,9 +7,10 @@ import MarketCategoryTree from "./MarketCategoryTree";
 import MarketOrders from "./MarketOrders";
 import MarketHistory from "./MarketHistory";
 import Animated from "../Animated";
+import { publicApi } from "../../utils/axios";
+import { formatNumber } from "../../utils/format";
 
 const ESI     = "https://esi.evetech.net/latest";
-const BACKEND = process.env.NEXT_PUBLIC_API_URL;
 
 function typeIconEndpoint(name) {
   if (name && name.endsWith(" Blueprint Copy")) return "bpc";
@@ -51,7 +52,7 @@ function MarketHome() {
     // Fetch each region independently so they render as they arrive
     REGIONS.forEach(async (region) => {
       try {
-        const res = await axios.get(`${BACKEND}market/orders`, {
+        const res = await publicApi.get(`market/orders`, {
           params: { typeId, regionId: region.id },
         });
         if (activeTypeIdRef.current !== typeId) return; // a newer item was selected meanwhile
@@ -80,7 +81,7 @@ function MarketHome() {
     setHistoryLoading(true);
     setHistory([]);
     try {
-      const res = await axios.get(`${BACKEND}market/history`, {
+      const res = await publicApi.get(`market/history`, {
         params: { typeId, regionId },
       });
       if (activeTypeIdRef.current !== typeId) return;
@@ -148,9 +149,9 @@ function MarketHome() {
               <div>
                 <div style={{ fontSize: "1rem", fontWeight: 600 }}>{typeInfo.name}</div>
                 <div className="text-muted" style={{ fontSize: "0.75rem" }}>
-                  {typeInfo.volume         != null && <>Vol: {typeInfo.volume.toFixed(2)} m³</>}
-                  {typeInfo.packaged_volume != null && <> · Packaged: {typeInfo.packaged_volume.toFixed(2)} m³</>}
-                  {typeInfo.mass           != null && <> · Mass: {typeInfo.mass.toLocaleString()} kg</>}
+                  {typeInfo.volume         != null && <>Vol: {formatNumber(typeInfo.volume)} m³</>}
+                  {typeInfo.packaged_volume != null && <> · Packaged: {formatNumber(typeInfo.packaged_volume)} m³</>}
+                  {typeInfo.mass           != null && <> · Mass: {formatNumber(typeInfo.mass)} kg</>}
                 </div>
               </div>
             </div>

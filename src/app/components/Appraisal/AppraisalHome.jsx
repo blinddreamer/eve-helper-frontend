@@ -1,11 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import axios from "axios";
 import AppraisalForm from "./AppraisalForm";
 import AppraisalResult from "./AppraisalResult";
 import AppraisalText from "./AppraisalText";
 import Animated from "../Animated";
+import { publicApi } from "../../utils/axios";
+import { parseAppraisal } from "../../utils/parseAppraisal.mjs";
 
 function AppraisalHome() {
   const [onStart, setOnStart] = useState(true);
@@ -26,7 +27,6 @@ function AppraisalHome() {
   const [compressData, setCompressData] = useState(null);
   const [reprocessLoading, setReprocessLoading] = useState(false);
   const [compressLoading, setCompressLoading] = useState(false);
-  const backend = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
   const { uuid } = useParams();
 
@@ -50,7 +50,7 @@ function AppraisalHome() {
     }
     const fetchAppraisal = async () => {
       try {
-        const response = await axios.get(`${backend}appraisal/${uuid}`);
+        const response = await publicApi.get(`appraisal/${uuid}`);
         if (response.status === 200) {
           setEditMode(false);
           setAppraisal(response.data);
@@ -79,7 +79,7 @@ function AppraisalHome() {
 
     const fetchStations = async () => {
       try {
-        const response = await axios.get(`${backend}stations`);
+        const response = await publicApi.get(`stations`);
         if (response.status === 200) {
           setStations(response.data);
         }
@@ -90,7 +90,7 @@ function AppraisalHome() {
 
     const fetchSystems = async () => {
       try {
-        const response = await axios.get(`${backend}systems`);
+        const response = await publicApi.get(`systems`);
         if (response.status === 200) {
           setOptionsSys(response.data.map((sys) => sys.systemName));
         }
@@ -133,7 +133,7 @@ function AppraisalHome() {
     if (!uuid) return;
     setReprocessLoading(true);
     try {
-      const { data } = await axios.get(`${backend}appraisal/${uuid}/reprocess?efficiency=${efficiency}`);
+      const { data } = await publicApi.get(`appraisal/${uuid}/reprocess?efficiency=${efficiency}`);
       setReprocessData(data);
     } catch (e) {
       console.error("Reprocess fetch failed", e);
@@ -146,7 +146,7 @@ function AppraisalHome() {
     if (!uuid) return;
     setCompressLoading(true);
     try {
-      const { data } = await axios.get(`${backend}appraisal/${uuid}/compress`);
+      const { data } = await publicApi.get(`appraisal/${uuid}/compress`);
       setCompressData(data);
     } catch (e) {
       console.error("Compress fetch failed", e);
@@ -168,32 +168,12 @@ function AppraisalHome() {
     updateStorageOnSubmit();
     try {
       setIsLoading(true);
-      const lines = appraisalData
-        .split("\n")
-        .map((line) => line.trim())
-        .filter((line) => line !== "");
-      const items = [];
-
-      lines.forEach((line) => {
-        // Match "Item Name <whitespace> Quantity [optional extra columns]"
-        // \s+ allows any number of spaces/tabs (EVE client uses tabs)
-        // [\d,]+ handles comma-formatted numbers like 1,000,000
-        const match = line.match(/^(.+?)\s+([\d,]+)(?:\s.*)?$/);
-        if (match) {
-          items.push({
-            name: match[1].trim(),
-            quantity: parseInt(match[2].replace(/,/g, ""), 10),
-          });
-        } else {
-          // No quantity found — treat whole line as item name, default qty to 1 (like Janice)
-          items.push({ name: line.trim(), quantity: 1 });
-        }
-      });
+      const items = parseAppraisal(appraisalData);
 
       if (items.length === 0) throw new Error("No valid items found.");
       if (!market) throw new Error("Market region is required.");
 
-      const { data, status } = await axios.post(`${backend}appraisal`, {
+      const { data, status } = await publicApi.post(`appraisal`, {
         appraisalRequestEntityList: items,
         regionId: market,
         pricePercentage,

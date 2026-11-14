@@ -8,14 +8,14 @@
     "dev:debug": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "node --test \"src/app/utils/*.test.mjs\""
   },
   "dependencies": {
     "axios": "^1.8.2",
     "bootstrap": "^5.3.3",
     "framer-motion": "^12.5.0",
-    "js-cookie": "^3.0.5",
-    "next": "15.2.2",
+    "next": "15.5.29",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.9",
     "react-bootstrap-icons": "^1.11.5",
@@ -28,6 +28,9 @@
     "@eslint/eslintrc": "^3",
     "@types/node": "22.13.10",
     "eslint": "^9",
-    "eslint-config-next": "15.2.2"
+    "eslint-config-next": "15.5.29"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }

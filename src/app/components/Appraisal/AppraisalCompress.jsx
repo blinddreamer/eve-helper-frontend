@@ -1,9 +1,8 @@
 "use client";
 import { Table, Button, Spinner } from "react-bootstrap";
+import { formatIsk, formatNumber } from "../../utils/format";
 
 function AppraisalCompress({ compressData, compressLoading, loadCompress, uuid }) {
-  const volumeFormat = new Intl.NumberFormat();
-  const priceFormat  = new Intl.NumberFormat("en-US");
 
   function formatVol(v) {
     if (!v) return "0";
@@ -65,11 +64,11 @@ function AppraisalCompress({ compressData, compressLoading, loadCompress, uuid }
                 <tr>
                   <th>#</th>
                   <th>Compressed Item</th>
-                  <th>Qty</th>
-                  <th>Remainder</th>
-                  <th>Volume Saved</th>
-                  <th>Sell</th>
-                  <th>Buy</th>
+                  <th className="num">Qty</th>
+                  <th className="num">Remainder</th>
+                  <th className="num">Volume Saved</th>
+                  <th className="num">Sell</th>
+                  <th className="num">Buy</th>
                 </tr>
               </thead>
               <tbody>
@@ -79,16 +78,16 @@ function AppraisalCompress({ compressData, compressLoading, loadCompress, uuid }
                     <td>
                       <div>{item.compressedName}</div>
                       <div style={{ fontSize: "0.65rem", color: "var(--bs-secondary-color)" }}>
-                        from {volumeFormat.format(item.originalQuantity)} {item.originalName}
+                        from {formatNumber(item.originalQuantity)} {item.originalName}
                       </div>
                     </td>
-                    <td>{volumeFormat.format(item.compressedQuantity)}</td>
-                    <td style={{ color: item.remainder > 0 ? "var(--bs-secondary-color)" : "inherit" }}>
-                      {item.remainder > 0 ? `${volumeFormat.format(item.remainder)} uncompressed` : "—"}
+                    <td className="num">{formatNumber(item.compressedQuantity)}</td>
+                    <td className="num" style={{ color: item.remainder > 0 ? "var(--bs-secondary-color)" : "inherit" }}>
+                      {item.remainder > 0 ? `${formatNumber(item.remainder)} uncompressed` : "—"}
                     </td>
-                    <td className="appr-sell">{formatVol(item.volumeSaved)} m³</td>
-                    <td>{priceFormat.format(item.compressedSellPrice)}</td>
-                    <td>{priceFormat.format(item.compressedBuyPrice)}</td>
+                    <td className="num appr-sell">{formatVol(item.volumeSaved)} m³</td>
+                    <td className="num">{formatIsk(item.compressedSellPrice)}</td>
+                    <td className="num">{formatIsk(item.compressedBuyPrice)}</td>
                   </tr>
                 ))}
               </tbody>

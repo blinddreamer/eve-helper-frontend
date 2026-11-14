@@ -1,7 +1,6 @@
-import { Cookie, Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Script from "next/script";
 import NavbarMenu from "./components/NavbarMenu";
 import Footer from "./components/Footer";
 import Video from "./components/Video";
@@ -17,7 +16,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// Status bar / browser chrome color. Dark is the site default; DarkModeToggle keeps it in sync.
+export const viewport = {
+  themeColor: "#1E1E1E",
+};
+
 export const metadata = {
+  // Relative canonical/OG URLs in each page resolve against this
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://eve-helper.com"),
   title: "EVE Helper - Industry Calculator/Appraisal for EVE Online",
   description:
     "EVE Helper is an industrial calculator for EVE Online, helping with market appraisals, production costs, and profit calculations.",
@@ -27,7 +33,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="canonical" href="https://eve-helper.com" />
         <link
           rel="icon"
           type="image/png"
@@ -49,7 +54,6 @@ export default function RootLayout({ children }) {
         <link rel="icon" sizes="512x512" href="/android-chrome-512x512.png" />
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
-        <meta name="theme-color" content="#ffffff" />
         <meta
           property="og:image"
           content="https://eve-helper.com/social-preview.jpg"
@@ -60,17 +64,12 @@ export default function RootLayout({ children }) {
           property="og:image:alt"
           content="EVE Helper - Industrial Calculator for EVE Online"
         />
-        <meta property="og:url" content="https://eve-helper.com" />
         <meta property="og:site_name" content="EVE Helper" />
         <meta property="og:locale" content="en_US" />
-        <meta property="og:updated_time" content="2023-10-01T12:00:00Z" />
         <meta
           name="twitter:image"
           content="https://eve-helper.com/social-preview.png"
         />
-        <meta name="twitter:url" content="https://eve-helper.com" />
-        <meta name="twitter:site" content="@YourWebsiteHandle" />
-        <meta name="twitter:creator" content="@YourPersonalHandle" />
         <meta
           name="keywords"
           content="EVE Online, industry calculator, reprocessing, market data, appraisal, profit calculator"
@@ -84,45 +83,14 @@ export default function RootLayout({ children }) {
                   const storedDarkMode = JSON.parse(localStorage.getItem("darkMode"));
                   const isDark = storedDarkMode ?? true;
                   document.documentElement.setAttribute("data-bs-theme", isDark ? "dark" : "light");
+                  if (!isDark) document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#ffffff");
                 } catch (e) {}
               })();
             `,
           }}
         />
 
-        {/* Statcounter Analytics */}
-        <Script id="statcounter-config" strategy="afterInteractive">
-          {`
-          var sc_project = 13161325; 
-          var sc_invisible = 1; 
-          var sc_security = "9ec34468"; 
-        `}
-        </Script>
-
-        <Script
-          src="https://www.statcounter.com/counter/counter.js"
-          strategy="afterInteractive"
-          async
-        />
-
-        <noscript>
-          <div className="statcounter">
-            <a
-              title="Web Analytics"
-              href="https://statcounter.com/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img
-                className="statcounter"
-                src="https://c.statcounter.com/13161325/0/9ec34468/1/"
-                alt="Web Analytics"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </a>
-          </div>
-        </noscript>
-        {/* Statcounter Analytics */}
+        {/* Statcounter analytics loads from CookieBanner, only after consent */}
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <div id="root">

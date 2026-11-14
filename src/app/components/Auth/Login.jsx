@@ -1,18 +1,13 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-import Cookies from "js-cookie";
-import {api} from "../../utils/axios"
+import React, { useEffect, useRef } from "react";
+import { api } from "../../utils/axios";
 
 export default function Login(props) {
-  // const [user, setUser] = useState(null);
-  const backend = process.env.NEXT_PUBLIC_API_URL;
   const popupPollRef = useRef(null);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
     if (!props.user) {
-      getUserInfo(); // Only call if user is null and session exists
+      getUserInfo();
     }
   }, [props.user]);
 
@@ -22,34 +17,23 @@ export default function Login(props) {
 
   const getUserInfo = async () => {
     try {
-      const response = await api.get(`${backend}auth/me`);
-     
-      
-      if (response.status === 200) {
-        const data = response.data; // Correctly parse response
-        props.setUser(data);
-        extendSession(); // Extend session after confirming user is valid
-      }
-     
-
-    
+      const response = await api.get("auth/me");
+      // Backend responds with { character: { charId, name, avatar } }
+      props.setUser(response.data.character);
+      extendSession();
     } catch (error) {
-      console.error("Error fetching user:", error);
+      // 401 just means "not logged in"
+      if (error.response?.status !== 401) {
+        console.error("Error fetching user:", error);
+      }
     }
   };
 
   const extendSession = async () => {
     try {
-      const response = await fetch(`${backend}auth/extend-session`, {
-        method: "POST",
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        console.warn("Session extension failed:", await response.text());
-      }
+      await api.post("auth/extend-session");
     } catch (error) {
-      console.error("Error extending session:", error);
+      console.warn("Session extension failed:", error);
     }
   };
 
@@ -60,13 +44,14 @@ export default function Login(props) {
     const top = window.screen.height / 2 - height / 2;
 
     const authWindow = window.open(
-      process.env.NEXT_PUBLIC_LOGIN_API,
+      `${process.env.NEXT_PUBLIC_API_URL}login`,
       "Eve Login",
       `width=${width},height=${height},top=${top},left=${left}`
     );
 
+    clearInterval(popupPollRef.current);
     popupPollRef.current = setInterval(() => {
-      if (authWindow.closed) {
+      if (!authWindow || authWindow.closed) {
         clearInterval(popupPollRef.current);
         getUserInfo();
       }
@@ -75,16 +60,12 @@ export default function Login(props) {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${backend}auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
+      // Revokes the session server-side and clears the HttpOnly cookie
+      await api.post("auth/logout");
     } catch (error) {
       console.error("Logout failed:", error);
     }
-
     props.setUser(null);
-    Cookies.remove("sessionUUID");
   };
 
   return (

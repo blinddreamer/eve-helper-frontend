@@ -7,10 +7,11 @@ export async function generateMetadata({ params }) {
     let metadata = {
       title: "Eve Helper - Appraisals", // Default title.
       description: "EVE Helper provides industrial calculation tools for EVE Online, including market appraisals and profit calculators.", // Default description.
+      alternates: { canonical: "/appraisal" },
       openGraph: {
         title: "Appraisals - EVE Helper", // Default OG title.
         description: "Appraisals - EVE Helper", // Default OG description.
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/appraisal/`,
+        url: "/appraisal",
         type: "website",
       },
       twitter: {

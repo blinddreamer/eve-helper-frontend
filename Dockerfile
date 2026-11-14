@@ -1,23 +1,22 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18-alpine
+FROM node:22-alpine
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the package.json and package-lock.json files first to install dependencies
-COPY package*.json ./
+# Install exactly what the lockfile pins (dev deps are needed for the build)
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# Install production dependencies
-RUN npm install --production
-
-# Copy the rest of the application files into the container
 COPY . .
 
-# Build the Next.js app for production
-RUN npm run build
+# NEXT_PUBLIC_* values are inlined into the browser bundle at build time, so they must be
+# set here; runtime env vars can't change them. Override with --build-arg for other hosts.
+ARG NEXT_PUBLIC_API_URL=https://api.eve-helper.com/api/v1/
+ARG NEXT_PUBLIC_BASE_URL=https://eve-helper.com
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL \
+    NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
 
-# Expose the port the app will run on (default is 3000)
+RUN npm run build && npm prune --omit=dev
+
+ENV NODE_ENV=production
 EXPOSE 3000
-
-# Start the Next.js app
 CMD ["npm", "start"]

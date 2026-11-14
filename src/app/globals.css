@@ -5,33 +5,6 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
 /* VS Code dark theme overrides for Bootstrap dark mode */
 html[data-bs-theme="dark"] {
   --bs-body-bg: #1E1E1E;           /* editor background */
@@ -76,10 +49,6 @@ body {
   transition: color 0.3s ease-in-out;
 }
 
-.read-the-docs {
-  color: #888;
-}
-
 .cardh {
   border: 0px !important;
 }
@@ -88,14 +57,14 @@ body {
   font-family: Roboto, sans-serif;
   font-size: 16pt;
   font-weight: 400;
-  transition: 0.5s;
   color: var(--bs-border-color);
-  transition: 1s;
+  transition: color 150ms ease;
 }
 
+@media (hover: hover) and (pointer: fine) {
 #icons:hover {
-  transition: 1s;
   color: var(--bs-btn-bg);
+}
 }
 
 #legal {
@@ -116,9 +85,14 @@ a:visited {
   margin-bottom: 1rem;
 }
 
+.cards {
+  transition: border-color 150ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
 .cards:hover {
   border-color: var(--bs-card-color);
-  transition: 0.5s;
+}
 }
 
 .cardsbg {
@@ -308,8 +282,10 @@ svg {
   border-radius: 5px;
 }
 
-.col-9 {
-  width: 76% !important;
+@media (min-width: 992px) {
+  .col-lg-9 {
+    width: 76% !important;
+  }
 }
 
 #animateddiv {
@@ -337,10 +313,6 @@ textarea {
   font-size: 0.75rem !important;
 }
 
-tr {
-  transform: 1s !important;
-}
-
 #fof {
   font-size: 170px;
   font-weight: bold;
@@ -352,6 +324,7 @@ tr {
   left: 0;
   width: 100%;
   height: 100vh;
+  height: 100dvh; /* tracks the mobile URL bar; 100vh above is the fallback */
   object-fit: cover;
   position: fixed;
 }
@@ -360,6 +333,7 @@ tr {
   position: fixed;
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   top: 0;
   left: 0;
   content: "";
@@ -453,7 +427,7 @@ tr {
 .nav-item {
   font-size: 1.1rem;
   margin-right: 5px; /* Adds spacing between links */
-  transition: color 0.3s ease-in-out;
+  transition: color 150ms ease;
 }
 
 /* Ensure dark mode toggle stays aligned right */
@@ -464,12 +438,6 @@ tr {
 
 #homebox {
   padding: 15px;
-}
-
-#alert-container-box {
-  width: 100%;
-  padding: 15px;
-  margin-bottom: -25px;
 }
 
 #akwarddiv {
@@ -627,8 +595,10 @@ tr {
   align-items: center;
 }
 
+@media (hover: hover) and (pointer: fine) {
 .navbar-custom .nav-item:hover {
   text-decoration: underline;
+}
 }
 
 .navbar-custom .navbar-brand {
@@ -830,6 +800,15 @@ tr {
 .appr-split { color: #b778bf; }
 .appr-sell  { color: #e1b489; }
 
+/* darker variants keep 4.5:1 contrast on white */
+[data-bs-theme="light"] .appr-buy   { color: #0b6e70; }
+[data-bs-theme="light"] .appr-split { color: #7a3a82; }
+[data-bs-theme="light"] .appr-sell  { color: #8a5414; }
+[data-bs-theme="light"] .appr-tab-btn.active {
+  color: #0b5ed7;
+  border-bottom-color: #0b5ed7;
+}
+
 .appr-table thead th {
   font-size: 0.7rem;
   text-transform: uppercase;
@@ -859,8 +838,10 @@ tr {
   transition: color 0.15s, border-color 0.15s;
 }
 
+@media (hover: hover) and (pointer: fine) {
 .appr-tab-btn:hover {
   color: var(--bs-body-color);
+}
 }
 
 .appr-tab-btn.active {
@@ -996,9 +977,11 @@ tr {
   text-overflow: ellipsis;
 }
 
+@media (hover: hover) and (pointer: fine) {
 .market-search-option:hover {
   background: var(--market-hover-accent-bg);
   color: var(--market-accent);
+}
 }
 
 .market-category-tree {
@@ -1022,9 +1005,11 @@ tr {
   min-width: 0;
 }
 
+@media (hover: hover) and (pointer: fine) {
 .market-tree-category:hover {
   background-color: var(--market-hover-alt-bg);
   color: var(--market-accent-alt);
+}
 }
 
 .market-tree-groups {
@@ -1043,9 +1028,11 @@ tr {
   min-width: 0;
 }
 
+@media (hover: hover) and (pointer: fine) {
 .market-tree-group:hover {
   background-color: var(--market-hover-alt-bg-soft);
   color: var(--market-accent-alt);
+}
 }
 
 .market-tree-types {
@@ -1071,9 +1058,11 @@ tr {
   min-width: 0;
 }
 
+@media (hover: hover) and (pointer: fine) {
 .market-tree-type:hover {
   color: var(--market-accent);
   background-color: var(--market-hover-accent-bg-soft);
+}
 }
 
 .market-tree-type.active {
@@ -1154,8 +1143,10 @@ tr {
   transition: background 0.15s;
 }
 
+@media (hover: hover) and (pointer: fine) {
 .market-region-row:hover {
   background-color: var(--market-hover-alt-bg-faint) !important;
+}
 }
 
 .market-region-row.expanded {
@@ -1203,4 +1194,202 @@ tr {
 .market-orders-table td {
   font-size: 0.76rem;
   padding: 3px 8px;
+}
+
+
+/* ── Numbers ────────────────────────────────────────── */
+
+table {
+  font-variant-numeric: tabular-nums;
+}
+
+/* numeric columns: right-aligned so digits line up */
+.num {
+  text-align: right !important;
+  white-space: nowrap;
+}
+
+.calc-total-row td {
+  font-weight: 600;
+}
+
+.appr-missing {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border: 1px solid var(--bs-warning-border-subtle);
+  border-radius: 6px;
+  background: var(--bs-warning-bg-subtle);
+  color: var(--bs-warning-text-emphasis);
+  font-size: 0.78rem;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.market-order-tables {
+  display: flex;
+  gap: 1.5rem;
+}
+
+/* ── Homepage ───────────────────────────────────────── */
+
+.home-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 8px 0 6px;
+}
+
+.home-lead {
+  color: var(--bs-secondary-color);
+  margin-bottom: 24px;
+}
+
+.home-tools {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  text-align: left;
+}
+
+a.home-tool,
+a.home-tool:visited {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 8px;
+  background: rgba(var(--bs-body-color-rgb), 0.03);
+  color: var(--bs-body-color);
+  transition: border-color 150ms ease, transform 120ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.home-tool-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.home-tool-text {
+  color: var(--bs-secondary-color);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  a.home-tool:hover {
+    border-color: var(--bs-secondary-color);
+  }
+}
+
+.home-more {
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: var(--bs-secondary-color);
+}
+
+.home-more a {
+  text-decoration: underline !important;
+}
+
+/* ── Press feedback & touch ─────────────────────────── */
+
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+button,
+a,
+[role="button"] {
+  touch-action: manipulation; /* no 300ms double-tap wait */
+}
+
+/* Bootstrap's own transitions plus a quick press scale */
+.btn {
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
+    transform 120ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn:active:not(:disabled),
+a.home-tool:active {
+  transform: scale(0.97);
+}
+
+/* iOS zooms into inputs under 16px; enlarge them on touch screens only */
+@media (pointer: coarse) {
+  #root :is(input, textarea, select, .form-control, .form-select) {
+    font-size: 16px !important;
+  }
+}
+
+/* ── Small screens ──────────────────────────────────── */
+
+@media (max-width: 767.98px) {
+  #root {
+    padding: 0.5rem;
+  }
+
+  .home-tools {
+    grid-template-columns: 1fr;
+  }
+
+  /* market: category tree above the results instead of beside them */
+  #market-browser {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #market-left-panel {
+    width: 100%;
+    max-height: 45vh;
+    overflow-y: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--market-border);
+  }
+
+  #market-right-panel {
+    padding: 12px 0 0;
+  }
+
+  .market-order-tables {
+    flex-direction: column;
+  }
+
+  /* appraisal: items and comment stacked so the paste box gets the full width */
+  .appr-textareas {
+    grid-template-columns: 1fr;
+  }
+
+  #appraisalText.appr-textarea {
+    min-height: 160px; /* the id rule above sets 100px; more room to paste on phones */
+  }
+
+  .appr-stat-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .appr-stat-card {
+    border-bottom: 1px solid var(--bs-border-color);
+  }
+
+  /* PI: form above the results, tier columns two per row */
+  #picalculator {
+    flex-direction: column;
+  }
+
+  #picalculatorleft,
+  #picalculatorright {
+    width: 100%;
+    height: auto;
+    margin-left: 0;
+  }
+
+  #pi-columns {
+    flex-wrap: wrap;
+  }
+
+  #pi-columns > div {
+    flex: 1 1 45% !important; /* overrides the inline flex: 1 */
+    min-width: 0;
+  }
 }

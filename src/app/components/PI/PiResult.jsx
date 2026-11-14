@@ -82,7 +82,7 @@ function PiResult(props) {
 
     calculateRequirements(selectedPi.id, volume);
 
-    // Sort by tier (type) in descending order (T4 -> T3 -> T2 -> T1)
+    // Sort by tier (type) in descending order (P4 -> P0)
     return results.sort((a, b) => b.tier - a.tier);
   }, [
     selectedItem,
@@ -106,12 +106,12 @@ function PiResult(props) {
   };
 
   const getTierName = (type) => {
-    const tiers = ["T0", "T1", "T2", "T3", "T4"];
-    return tiers[type] || "Unknown";
+    // type 1 = raw resource (P0) ... type 5 = P4
+    return type >= 1 && type <= 5 ? `P${type - 1}` : "Unknown";
   };
 
   const getFactoryType = (tier) => {
-    if (tier === 1) return "N/A"; // T1 is raw materials, no factory
+    if (tier === 1) return "N/A"; // P0 is raw materials, no factory
     if (tier === 2) return "Basic";
     if (tier === 3) return "Advanced";
     if (tier === 4) return "Special";

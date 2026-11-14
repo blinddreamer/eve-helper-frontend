@@ -4,6 +4,7 @@ import { Button } from "react-bootstrap";
 import { Clipboard } from "react-bootstrap-icons";
 import AppraisalReprocess from "./AppraisalReprocess";
 import AppraisalCompress from "./AppraisalCompress";
+import { formatCompact, formatIsk, formatNumber } from "../../utils/format";
 
 const TABS = ["Appraisal", "Reprocess", "Compress"];
 
@@ -11,16 +12,8 @@ function AppraisalResult(props) {
   const [activeTab, setActiveTab] = useState("Appraisal");
   const { appraisalResult } = props.appraisal;
   const pct = (props.pricePercentage || 100) / 100;
-  const volumeFormat = new Intl.NumberFormat();
-  const priceFormat  = new Intl.NumberFormat("en-US");
-
-  function formatPrice(price) {
-    if (!price || isNaN(price)) return "0";
-    if (price >= 1e9) return (price / 1e9).toFixed(1) + "B";
-    if (price >= 1e6) return (price / 1e6).toFixed(1) + "M";
-    if (price >= 1e3) return (price / 1e3).toFixed(1) + "K";
-    return price.toFixed(0);
-  }
+  const formatPrice = (price) => formatCompact(price || 0);
+  const missingItems = appraisalResult.missingItems || [];
 
   const buy   = appraisalResult.estimateTotalBuy   * pct;
   const split = appraisalResult.estimateTotalSplit  * pct;
@@ -66,7 +59,7 @@ function AppraisalResult(props) {
         <div className="appr-stat-card">
           <div className="appr-stat-card-label">Volume</div>
           <div className="appr-stat-card-value">{formatPrice(vol)} m³</div>
-          <div className="appr-stat-card-sub">{volumeFormat.format(appraisalResult.appraisals.length)} items</div>
+          <div className="appr-stat-card-sub">{formatNumber(appraisalResult.appraisals.length)} items</div>
         </div>
       </div>
 
@@ -87,18 +80,18 @@ function AppraisalResult(props) {
       {activeTab === "Appraisal" && (
         <div style={{ overflowX: "auto" }}>
           {appraisalResult.appraisals.filter(ap => ap != null).length === 0 && (
-            <div className="appr-tab-empty">No recognised items — check that item names match exactly (case-sensitive).</div>
+            <div className="appr-tab-empty">No recognised items — check the item names.</div>
           )}
           <Table bordered hover size="sm" className="appr-table mt-0">
             <thead>
               <tr>
                 <th>#</th>
                 <th>Item</th>
-                <th>Qty</th>
-                <th>Volume</th>
-                <th>Sell</th>
-                <th>Buy</th>
-                <th>Split</th>
+                <th className="num">Qty</th>
+                <th className="num">Volume</th>
+                <th className="num">Sell</th>
+                <th className="num">Buy</th>
+                <th className="num">Split</th>
               </tr>
             </thead>
             <tbody>
@@ -106,15 +99,20 @@ function AppraisalResult(props) {
                 <tr key={index}>
                   <td><img src={ap.icon} loading="lazy" alt={ap.item} /></td>
                   <td>{ap.item}</td>
-                  <td>{volumeFormat.format(ap.quantity)}</td>
-                  <td>{volumeFormat.format(ap.quantity * (ap.volume || 0))} m³</td>
-                  <td>{priceFormat.format(ap.quantity * (ap.sellOrderPrice || 0) * pct)}</td>
-                  <td>{priceFormat.format(ap.quantity * (ap.buyOrderPrice || 0) * pct)}</td>
-                  <td>{priceFormat.format(ap.quantity * (ap.splitPrice || 0) * pct)}</td>
+                  <td className="num">{formatNumber(ap.quantity)}</td>
+                  <td className="num">{formatNumber(ap.quantity * (ap.volume || 0))} m³</td>
+                  <td className="num">{formatIsk(ap.quantity * (ap.sellOrderPrice || 0) * pct)}</td>
+                  <td className="num">{formatIsk(ap.quantity * (ap.buyOrderPrice || 0) * pct)}</td>
+                  <td className="num">{formatIsk(ap.quantity * (ap.splitPrice || 0) * pct)}</td>
                 </tr>
               ))}
             </tbody>
           </Table>
+          {missingItems.length > 0 && (
+            <div className="appr-missing" role="status">
+              <strong>Not recognised, not priced ({missingItems.length}):</strong> {missingItems.join(", ")}
+            </div>
+          )}
           <span className="text-muted" style={{ fontSize: "0.7rem" }}>* all prices are estimates</span>
         </div>
       )}

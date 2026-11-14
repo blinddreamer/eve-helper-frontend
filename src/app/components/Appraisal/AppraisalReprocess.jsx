@@ -1,11 +1,10 @@
 "use client";
 import { useState } from "react";
 import { Table, Button, Spinner, Form } from "react-bootstrap";
+import { formatIsk, formatNumber } from "../../utils/format";
 
 function AppraisalReprocess({ reprocessData, reprocessLoading, loadReprocess, uuid }) {
   const [efficiency, setEfficiency] = useState(87.5);
-  const volumeFormat = new Intl.NumberFormat();
-  const priceFormat  = new Intl.NumberFormat("en-US");
 
   function formatPrice(price) {
     if (!price) return "0";
@@ -73,11 +72,11 @@ function AppraisalReprocess({ reprocessData, reprocessLoading, loadReprocess, uu
                 <tr>
                   <th>#</th>
                   <th>Material</th>
-                  <th>Quantity</th>
-                  <th>Sell / unit</th>
-                  <th>Buy / unit</th>
-                  <th>Total Sell</th>
-                  <th>Total Buy</th>
+                  <th className="num">Quantity</th>
+                  <th className="num">Sell / unit</th>
+                  <th className="num">Buy / unit</th>
+                  <th className="num">Total Sell</th>
+                  <th className="num">Total Buy</th>
                 </tr>
               </thead>
               <tbody>
@@ -85,11 +84,11 @@ function AppraisalReprocess({ reprocessData, reprocessLoading, loadReprocess, uu
                   <tr key={i}>
                     <td><img src={mat.icon} loading="lazy" alt={mat.name} /></td>
                     <td>{mat.name}</td>
-                    <td>{volumeFormat.format(mat.quantity)}</td>
-                    <td>{priceFormat.format(mat.sellPrice)}</td>
-                    <td>{priceFormat.format(mat.buyPrice)}</td>
-                    <td className="appr-sell">{priceFormat.format(mat.totalSell)}</td>
-                    <td className="appr-buy">{priceFormat.format(mat.totalBuy)}</td>
+                    <td className="num">{formatNumber(mat.quantity)}</td>
+                    <td className="num">{formatIsk(mat.sellPrice)}</td>
+                    <td className="num">{formatIsk(mat.buyPrice)}</td>
+                    <td className="num appr-sell">{formatIsk(mat.totalSell)}</td>
+                    <td className="num appr-buy">{formatIsk(mat.totalBuy)}</td>
                   </tr>
                 ))}
               </tbody>

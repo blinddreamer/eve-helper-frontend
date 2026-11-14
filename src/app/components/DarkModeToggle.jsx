@@ -18,6 +18,10 @@ export default function DarkModeToggle() {
         darkMode ? "dark" : "light"
       );
       localStorage.setItem("darkMode", JSON.stringify(darkMode));
+      // keep the phone status bar matching the page
+      document
+        .querySelector('meta[name="theme-color"]')
+        ?.setAttribute("content", darkMode ? "#1E1E1E" : "#ffffff");
     }
   }, [darkMode]);
 

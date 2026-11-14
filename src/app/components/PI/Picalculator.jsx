@@ -1,9 +1,9 @@
 "use client";
-import axios from "axios";
 import { useState, useEffect } from "react";
 import Alert from "react-bootstrap/Alert";
 import PiForm from "./PiForm";
 import PiResult from "./PiResult";
+import { publicApi } from "../../utils/axios";
 
 export default function Picalculator() {
   const [piList, setPiList] = useState([]);
@@ -16,8 +16,6 @@ export default function Picalculator() {
   const [advancedFactory, setAdvancedFactory] = useState(1);
   const [specialFactory, setSpecialFactory] = useState(1);
   const [selectedPi, setSelectedPi] = useState(null);
-
-  const backend = process.env.NEXT_PUBLIC_API_URL;
 
   // Update chain highlighting when selectedItem changes
   useEffect(() => {
@@ -37,12 +35,13 @@ export default function Picalculator() {
     }
   }, [selectedItem, piList]);
 
-  const categories = ["T1", "T2", "T3", "T4", "T5"];
+  // EVE names planetary tiers P0 (raw) to P4
+  const categories = ["P0", "P1", "P2", "P3", "P4"];
 
   useEffect(() => {
     const fetchPiData = async () => {
       try {
-        const response = await axios.get(backend + "pi");
+        const response = await publicApi.get("pi");
         if (response.status === 200) {
           setPiList(response.data);
         } else {
@@ -101,7 +100,7 @@ export default function Picalculator() {
   };
 
   const handleSelection = (pi) => {
-    if (pi.type <= 1) return; // Only T2+ can be selected
+    if (pi.type <= 1) return; // raw resources (P0) have nothing to build
 
     if (selectedItem === pi.name) {
       // Deselect
@@ -169,7 +168,7 @@ export default function Picalculator() {
           return (
             <div
               key={category}
-              id={category.toLowerCase()}
+              id={`t${index + 1}`}
               style={{ flex: 1, padding: "2px" }}
             >
               <div class="picategory">

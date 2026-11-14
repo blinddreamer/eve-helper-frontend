@@ -4,10 +4,11 @@ export async function generateMetadata() {
   return {
     title: "Eve Helper - Market Browser",
     description: "Browse EVE Online live market orders and price history for any item across all major trade hubs.",
+    alternates: { canonical: "/market" },
     openGraph: {
       title: "Market Browser - EVE Helper",
       description: "Browse EVE Online live market orders and price history for any item across all major trade hubs.",
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/market/`,
+      url: "/market",
       type: "website",
     },
     twitter: {

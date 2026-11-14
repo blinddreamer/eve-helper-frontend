@@ -1,8 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import axios from "axios";
-
-const BACKEND = process.env.NEXT_PUBLIC_API_URL;
+import { publicApi } from "../../utils/axios";
 
 function typeIconUrl(typeId, name) {
   if (name && name.endsWith(" Blueprint Copy")) {
@@ -15,7 +13,7 @@ function typeIconUrl(typeId, name) {
 }
 
 async function buildTypeIndex() {
-  const res = await axios.get(`${BACKEND}market/types`);
+  const res = await publicApi.get(`market/types`);
   // backend returns [{ typeId, name }, ...]
   return res.data;
 }

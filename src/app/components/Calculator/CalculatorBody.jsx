@@ -5,7 +5,7 @@ import Col from "react-bootstrap/Col";
 import Calculator from "./Calculator.jsx";
 import GetForm from "./CalculatorForm.jsx";
 import AdvancedModeToggle from "../AdvancedModeToggle.jsx";
-import axios from "axios";
+import { publicApi } from "../../utils/axios";
 
 function CalculatorBody(props) {
   const [openState, setOpenState] = useState({});
@@ -26,43 +26,25 @@ function CalculatorBody(props) {
   const [checkedItems, setCheckedItems] = useState({});
   const [blueprintComplexity, setBlueprintComplexity] = useState({});
   const [bpDetails, setBpDetails] = useState([]);
-  const backend = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     isClicked && submitForm();
   }, [isClicked]);
   useEffect(() => {
-    getRegions();
-    getSystems();
-    getBlueprints();
-    getStations();
+    // The form is unusable without this data, so surface a failure instead of an empty form
+    Promise.all([
+      publicApi.get("regions").then((r) => setRegions(r.data)),
+      publicApi.get("stations").then((r) => setStations(r.data)),
+      publicApi.get("systems").then((r) => setOptionsSys(r.data.map((sys) => sys.systemName))),
+      publicApi.get("blueprints").then((r) => {
+        setOptionsBp(r.data.blueprints.map((bp) => bp.blueprint));
+        setBpDetails(r.data.blueprints);
+      }),
+    ]).catch((error) => {
+      console.error("Failed to load calculator data:", error);
+      setErrorMessage("Could not load calculator data. Please refresh the page or try again later.");
+    });
   }, []);
-
-  async function getRegions() {
-    const response = await axios.get(backend + "regions");
-    if (response.status === 200) {
-      setRegions(response.data);
-    }
-  }
-  async function getStations() {
-    const response = await axios.get(backend + "stations");
-    if (response.status === 200) {
-      setStations(response.data);
-    }
-  }
-  async function getSystems() {
-    const response = await axios.get(backend + "systems");
-    if (response.status === 200) {
-      setOptionsSys(response.data.map((sys) => sys.systemName));
-    }
-  }
-  async function getBlueprints() {
-    const response = await axios.get(backend + "blueprints");
-    if (response.status === 200) {
-      setOptionsBp(response.data.blueprints.map((bp) => bp.blueprint));
-      setBpDetails(response.data.blueprints);
-    }
-  }
   const submitForm = async () => {
     setCheckedItems({});
     setIsCopied({});
@@ -70,7 +52,7 @@ function CalculatorBody(props) {
     setOpenState({});
     setIsLoading(true);
     try {
-      const response = await axios.post(backend + "type", {
+      const response = await publicApi.post("type", {
         blueprintName: formData.blueprintName,
         runs: formData.runs,
         blueprintMe: formData.blueprintMe,
@@ -108,7 +90,8 @@ function CalculatorBody(props) {
       
         <Container>
           <Row>
-            <Col>
+            {/* side by side from lg up; stacked (form first) on smaller screens */}
+            <Col xs={12} lg>
               <Col>
                 <div id="menuleft">
                   <AdvancedModeToggle
@@ -132,7 +115,7 @@ function CalculatorBody(props) {
                 </div>
                </Col>
             </Col>
-            <Col xs={9}>
+            <Col xs={12} lg={9}>
               <Calculator
                 materialsList={materialsList}
                 setMaterialsList={setMaterialsList}
@@ -143,7 +126,6 @@ function CalculatorBody(props) {
                 openState={openState}
                 setOpenState={setOpenState}
                 optionsSys={optionsSys}
-                backend={backend}
                 advancedMode={props.advancedMode}
                 setAdvancedMode={props.setAdvancedMode}
                 formData={formData}

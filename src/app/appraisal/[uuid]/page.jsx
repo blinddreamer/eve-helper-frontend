@@ -1,5 +1,5 @@
 import AppraisalHome from "@/app/components/Appraisal/AppraisalHome";
-import axios from "axios";
+import { publicApi } from "../../utils/axios";
 
 // generateMetadata function updates the metadata dynamically for SEO purposes.
 export async function generateMetadata({ params }) {
@@ -28,7 +28,6 @@ function formatPrice(price) {
     return price.toFixed(0); // Otherwise, return as it is
   }
 }
-  const backend = process.env.NEXT_PUBLIC_API_URL;
 
   // Set the default metadata with a placeholder.
   let metadata = {
@@ -49,7 +48,7 @@ function formatPrice(price) {
 
   try {
     // Fetch appraisal data from the backend using the uuid.
-    const response = await axios.get(`${backend}appraisal/${uuid}`);
+    const response = await publicApi.get(`appraisal/${uuid}`);
 
     if (response.status === 200) {
       const appraisal = response.data;
@@ -58,18 +57,19 @@ function formatPrice(price) {
             ? formatPrice(appraisal.appraisalResult?.estimateTotalSplit)
             : appraisal.transactionType === "SELL"
             ? formatPrice(appraisal.appraisalResult?.estimateTotalSell)
-            : formatPrice(appraisal.appraisalResult?.estimateTotalBuy)} ISK @ ${appraisal.system}`;
+            : formatPrice(appraisal.appraisalResult?.estimateTotalBuy)} ISK${appraisal.system ? ` @ ${appraisal.system}` : ""}`;
       const description = appraisal.appraisalResult?.appraisals
       ?.map(res => `${res.item}: ${appraisal.transactionType === "SPLIT" ? formatPrice(res.splitPrice) : appraisal.transactionType === "BUY" ? formatPrice(res.buyOrderPrice) : formatPrice(res.sellOrderPrice)} &#xD;&#xA;`)
       ?.join("") ||  "No items available"; // Avoids potential undefined issues
     
     metadata = {
       title: title, // Dynamic title
+      alternates: { canonical: `/appraisal/${uuid}` },
       description: description, // Dynamic description
       openGraph: {
         title: title, // Updated OG title
         description: description, // No need for `{description}`, just use the variable
-        url: `${process.env.NEXT_PUBLIC_BASE_URL}/appraisal/${uuid}`,
+        url: `/appraisal/${uuid}`,
         type: "website",
       },
       twitter: {

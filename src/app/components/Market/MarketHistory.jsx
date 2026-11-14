@@ -11,6 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+import { formatCompact } from "../../utils/format";
 
 const RANGES = [
   { label: "30d", days: 30 },
@@ -19,12 +20,7 @@ const RANGES = [
   { label: "All", days: null },
 ];
 
-function formatISK(value) {
-  if (value >= 1e9) return (value / 1e9).toFixed(2) + "B";
-  if (value >= 1e6) return (value / 1e6).toFixed(2) + "M";
-  if (value >= 1e3) return (value / 1e3).toFixed(2) + "K";
-  return value?.toFixed(2) ?? "0";
-}
+const formatISK = (value) => formatCompact(value, 2);
 
 function MarketHistory({ history }) {
   const [range, setRange] = useState(30);
@@ -73,6 +69,8 @@ function MarketHistory({ history }) {
           />
           <YAxis
             yAxisId="price"
+            // fit the price range; a 0-based axis flattened every move into a straight line
+            domain={["auto", "auto"]}
             tick={{ fontSize: 10, fill: "var(--market-text-dim)" }}
             tickFormatter={formatISK}
             width={65}
@@ -80,6 +78,8 @@ function MarketHistory({ history }) {
           <YAxis
             yAxisId="volume"
             orientation="right"
+            // keep volume bars in the bottom third so they don't sit under the price lines
+            domain={[0, (max) => max * 3]}
             tick={{ fontSize: 10, fill: "var(--market-text-dim)" }}
             tickFormatter={formatISK}
             width={65}
@@ -104,6 +104,7 @@ function MarketHistory({ history }) {
             fill="var(--market-bar-fill)"
             opacity={0.7}
             name="Volume"
+            isAnimationActive={false}
           />
           <Line
             yAxisId="price"
@@ -111,6 +112,7 @@ function MarketHistory({ history }) {
             dataKey="highest"
             stroke="var(--market-sell)"
             dot={false}
+            isAnimationActive={false}
             name="High"
             strokeWidth={1}
             strokeDasharray="4 4"
@@ -121,6 +123,7 @@ function MarketHistory({ history }) {
             dataKey="lowest"
             stroke="var(--market-buy)"
             dot={false}
+            isAnimationActive={false}
             name="Low"
             strokeWidth={1}
             strokeDasharray="4 4"
@@ -131,6 +134,7 @@ function MarketHistory({ history }) {
             dataKey="average"
             stroke="var(--market-accent-alt)"
             dot={false}
+            isAnimationActive={false}
             name="Avg"
             strokeWidth={2}
           />

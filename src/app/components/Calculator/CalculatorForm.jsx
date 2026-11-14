@@ -117,7 +117,8 @@ function CalculatorForm(props) {
         {/* Market Region */}
         <Form.Group className="calc-form-group" controlId="marketRegion">
           <Form.Label>Buy Materials From</Form.Label>
-          <Form.Select defaultValue="10000002_60003760">
+          {/* key: remount once stations load so the Jita default applies (defaultValue only works on first render) */}
+          <Form.Select key={props.stations.length} defaultValue="10000002_60003760">
             {props.stations.map((station, index) => (
               <option
                 key={index}

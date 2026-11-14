@@ -7,7 +7,8 @@ import Spinner from "react-bootstrap/Spinner";
 import Modal from "react-bootstrap/Modal";
 import { OverlayTrigger, Tooltip, Popover } from "react-bootstrap";
 import { GiBasket } from "react-icons/gi";
-import axios from "axios";
+import { publicApi } from "../../utils/axios";
+import { formatIsk, formatNumber } from "../../utils/format";
 
 function Calculator(props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -60,28 +61,28 @@ function Calculator(props) {
                 <div className="calc-stat-row">
                   <span className="calc-stat-label">Craft Cost</span>
                   <span className="calc-stat-value">
-                    {(transactionType === "sell"
+                    {"ISK " + formatIsk((transactionType === "sell"
                       ? props.initialBlueprint.sellCraftPrice
                       : props.initialBlueprint.buyCraftPrice
-                    ).toLocaleString("en-US", { style: "currency", currency: "ISK", minimumFractionDigits: 2 })}
+                    ))}
                   </span>
                 </div>
                 <div className="calc-stat-row">
                   <span className="calc-stat-label">Sell Order</span>
                   <span className="calc-stat-value">
-                    {props.initialBlueprint.totalSellPrice.toLocaleString("en-US", { style: "currency", currency: "ISK", minimumFractionDigits: 2 })}
+                    {"ISK " + formatIsk(props.initialBlueprint.totalSellPrice)}
                   </span>
                 </div>
                 <div className="calc-stat-row">
                   <span className="calc-stat-label">Buy Order</span>
                   <span className="calc-stat-value">
-                    {props.initialBlueprint.totalBuyPrice.toLocaleString("en-US", { style: "currency", currency: "ISK", minimumFractionDigits: 2 })}
+                    {"ISK " + formatIsk(props.initialBlueprint.totalBuyPrice)}
                   </span>
                 </div>
                 <div className="calc-stat-row">
                   <span className="calc-stat-label">Profit</span>
                   <span className={`calc-stat-value fw-bold ${calculatePriceDifferences() < 0 ? "negativeprice" : "positiveprice"}`}>
-                    {calculatePriceDifferences().toLocaleString("en-US", { style: "currency", currency: "ISK", minimumFractionDigits: 2 })}
+                    {"ISK " + formatIsk(calculatePriceDifferences())}
                   </span>
                 </div>
                 <div className="calc-stat-row">
@@ -288,9 +289,9 @@ function Calculator(props) {
             <tr>
               <th>#</th>
               <th>Item</th>
-              <th>Quantity</th>
-              <th>Volume m³</th>
-              <th>Market Cost ISK (unit / total)</th>
+              <th className="num">Quantity</th>
+              <th className="num">Volume m³</th>
+              <th className="num">Market Cost ISK (unit / total)</th>
               <th>Type</th>
               <th>Excess</th>
               <th>Buy / Craft</th>
@@ -332,25 +333,25 @@ function Calculator(props) {
                     ) : (
                       <td key={`td_name_${index}`}>{mat.name}</td>
                     )}
-                    <td key={"td_quant" + index}>
+                    <td key={"td_quant" + index} className="num">
                       {volumeFormat.format(
                         calculateQuantity(props.materialsList, mat.name)
                       )}
                     </td>
-                    <td key={"td_vol" + index}>
+                    <td key={"td_vol" + index} className="num">
                       {volumeFormat.format(
                         mat.volume *
                           calculateQuantity(props.materialsList, mat.name)
                       )}
                     </td>
-                    <td key={"td_price" + index}>
-                      {priceFormat.format(
+                    <td key={"td_price" + index} className="num">
+                      {formatIsk(
                         transactionType === "sell"
                           ? mat.sellPrice
                           : mat.buyPrice
                       )}{" "}
                       /{" "}
-                      {priceFormat.format(
+                      {formatIsk(
                         (transactionType === "sell"
                           ? mat.sellPrice
                           : mat.buyPrice) *
@@ -366,7 +367,7 @@ function Calculator(props) {
                         ? "fuel"
                         : "none"}
                     </td>
-                    <td key={"td_excess" + index}>{getExcess(mat)}</td>
+                    <td key={"td_excess" + index} className="num">{getExcess(mat)}</td>
                     <td key={"td_checkBox" + index}>
                       <OverlayTrigger
                         placement="right" // Position of tooltip
@@ -420,56 +421,12 @@ function Calculator(props) {
                   </tr>
                 )
             )}
-            <tr>
-              <td>#</td>
-              <td colSpan={2}>Total</td>
-              <td>{volumeFormat.format(totalVolume) + " m³"}</td>
-              <td>
-                {totalBuyCost.toLocaleString("en-US", {
-                  style: "currency",
-                  currency: "ISK",
-                  minimumFractionDigits: 2,
-                })}
-              </td>
-              <OverlayTrigger
-                placement="right"
-                overlay={
-                  <Popover id={`popover-costs${tier}`}>
-                    <Popover.Header as="h3">Job Costs</Popover.Header>
-                    <Popover.Body>
-                      <Table striped bordered hover size="sm">
-                        <thead>
-                          <tr>
-                            <th>Material</th>
-                            <th>Job Costs</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {showTableJobCosts(tier)}
-                          <tr>
-                            <td>Total</td>
-                            <td>
-                              {calculateJobCosts(tier).toLocaleString("en-US", {
-                                style: "currency",
-                                currency: "ISK",
-                                minimumFractionDigits: 2,
-                              })}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </Table>
-                    </Popover.Body>
-                  </Popover>
-                }
-              >
-                <td colSpan={2}>
-                  {calculateJobCosts(tier).toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "ISK",
-                    minimumFractionDigits: 2,
-                  })}
-                </td>
-              </OverlayTrigger>
+            <tr className="calc-total-row">
+              <td></td>
+              <td colSpan={2}>Materials</td>
+              <td className="num">{formatNumber(totalVolume) + " m³"}</td>
+              <td className="num calc-total-value">ISK {formatIsk(totalBuyCost)}</td>
+              <td colSpan={2}></td>
               <td>
                 <OverlayTrigger
                   placement="right" // Position of tooltip
@@ -517,6 +474,40 @@ function Calculator(props) {
                   </span>
                 </OverlayTrigger>
               </td>
+            </tr>
+            <tr className="calc-total-row">
+              <td></td>
+              <td colSpan={3}>Job costs (installation + taxes)</td>
+              <OverlayTrigger
+                placement="right"
+                overlay={
+                  <Popover id={`popover-costs${tier}`}>
+                    <Popover.Header as="h3">Job Costs</Popover.Header>
+                    <Popover.Body>
+                      <Table striped bordered hover size="sm">
+                        <thead>
+                          <tr>
+                            <th>Material</th>
+                            <th>Job Costs</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {showTableJobCosts(tier)}
+                          <tr>
+                            <td>Total</td>
+                            <td>
+                              {"ISK " + formatIsk(calculateJobCosts(tier))}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </Table>
+                    </Popover.Body>
+                  </Popover>
+                }
+              >
+                <td className="num calc-total-value">ISK {formatIsk(calculateJobCosts(tier))}</td>
+              </OverlayTrigger>
+              <td colSpan={3}></td>
             </tr>
           </tbody>
         </Table>
@@ -609,7 +600,7 @@ function Calculator(props) {
           : props.formDataPart.facilityTax,
     };
     try {
-      const response = await axios.post(props.backend + "update-type", request);
+      const response = await publicApi.post("update-type", request);
       props.setMaterialsList(response.data.blueprintResult);
       props.setInitialBlueprint(response.data.blueprintResult[0]);
     } catch (error) {
@@ -672,8 +663,7 @@ function Calculator(props) {
           : props.formDataPart.facilityTax,
     }));
     try {
-      const response = await axios.post(
-        props.backend + "mass-update-type",
+      const response = await publicApi.post("mass-update-type",
         requests
       );
       props.setMaterialsList(response.data.blueprintResult);
@@ -754,11 +744,7 @@ function Calculator(props) {
         <tr key={m.id}>
           <td>{m.name}</td>
           <td>
-            {m.industryCosts.toLocaleString("en-US", {
-              style: "currency",
-              currency: "ISK",
-              minimumFractionDigits: 2,
-            })}
+            {"ISK " + formatIsk(m.industryCosts)}
           </td>
         </tr>
       ));
