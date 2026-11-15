@@ -19,6 +19,11 @@ const TOOLS = [
     title: "Market Browser",
     text: "Live orders and price history for every item across Jita, Amarr, Rens, Dodixie and Hek.",
   },
+  {
+    href: "/picalculator",
+    title: "PI Calculator",
+    text: "Planetary Interaction production chains, from raw materials up to advanced commodities.",
+  },
 ];
 
 function Homepage() {
@@ -37,9 +42,6 @@ function Homepage() {
             </Link>
           ))}
         </div>
-        <p className="home-more">
-          Also: a <Link href="/picalculator">Planetary Interaction calculator</Link> for PI production chains.
-        </p>
       </main>
     </Animated>
   );

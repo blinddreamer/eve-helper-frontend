@@ -1245,7 +1245,7 @@ table {
 
 .home-tools {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   text-align: left;
 }
@@ -1278,16 +1278,6 @@ a.home-tool:visited {
   a.home-tool:hover {
     border-color: var(--bs-secondary-color);
   }
-}
-
-.home-more {
-  margin-top: 20px;
-  font-size: 0.85rem;
-  color: var(--bs-secondary-color);
-}
-
-.home-more a {
-  text-decoration: underline !important;
 }
 
 /* ── Press feedback & touch ─────────────────────────── */
