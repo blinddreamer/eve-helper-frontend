@@ -1,4 +1,4 @@
-name: Lint, then build, scan and push Docker image
+name: Lint and test, then build, scan and push Docker image
 
 on:
   push:
@@ -20,8 +20,8 @@ jobs:
         env:
           VALIDATE_ALL_CODEBASE: true
 
-  eslint:
-    name: ESLint
+  lint_and_test:
+    name: ESLint and tests
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -40,9 +40,12 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Test
+        run: npm test
+
   push_to_registry:
     name: Build (and push from main)
-    needs: [megalinter, eslint]
+    needs: [megalinter, lint_and_test]
     uses: blinddreamer/workflows/.github/workflows/docker.yml@main
     with:
       image: blinddreamer/eve-helper-frontend:latest
