@@ -25,4 +25,5 @@ RUN npm run build && npm prune --omit=dev \
 
 ENV NODE_ENV=production
 EXPOSE 3000
-CMD ["node_modules/.bin/next", "start"]
+# npm is removed above, so start Next with node directly (also lets SIGTERM reach node)
+CMD ["node", "node_modules/next/dist/bin/next", "start"]
