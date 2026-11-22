@@ -1,5 +1,8 @@
 FROM node:22-alpine
 
+# Pull Alpine security fixes not yet in the base image
+RUN apk upgrade --no-cache
+
 WORKDIR /app
 
 # Install exactly what the lockfile pins (dev deps are needed for the build)
@@ -15,8 +18,11 @@ ARG NEXT_PUBLIC_BASE_URL=https://eve-helper.com
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL \
     NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
 
-RUN npm run build && npm prune --omit=dev
+# npm/yarn are only needed to build; drop them, their bundled deps carry CVEs
+RUN npm run build && npm prune --omit=dev \
+    && rm -rf /usr/local/lib/node_modules /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack \
+              /opt/yarn-* /usr/local/bin/yarn /usr/local/bin/yarnpkg
 
 ENV NODE_ENV=production
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["node_modules/.bin/next", "start"]
