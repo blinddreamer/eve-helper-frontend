@@ -9,6 +9,10 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [...compat.extends("next/core-web-vitals")];
+const eslintConfig = [
+  // Build output, so `npm run lint` after `next build` doesn't lint generated files.
+  { ignores: [".next/**", "out/**", "build/**", "next-env.d.ts"] },
+  ...compat.extends("next/core-web-vitals"),
+];
 
 export default eslintConfig;
